@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Water Readings Capture (Cloud)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #2870ea;
+      --primary-dark: #1851b8;
+      --primary-light: #f4f8fb;
+      --success: #1e843b;
+      --danger: #e62739;
+      --accent: #ffa502;
+      --card-bg: #fff;
+      --text-main: #183d5c;
+      --shadow: 0 4px 24px rgba(40, 112, 234, 0.10);
+      --radius: 18px;
+      --bowser: #2870ea;
+      --dip: #ffa502;
+      --ilembe: #23c181;
+      --hydrant: #e62739;
+    }
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(120deg, #f5fafd 40%, #e8ecfa 100%);
+      margin: 0; padding: 0; min-height: 100vh;
+    }
+    .container {
+      background: var(--card-bg);
+      max-width: 650px;
+      margin: 38px auto 28px auto;
+      padding: 36px 28px 28px 28px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.7s cubic-bezier(.57,.21,.69,1.25);
+    }
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 24px;
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 0.7px;
+      text-shadow: 0 2px 8px #eaf2fa;
+    }
+    .top-bar {
+      display: flex; gap: 14px; justify-content: flex-end; align-items: center; margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .csv-btn, .stat-btn, .chart-btn {
+      border: none;
+      border-radius: 11px;
+      font-weight: 700;
+      font-family: inherit;
+      padding: 9px 25px;
+      font-size: 1.04em;
+      cursor: pointer;
+      transition: background 0.15s, box-shadow 0.12s, color 0.18s;
+      box-shadow: 0 2px 10px rgba(40,112,234,0.08);
+      outline: none;
+      margin-bottom: 3px;
+    }
+    .csv-btn {
+      background: var(--success);
+      color: #fff;
+    }
+    .csv-btn:hover { background: #156328;}
+    .stat-btn {
+      background: var(--accent);
+      color: var(--text-main);
+    }
+    .stat-btn:hover { background: #ffd66b; color: var(--primary-dark);}
+    .chart-btn {
+      background: var(--bowser);
+      color: #fff;
+    }
+    .chart-btn:hover { background: #1851b8;}
+    .section { margin-bottom: 20px; }
+    .section label { font-weight: 600; color: var(--text-main); display: block; margin-bottom: 6px; font-size: 1.02em;}
+    .row {
+      display: flex; gap: 10px; margin-bottom: 7px; align-items: center;
+      background: #f7fafd;
+      border-radius: 8px;
+      padding: 7px 0 7px 0;
+    }
+    .row input[type="number"] {
+      width: 80px; padding: 8px; border: 1px solid #e2e6ed;
+      border-radius: 8px; font-size: 1.06em; text-align: right; background: #f6fafd; color: var(--text-main);
+      box-shadow: 0 1px 2px #eaf2fa;
+      transition: border 0.14s;
+    }
+    .row input[type="number"]:focus { border: 1.7px solid var(--primary);}
+    .row .diff {
+      font-weight: 700; color: var(--success); min-width: 54px; text-align: right;
+      font-size: 1.07em;
+      letter-spacing: 1.2px;
+    }
+    textarea, input[type="text"] {
+      width: 100%; border-radius: 8px; border: 1px solid #e2e6ed; font-size: 1.04em; padding: 10px 9px; background: #f7fafd;
+      margin-top: 5px; transition: border 0.14s;
+      box-shadow: 0 1px 3px #eaf2fa;
+      color: var(--text-main);
+    }
+    textarea:focus, input[type="text"]:focus { border: 1.7px solid var(--primary);}
+    .note-label, .mini-label {
+      font-weight: 600; color: var(--primary); font-size: 1.01em; margin-top: 11px; display:block;
+    }
+    button[type="submit"] {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      padding: 15px 0;
+      margin-top: 16px;
+      font-weight: 700;
+      border-radius: 11px;
+      border: none;
+      font-size: 1.15em;
+      box-shadow: 0 2px 16px #eaf2fa;
+      letter-spacing: 0.5px;
+      transition: background 0.17s, box-shadow 0.16s;
+    }
+    button[type="submit"]:hover:not(:disabled) { background: var(--primary-dark);}
+    button[type="submit"]:disabled { background: #b1c7f4; cursor: not-allowed;}
+    .history-table {
+      width: 100%; margin-top: 24px; border-collapse: collapse; font-size: 1.01em;
+      background: #fafcff;
+      border-radius: 9px;
+      overflow: hidden;
+      box-shadow: 0 1px 8px #eaf2fa;
+    }
+    .history-table th, .history-table td {
+      padding: 8px 6px; text-align: center; border-bottom: 1px solid #e5eaf3;
+    }
+    .history-table th {
+      background: #f0f6ff; font-weight: 700; color: var(--primary);
+      border-bottom: 2.5px solid #e0e6f2;
+    }
+    .history-table tr:hover { background: #f3f8ff;}
+    .action-btn {
+      background: none; border: none; color: var(--primary); cursor: pointer; font-size: 1.17em; margin: 0 2px;
+      padding: 0 3px; font-weight: 700; transition: color 0.15s;
+    }
+    .action-btn:hover { color: var(--danger);}
+    .loader {
+      text-align: center;
+      margin-top: 35px;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .error {
+      color: var(--danger);
+      background: #fff5f5;
+      border-radius: 7px;
+      padding: 7px 0;
+      text-align: center;
+      margin-bottom: 8px;
+      font-weight: 500;
+      box-shadow: 0 1px 8px #eaf2fa;
+    }
+    /* Stats & Chart popup */
+    .stat-modal, .chart-modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(40,112,234,0.13);
+      justify-content: center;
+      align-items: center;
+      transition: background 0.15s;
+    }
+    .stat-modal.active, .chart-modal.active { display: flex; }
+    .stat-panel, .chart-panel {
+      background: #fff;
+      border-radius: 23px;
+      box-shadow: 0 8px 48px rgba(40,112,234,0.13), 0 1px 16px #eaf2fa;
+      padding: 36px 28px 28px 28px;
+      max-width: 620px;
+      width: 97vw;
+      max-height: 92vh;
+      overflow-y: auto;
+      color: var(--text-main);
+      animation: popupIn .4s cubic-bezier(.51,.13,.36,1.16);
+      position: relative;
+    }
+    .stat-title, .chart-title {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.28rem;
+      margin-bottom: 16px;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px #eaf2fa;
+    }
+    .stat-section {
+      margin-bottom: 22px;
+      padding-bottom: 13px;
+      border-bottom: 1.5px solid #f1f6fa;
+    }
+    .stat-section:last-child { border-bottom: none; }
+    .stat-label {
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 1.02em;
+      margin-bottom: 2px;
+      display: block;
+      letter-spacing: 0.2px;
+      margin-left: 2px;
+    }
+    .stat-table {
+      width: 100%; margin-top: 4px; font-size: 1.03em; border-collapse: collapse; background: #f7fafd;
+      border-radius: 7px; overflow: hidden;
+      box-shadow: 0 1px 4px #eaf2fa;
+    }
+    .stat-table th, .stat-table td {
+      padding: 4px 7px;
+      text-align: right;
+      border-bottom: 1px solid #eef3fa;
+    }
+    .stat-table th {
+      color: var(--primary);
+      font-weight: 700;
+      text-align: left;
+      font-size: 1.02em;
+      background: #f7fafd;
+      letter-spacing: 0.5px;
+    }
+    .stat-table tr:last-child td { border-bottom: none; }
+    .close-btn {
+      position: absolute;
+      right: 15px;
+      top: 12px;
+      font-size: 2em;
+      color: var(--danger);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 900;
+      padding: 2px 8px;
+      transition: color 0.15s;
+    }
+    .close-btn:hover { color: #ad1b29;}
+    .chart-panel {
+      max-width: 620px;
+      padding: 30px 15px 25px 15px;
+    }
+    .chart-title {
+      margin-bottom: 7px;
+    }
+    #chartCanvas {
+      width: 99% !important;
+      max-width: 540px;
+      height: 280px !important;
+      margin: 0 auto;
+      display: block;
+      background: #f8fafd;
+      border-radius: 13px;
+      box-shadow: 0 1px 9px #eaf2fa;
+      padding: 0;
+    }
+    .chart-controls {
+      display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: center;
+      margin-bottom: 12px;
+      margin-top: -5px;
+    }
+    .chart-type-group {
+      display: flex; gap: 4px;
+      border-radius: 8px; background: #f8fafd; padding: 3px 7px;
+      box-shadow: 0 1px 5px #eaf2fa;
+    }
+    .chart-type-btn {
+      border: none;
+      background: none;
+      font-weight: 700;
+      color: #2870ea;
+      font-size: 1.06em;
+      padding: 5px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.12s, color 0.13s;
+    }
+    .chart-type-btn.selected,
+    .chart-type-btn:focus {
+      background: #2870ea;
+      color: #fff;
+    }
+    .series-toggle {
+      margin-left: 5px; margin-right: 8px;
+      cursor: pointer;
+      accent-color: #2870ea;
+      vertical-align: middle;
+      width: 17px;
+      height: 17px;
+    }
+    .series-label {
+      font-weight: 600; color: #222; font-size: 1em;
+      margin-right: 10px; letter-spacing: 0.4px;
+      padding: 2px 7px; border-radius: 5px;
+      display: inline-block;
+    }
+    .series-label.bowser   { background: #eaf3ff; color: #2870ea;}
+    .series-label.dip      { background: #fff6e2; color: #ffa502;}
+    .series-label.ilembe   { background: #e6f8f2; color: #23c181;}
+    .series-label.hydrant  { background: #fff0f2; color: #e62739;}
+    @media (max-width: 650px) {
+      .container { padding: 11px 1vw; }
+      h1 { font-size: 1.12rem; }
+      .row input[type="number"] { width: 51px; }
+      .top-bar { flex-direction: column; align-items: stretch; gap: 7px; }
+      .csv-btn, .stat-btn, .chart-btn { width: 100%; }
+      .close-btn { right: 5vw; top: 5vw; }
+      .stat-panel, .chart-panel { padding: 12px 5px 7px 5px;}
+      #chartCanvas { height: 220px !important;}
+      .chart-controls { flex-direction: column; gap: 9px 0; }
+      .chart-type-btn { padding: 5px 6vw;}
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(24px);}
+      to   { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes popupIn {
+      from { opacity: 0; transform: scale(0.89);}
+      to   { opacity: 1; transform: scale(1);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Daily Water Readings (Cloud)</h1>
+    <div id="errormsg"></div>
+    <div class="top-bar">
+      <button class="csv-btn" onclick="exportCSV()">Export CSV</button>
+      <button class="stat-btn" onclick="showStats()">View Stats</button>
+      <button class="chart-btn" onclick="showChart()">Show Chart</button>
+    </div>
+    <form id="readingsForm" autocomplete="off">
+      <div class="section">
+        <label>Bowser Reading</label>
+        <div class="row">
+          <span>Open</span>
+          <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')">
+          <span>Close</span>
+          <input type="number" id="bowserClose" required oninput="calcDiff('bowser')">
+          <span class="diff" id="bowserDiff">-</span>
+        </div>
+      </div>
+      <div class="section">
+        <label>Dipstick</label>
+        <div class="row">
+          <span>Open</span>
+          <input type="number" id="dipOpen" required oninput="calcDiff('dip')">
+          <span>Close</span>
+          <input type="number" id="dipClose" required oninput="calcDiff('dip')">
+          <span class="diff" id="dipDiff">-</span>
+        </div>
+      </div>
+      <div class="section">
+        <label>iLembe Water</label>
+        <div class="row">
+          <span>Open</span>
+          <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')">
+          <span>Close</span>
+          <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')">
+          <span class="diff" id="ilembeDiff">-</span>
+        </div>
+      </div>
+      <div class="section">
+        <label>Hydrant</label>
+        <div class="row">
+          <span>Open</span>
+          <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')">
+          <span>Close</span>
+          <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')">
+          <span class="diff" id="hydrantDiff">-</span>
+        </div>
+      </div>
+      <div>
+        <label class="mini-label" for="countedBy">Counted By</label>
+        <input type="text" id="countedBy" maxlength="50" required placeholder="Name of person who counted">
+      </div>
+      <div>
+        <label class="mini-label" for="checkedBy">Checked By</label>
+        <input type="text" id="checkedBy" maxlength="50" required placeholder="Name of person who checked">
+      </div>
+      <div>
+        <label class="note-label" for="notes">Notes</label>
+        <textarea id="notes" placeholder="Add any notes here..."></textarea>
+      </div>
+      <button type="submit" id="saveBtn">Save Today's Readings</button>
+    </form>
+    <div id="loader" class="loader">Loading history...</div>
+    <div id="historySection"></div>
+  </div>
+
+  <!-- Stats Popup -->
+  <div class="stat-modal" id="statModal">
+    <div class="stat-panel" id="statPanel">
+      <button class="close-btn" onclick="closeStats()" title="Close">&times;</button>
+      <div class="stat-title">Summary Stats</div>
+      <div id="statsContent"></div>
+    </div>
+  </div>
+  <!-- Chart Popup -->
+  <div class="chart-modal" id="chartModal">
+    <div class="chart-panel" id="chartPanel">
+      <button class="close-btn" onclick="closeChart()" title="Close">&times;</button>
+      <div class="chart-title">Usage Chart</div>
+      <div class="chart-controls">
+        <div class="chart-type-group">
+          <button class="chart-type-btn selected" id="btnLine" onclick="setChartType('line')" type="button">Line</button>
+          <button class="chart-type-btn" id="btnBar" onclick="setChartType('bar')" type="button">Bar</button>
+          <button class="chart-type-btn" id="btnArea" onclick="setChartType('area')" type="button">Area</button>
+        </div>
+        <div>
+          <label class="series-label bowser">
+            <input class="series-toggle" type="checkbox" id="showBowser" checked onchange="updateChart()"/> Bowser
+          </label>
+          <label class="series-label dip">
+            <input class="series-toggle" type="checkbox" id="showDip" checked onchange="updateChart()"/> Dipstick
+          </label>
+          <label class="series-label ilembe">
+            <input class="series-toggle" type="checkbox" id="showIlembe" checked onchange="updateChart()"/> iLembe
+          </label>
+          <label class="series-label hydrant">
+            <input class="series-toggle" type="checkbox" id="showHydrant" checked onchange="updateChart()"/> Hydrant
+          </label>
+        </div>
+      </div>
+      <canvas id="chartCanvas"></canvas>
+    </div>
+  </div>
+  <script>
+    // JSONBin Setup (your credentials, for PRIVATE bin!)
+    const binId = "686b9c1b8561e97a5032ef3e";
+    const apiKey = "$2a$10$rMDjhTzn1yDfnMMAec0fW.Ok54iIQijr5K2OixHy8gaxSF.UMSw.S";
+    const url = `https://api.jsonbin.io/v3/b/${binId}`;
+    let readingsHistory = [];
+    let editingIdx = null;
+    let loading = true;
+    let chartInstance = null;
+    let chartType = 'line';
+
+    function calcDiff(section) {
+      const open = Number(document.getElementById(section + 'Open').value) || 0;
+      const close = Number(document.getElementById(section + 'Close').value) || 0;
+      const diff = close - open;
+      document.getElementById(section + 'Diff').textContent = (open || close) ? diff : '-';
+    }
+
+    function getTodayString() {
+      const d = new Date();
+      return d.toISOString().slice(0,10); // YYYY-MM-DD
+    }
+
+    function showError(msg) {
+      document.getElementById('errormsg').innerHTML = '<div class="error">' + msg + '</div>';
+      setTimeout(() => {
+        document.getElementById('errormsg').innerHTML = '';
+      }, 5500);
+    }
+
+    async function loadHistory() {
+      loading = true;
+      document.getElementById('loader').style.display = '';
+      document.getElementById('saveBtn').disabled = true;
+      try {
+        const res = await fetch(url + '/latest', {
+          headers: { "X-Access-Key": apiKey }
+        });
+        if (!res.ok) throw new Error('Could not load data from cloud.');
+        const data = await res.json();
+        readingsHistory = data.record.dailyReadings || [];
+        renderHistory();
+      } catch (e) {
+        showError("Could not load from cloud: " + e.message);
+        readingsHistory = [];
+        renderHistory();
+      } finally {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('saveBtn').disabled = false;
+        loading = false;
+      }
+    }
+
+    async function saveHistory() {
+      document.getElementById('saveBtn').disabled = true;
+      document.getElementById('loader').style.display = '';
+      try {
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            "Content-Type": "application/json",
+            "X-Access-Key": apiKey
+          },
+          body: JSON.stringify({ dailyReadings: readingsHistory })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error((data && data.message) ? data.message : 'Failed to save to cloud.');
+      } catch (e) {
+        showError("Cloud save failed: " + (e && e.message ? e.message : e));
+      } finally {
+        document.getElementById('saveBtn').disabled = false;
+        document.getElementById('loader').style.display = 'none';
+      }
+    }
+
+    function getWeekNum(dateStr) {
+      const d = new Date(dateStr);
+      d.setHours(0,0,0,0);
+      d.setDate(d.getDate() + 4 - (d.getDay()||7));
+      const yearStart = new Date(d.getFullYear(),0,1);
+      return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+    }
+    function getMonthStr(dateStr) { return dateStr.slice(0,7); }
+    function groupStats(data) {
+      const daily = {}, weekly = {}, monthly = {};
+      data.forEach(e => {
+        if (!e.date) return;
+        daily[e.date] = daily[e.date]||[]; daily[e.date].push(e);
+        const weekKey = e.date.slice(0,4)+'-W'+getWeekNum(e.date);
+        weekly[weekKey] = weekly[weekKey]||[]; weekly[weekKey].push(e);
+        const monKey = getMonthStr(e.date);
+        monthly[monKey] = monthly[monKey]||[]; monthly[monKey].push(e);
+      });
+      return {daily, weekly, monthly};
+    }
+    function statRows(entries) {
+      function sum(field) { return entries.reduce((a,b)=>a+(Number(b[field])||0),0); }
+      function avg(field) { return entries.length ? sum(field)/entries.length : 0; }
+      return `
+        <tr><th></th>
+            <th>Bowser</th>
+            <th>Dipstick</th>
+            <th>iLembe</th>
+            <th>Hydrant</th>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>${sum("bowserDiff")}</td>
+          <td>${sum("dipDiff")}</td>
+          <td>${sum("ilembeDiff")}</td>
+          <td>${sum("hydrantDiff")}</td>
+        </tr>
+        <tr>
+          <td>Average</td>
+          <td>${avg("bowserDiff").toFixed(2)}</td>
+          <td>${avg("dipDiff").toFixed(2)}</td>
+          <td>${avg("ilembeDiff").toFixed(2)}</td>
+          <td>${avg("hydrantDiff").toFixed(2)}</td>
+        </tr>
+      `;
+    }
+    function statsTable(label, groups, count=5) {
+      let keys = Object.keys(groups).sort().reverse();
+      if (count) keys = keys.slice(0, count);
+      let html = `<div class="stat-section"><div class="stat-label">${label}</div>`;
+      keys.forEach(k=>{
+        html += `<div style="font-weight:700; margin-top:10px;">${k}</div>
+          <table class="stat-table">${statRows(groups[k])}</table>`;
+      });
+      html += "</div>";
+      return html;
+    }
+
+    window.showStats = function() {
+      if (readingsHistory.length === 0) {
+        document.getElementById('statsContent').innerHTML = `<div style="margin:14px;">No stats available yet.</div>`;
+      } else {
+        const {daily, weekly, monthly} = groupStats(readingsHistory);
+        let html = "";
+        html += statsTable("Most Recent 5 Days", daily, 5);
+        html += statsTable("Most Recent 5 Weeks", weekly, 5);
+        html += statsTable("Most Recent 5 Months", monthly, 5);
+        document.getElementById('statsContent').innerHTML = html;
+      }
+      document.getElementById('statModal').classList.add("active");
+    };
+    window.closeStats = function() {
+      document.getElementById('statModal').classList.remove("active");
+    };
+
+    // Chart.js visualization
+    window.showChart = function() {
+      document.getElementById('chartModal').classList.add('active');
+      setTimeout(updateChart, 50);
+    };
+    window.closeChart = function() {
+      document.getElementById('chartModal').classList.remove('active');
+      if (chartInstance) chartInstance.destroy();
+    };
+
+    window.setChartType = function(type) {
+      chartType = type;
+      document.getElementById('btnLine').classList.toggle('selected', type === 'line');
+      document.getElementById('btnBar').classList.toggle('selected', type === 'bar');
+      document.getElementById('btnArea').classList.toggle('selected', type === 'area');
+      updateChart();
+    };
+
+    window.updateChart = function() {
+      const sorted = [...readingsHistory].sort((a,b)=>a.date.localeCompare(b.date));
+      const labels = sorted.map(e=>e.date);
+      const bowser = sorted.map(e=>e.bowserDiff);
+      const dip = sorted.map(e=>e.dipDiff);
+      const ilembe = sorted.map(e=>e.ilembeDiff);
+      const hydrant = sorted.map(e=>e.hydrantDiff);
+      // Series toggles
+      const showBowser = document.getElementById('showBowser').checked;
+      const showDip = document.getElementById('showDip').checked;
+      const showIlembe = document.getElementById('showIlembe').checked;
+      const showHydrant = document.getElementById('showHydrant').checked;
+      if (chartInstance) chartInstance.destroy();
+      const ctx = document.getElementById('chartCanvas').getContext('2d');
+      const datasets = [];
+      if (showBowser) datasets.push({
+        label: 'Bowser', data: bowser,
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bowser'),
+        backgroundColor: (chartType==='bar'||chartType==='area') ? 'rgba(40,112,234,0.13)' : 'rgba(40,112,234,0.05)',
+        pointRadius: 3, pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bowser'),
+        fill: chartType==='area'
+      });
+      if (showDip) datasets.push({
+        label: 'Dipstick', data: dip,
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent'),
+        backgroundColor: (chartType==='bar'||chartType==='area') ? 'rgba(255,165,2,0.16)' : 'rgba(255,165,2,0.05)',
+        pointRadius: 3, pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--accent'),
+        fill: chartType==='area'
+      });
+      if (showIlembe) datasets.push({
+        label: 'iLembe', data: ilembe,
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--ilembe'),
+        backgroundColor: (chartType==='bar'||chartType==='area') ? 'rgba(35,193,129,0.18)' : 'rgba(35,193,129,0.07)',
+        pointRadius: 3, pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--ilembe'),
+        fill: chartType==='area'
+      });
+      if (showHydrant) datasets.push({
+        label: 'Hydrant', data: hydrant,
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--hydrant'),
+        backgroundColor: (chartType==='bar'||chartType==='area') ? 'rgba(230,39,57,0.19)' : 'rgba(230,39,57,0.07)',
+        pointRadius: 3, pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--hydrant'),
+        fill: chartType==='area'
+      });
+      chartInstance = new Chart(ctx, {
+        type: (chartType==='area') ? 'line' : chartType,
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display:true, position:'top', labels:{font:{weight:'bold'}} },
+            title: { display: false }
+          },
+          elements: {
+            line: { tension: 0.34, fill: chartType==='area' }
+          },
+          scales: {
+            x: {
+              ticks: { font: { size: 13 }, color: '#888' }
+            },
+            y: {
+              title: { display: true, text: 'Difference', color: '#333', font:{size:13, weight:'bold'}},
+              ticks: { font: { size: 13 }, color: '#888' },
+              grid: { color:'#eaf2fa' }
+            }
+          }
+        }
+      });
+    };
+
+    // App UI and Data Logic
+    function renderHistory() {
+      if (readingsHistory.length === 0) {
+        document.getElementById('historySection').innerHTML = '<p style="text-align:center;margin-top:18px;">No previous readings saved.</p>';
+        return;
+      }
+      let table = `<table class="history-table">
+        <tr>
+          <th>Date</th>
+          <th>Bowser</th>
+          <th>Dipstick</th>
+          <th>iLembe</th>
+          <th>Hydrant</th>
+          <th>Counted By</th>
+          <th>Checked By</th>
+          <th>Notes</th>
+          <th>Action</th>
+        </tr>`;
+      for (let [i, entry] of readingsHistory.entries()) {
+        table += `<tr>
+          <td>${entry.date}</td>
+          <td>${entry.bowserOpen}&rarr;${entry.bowserClose} (<b>${entry.bowserDiff}</b>)</td>
+          <td>${entry.dipOpen}&rarr;${entry.dipClose} (<b>${entry.dipDiff}</b>)</td>
+          <td>${entry.ilembeOpen}&rarr;${entry.ilembeClose} (<b>${entry.ilembeDiff}</b>)</td>
+          <td>${entry.hydrantOpen}&rarr;${entry.hydrantClose} (<b>${entry.hydrantDiff}</b>)</td>
+          <td>${entry.countedBy||""}</td>
+          <td>${entry.checkedBy||""}</td>
+          <td style="max-width:110px;overflow-x:auto;">${entry.notes||''}</td>
+          <td>
+            <button class="action-btn" title="Edit" onclick="editEntry(${i})">&#9998;</button>
+            <button class="action-btn" title="Delete" onclick="deleteEntry(${i})">&#10006;</button>
+          </td>
+        </tr>`;
+      }
+      table += '</table>';
+      document.getElementById('historySection').innerHTML = table;
+    }
+
+    window.editEntry = function(idx) {
+      const entry = readingsHistory[idx];
+      document.getElementById('bowserOpen').value = entry.bowserOpen;
+      document.getElementById('bowserClose').value = entry.bowserClose;
+      document.getElementById('dipOpen').value = entry.dipOpen;
+      document.getElementById('dipClose').value = entry.dipClose;
+      document.getElementById('ilembeOpen').value = entry.ilembeOpen;
+      document.getElementById('ilembeClose').value = entry.ilembeClose;
+      document.getElementById('hydrantOpen').value = entry.hydrantOpen;
+      document.getElementById('hydrantClose').value = entry.hydrantClose;
+      document.getElementById('countedBy').value = entry.countedBy || '';
+      document.getElementById('checkedBy').value = entry.checkedBy || '';
+      document.getElementById('notes').value = entry.notes || '';
+      calcDiff('bowser'); calcDiff('dip'); calcDiff('ilembe'); calcDiff('hydrant');
+      editingIdx = idx;
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    window.deleteEntry = async function(idx) {
+      if (!confirm("Delete this day's readings?")) return;
+      readingsHistory.splice(idx, 1);
+      renderHistory();
+      await saveHistory();
+    }
+
+    document.getElementById('readingsForm').onsubmit = async function(e) {
+      e.preventDefault();
+      if (loading) return false;
+      const data = {
+        date: getTodayString(),
+        bowserOpen: Number(bowserOpen.value), bowserClose: Number(bowserClose.value), bowserDiff: bowserClose.value-bowserOpen.value,
+        dipOpen: Number(dipOpen.value), dipClose: Number(dipClose.value), dipDiff: dipClose.value-dipOpen.value,
+        ilembeOpen: Number(ilembeOpen.value), ilembeClose: Number(ilembeClose.value), ilembeDiff: ilembeClose.value-ilembeOpen.value,
+        hydrantOpen: Number(hydrantOpen.value), hydrantClose: Number(hydrantClose.value), hydrantDiff: hydrantClose.value-hydrantOpen.value,
+        countedBy: countedBy.value.trim(),
+        checkedBy: checkedBy.value.trim(),
+        notes: notes.value.trim()
+      };
+      if (editingIdx !== null) {
+        readingsHistory[editingIdx] = data;
+        editingIdx = null;
+      } else {
+        let existingIdx = readingsHistory.findIndex(h => h.date === data.date);
+        if (existingIdx !== -1) readingsHistory[existingIdx] = data;
+        else readingsHistory.push(data);
+      }
+      renderHistory();
+      await saveHistory();
+      readingsForm.reset();
+      ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
+      notes.value = '';
+      countedBy.value = '';
+      checkedBy.value = '';
+    }
+
+    window.exportCSV = function() {
+      if (readingsHistory.length === 0) return alert("No data to export.");
+      let csv = [
+        [
+          "Date",
+          "Bowser Opening","Bowser Closing","Bowser Difference",
+          "Dipstick Opening","Dipstick Closing","Dipstick Difference",
+          "iLembe Opening","iLembe Closing","iLembe Difference",
+          "Hydrant Opening","Hydrant Closing","Hydrant Difference",
+          "Counted By", "Checked By",
+          "Notes"
+        ].join(",")
+      ];
+      readingsHistory.forEach(e=>{
+        csv.push([
+          e.date,
+          e.bowserOpen, e.bowserClose, e.bowserDiff,
+          e.dipOpen, e.dipClose, e.dipDiff,
+          e.ilembeOpen, e.ilembeClose, e.ilembeDiff,
+          e.hydrantOpen, e.hydrantClose, e.hydrantDiff,
+          '"' + (e.countedBy||"").replace(/"/g, '""') + '"',
+          '"' + (e.checkedBy||"").replace(/"/g, '""') + '"',
+          '"' + (e.notes||"").replace(/"/g, '""') + '"'
+        ].join(","));
+      });
+      const blob = new Blob([csv.join("\r\n")], {type: 'text/csv'});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "daily_water_readings.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    };
+
+    // On load
+    loadHistory();
+  </script>
+</body>
+</html>
