@@ -9,7 +9,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* Large but clean: all styles for light/dark, table, forms, popups, tooltips, print, responsive */
     html { box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
     :root {
@@ -103,7 +102,6 @@
     .dark-btn:hover { background: var(--primary); color: #fff;}
     @media (max-width: 700px) { .top-bar { flex-direction: column; align-items: stretch; gap: 7px;} }
 
-    /* Form, input and error/success UI */
     .form-row { margin-bottom: 17px; }
     label { font-weight: 600; color: var(--primary); display: block; margin-bottom: 6px;}
     .row {
@@ -175,7 +173,6 @@
     .error-msg   { background: var(--danger);}
     @keyframes fadeInMsg { from { opacity:0; transform:translateY(-10px);} to {opacity:1;transform:none;} }
 
-    /* Table & history, avatars */
     .history-section {
       overflow-x: auto; width: 100%;
     }
@@ -215,7 +212,6 @@
       margin-right: 3px;
       box-shadow: 0 1px 2px #eaf2fa;
     }
-    /* Responsive, print, tooltips, popup */
     @media (max-width: 1000px) {
       .history-section { overflow-x: auto; }
       .history-table { min-width: 700px;}
@@ -231,7 +227,6 @@
       .top-bar, .stat-modal, .chart-modal, .admin-popup, .dark-btn { display:none !important;}
       body { background: #fff !important; color: #111 !important;}
     }
-    /* Popups (stats, chart, admin) */
     .stat-modal, .chart-modal, .admin-popup, .restore-modal {
       display: none; position: fixed; z-index: 1001;
       left: 0; top: 0; width: 100vw; height: 100vh;
@@ -267,7 +262,6 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(24px);} to   { opacity: 1; transform: translateY(0);} }
     @keyframes popupIn { from { opacity: 0; transform: scale(0.89);} to   { opacity: 1; transform: scale(1);} }
   </style>
-</head>
 <body>
   <div class="container">
     <h1>Daily Water Readings (Cloud)</h1>
@@ -346,7 +340,6 @@
     <div id="loader" class="loader" style="display:none;">Loading history...</div>
     <div class="history-section" id="historySection"></div>
   </div>
-
   <!-- Stats Popup -->
   <div class="stat-modal" id="statModal">
     <div class="stat-panel" id="statPanel">
@@ -408,9 +401,8 @@
       <div style="color:var(--danger);font-weight:600;margin-top:10px;">Warning: This will replace all data!</div>
     </div>
   </div>
-
-  <!-- Tooltips for table headers -->
   <script>
+    // --- Tooltips ---
     const tooltips = {
       "Date": "The date of the reading.\nSelect or type to add/edit past/future readings.",
       "Bowser": "Manual water bowser readings.\nShows opening, closing, and usage.",
@@ -435,10 +427,7 @@
         });
       }, 400);
     });
-  </script>
-  <!-- Main Logic -->
-  <script>
-    // JSONBin Setup (your credentials, for PRIVATE bin!)
+    // --- Main App Logic ---
     const binId = "686b9c1b8561e97a5032ef3e";
     const apiKey = "$2a$10$rMDjhTzn1yDfnMMAec0fW.Ok54iIQijr5K2OixHy8gaxSF.UMSw.S";
     const url = `https://api.jsonbin.io/v3/b/${binId}`;
@@ -455,11 +444,15 @@
     let lastMsgTimeout = null;
     let darkMode = false;
 
-    // Utility functions
     function calcDiff(section) {
       const open = Number(document.getElementById(section + 'Open').value) || 0;
       const close = Number(document.getElementById(section + 'Close').value) || 0;
-      const diff = close - open;
+      let diff;
+      if (section === "dip") {
+        diff = open - close;
+      } else {
+        diff = close - open;
+      }
       document.getElementById(section + 'Diff').textContent = (open || close) ? diff : '-';
     }
     function getTodayString() {
@@ -471,12 +464,9 @@
       return name.split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);
     }
     function randomColor(str) {
-      // Unique pastel color for each string
       let hash = 0; for (let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
       let h = hash%360; return `hsl(${h}, 60%, 80%)`;
     }
-
-    // Messaging
     function showMsg(text, ok=true) {
       clearTimeout(lastMsgTimeout);
       let msg = document.getElementById('msg');
@@ -488,8 +478,6 @@
         ? `<span class="saving-spinner"></span>Saving...`
         : (editingIdx!==null?"Update":"Save Reading");
     }
-
-    // Dark Mode
     function setDarkMode(on) {
       document.body.classList.toggle("dark", !!on);
       darkMode = !!on;
@@ -497,8 +485,6 @@
       localStorage.setItem("darkMode", darkMode ? "1" : "");
     }
     function toggleDarkMode() { setDarkMode(!darkMode); }
-
-    // Admin functions
     function showAdminPopup() {
       document.getElementById('adminPopup').classList.add("active");
       document.getElementById('adminPassInput').focus();
@@ -519,8 +505,6 @@
         document.getElementById('adminMsg').textContent = "Incorrect password!";
       }
     }
-
-    // Load/Save cloud
     async function loadHistory() {
       loading = true;
       document.getElementById('loader').style.display = '';
@@ -565,8 +549,6 @@
         document.getElementById('saveBtn').disabled = false;
       }
     }
-
-    // Form logic
     function cancelEdit() {
       editingIdx = null; editingDate = null;
       document.getElementById('cancelEditBtn').style.display = 'none';
@@ -575,11 +557,9 @@
       readingsForm.reset();
       ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
     }
-
     document.getElementById('readingsForm').onsubmit = async function(e) {
       e.preventDefault();
       if (loading) return false;
-      // Collect and validate input
       const date = document.getElementById('readingDate').value;
       const counted = countedBy.value.trim(), checked = checkedBy.value.trim();
       const notesVal = notes.value.trim();
@@ -590,13 +570,18 @@
         {s:"hydrant",open:+hydrantOpen.value,close:+hydrantClose.value},
       ];
       for(let i=0;i<openCloseDiffs.length;i++) {
-        if (openCloseDiffs[i].close<openCloseDiffs[i].open) {
-          showMsg(`Error: ${openCloseDiffs[i].s.charAt(0).toUpperCase()+openCloseDiffs[i].s.slice(1)} closing < opening!`,false); return;
+        if (openCloseDiffs[i].s === "dip") {
+          if (openCloseDiffs[i].open < openCloseDiffs[i].close) {
+            showMsg("Error: Dipstick opening cannot be less than closing!", false); return;
+          }
+        } else {
+          if (openCloseDiffs[i].close < openCloseDiffs[i].open) {
+            showMsg(`Error: ${openCloseDiffs[i].s.charAt(0).toUpperCase()+openCloseDiffs[i].s.slice(1)} closing < opening!`,false); return;
+          }
         }
       }
       if (!counted || !checked) { showMsg("Counted By and Checked By required.",false); return; }
       if (!date) { showMsg("Please select a date.",false); return; }
-      // Prevent duplicate date
       let existingIdx = readingsHistory.findIndex(h => h.date === date);
       if (editingIdx === null && existingIdx !== -1) {
         showMsg("A reading for this date already exists. Use Edit.",false); return;
@@ -604,7 +589,7 @@
       const data = {
         date,
         bowserOpen:+bowserOpen.value, bowserClose:+bowserClose.value, bowserDiff:+bowserClose.value-+bowserOpen.value,
-        dipOpen:+dipOpen.value, dipClose:+dipClose.value, dipDiff:+dipClose.value-+dipOpen.value,
+        dipOpen:+dipOpen.value, dipClose:+dipClose.value, dipDiff:+dipOpen.value-+dipClose.value,
         ilembeOpen:+ilembeOpen.value, ilembeClose:+ilembeClose.value, ilembeDiff:+ilembeClose.value-+ilembeOpen.value,
         hydrantOpen:+hydrantOpen.value, hydrantClose:+hydrantClose.value, hydrantDiff:+hydrantClose.value-+hydrantOpen.value,
         countedBy:counted, checkedBy:checked, notes:notesVal
@@ -623,14 +608,11 @@
       readingsForm.reset();
       ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
     }
-
-    // Table rendering (with avatars, admin lock, trend arrows)
     function renderHistory() {
       if (readingsHistory.length === 0) {
         document.getElementById('historySection').innerHTML = '<p style="text-align:center;margin-top:15px;">No previous readings saved.</p>';
         return;
       }
-      // Sort by date, newest first
       const sorted = [...readingsHistory].sort((a,b)=>b.date.localeCompare(a.date));
       let table = `<table class="history-table" aria-label="Reading History Table">
         <tr>`;
@@ -640,7 +622,6 @@
       table += "</tr>";
       for (let i=0; i<sorted.length; i++) {
         const entry = sorted[i];
-        // Trend arrows
         const prev = sorted[i+1];
         function arrow(curr,prev) {
           if (!prev) return "";
@@ -708,8 +689,6 @@
       renderHistory();
       await saveHistory();
     }
-
-    // Export CSV
     window.exportCSV = function() {
       if (readingsHistory.length === 0) return alert("No data to export.");
       let csv = [
@@ -743,8 +722,6 @@
       a.click();
       document.body.removeChild(a);
     };
-
-    // Export PDF
     window.exportPDF = function() {
       if (readingsHistory.length === 0) { alert("No data to export."); return; }
       const { jsPDF } = window.jspdf;
@@ -756,11 +733,17 @@
       readingsHistory.slice(-25).reverse().forEach(e=>{
         rows.push([e.date,e.bowserDiff,e.dipDiff,e.ilembeDiff,e.hydrantDiff,e.countedBy,e.checkedBy,e.notes||""]);
       });
-      doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 25, styles:{font:"helvetica",fontSize:10,cellPadding:2}});
+      if (doc.autoTable) {
+        doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 25, styles:{font:"helvetica",fontSize:10,cellPadding:2}});
+      } else {
+        let y = 30;
+        rows.forEach(row=>{
+          doc.text(row.join(" | "), 13, y);
+          y += 8;
+        });
+      }
       doc.save("daily_water_readings.pdf");
     };
-
-    // Backup/Restore
     window.backupJSON = function() {
       if (readingsHistory.length === 0) return alert("No data to backup.");
       const blob = new Blob([JSON.stringify({dailyReadings: readingsHistory},null,2)], {type: 'application/json'});
@@ -799,8 +782,6 @@
       };
       reader.readAsText(file);
     }
-
-    // Stats
     function getWeekNum(dateStr) {
       const d = new Date(dateStr);
       d.setHours(0,0,0,0);
@@ -858,7 +839,6 @@
       html += "</div>";
       return html;
     }
-
     window.showStats = function() {
       if (readingsHistory.length === 0) {
         document.getElementById('statsContent').innerHTML = `<div style="margin:13px;">No stats available yet.</div>`;
@@ -875,8 +855,6 @@
     window.closeStats = function() {
       document.getElementById('statModal').classList.remove("active");
     };
-
-    // Charts (Line, Bar, Stacked, Pie, Daily Total)
     window.showChart = function() {
       document.getElementById('chartModal').classList.add('active');
       setTimeout(updateChart, 50);
@@ -911,7 +889,6 @@
       const ctx = document.getElementById('chartCanvas').getContext('2d');
       let datasets = [];
       if (chartType==="pie") {
-        // Show latest day pie chart
         let lastIdx = labels.length-1;
         let dataPie = [];
         if (showBowser) dataPie.push(bowser[lastIdx]);
@@ -993,17 +970,15 @@
       });
     };
 
-    // Start-up
+    // Startup
     document.addEventListener("DOMContentLoaded", ()=>{
       document.getElementById('readingDate').value = getTodayString();
       setDarkMode(localStorage.getItem("darkMode")==="1");
       loadHistory();
     });
-    // Allow Enter on admin popup
     document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
       if (e.key==="Enter") submitAdminPassword();
     });
-
   </script>
 </body>
 </html>
