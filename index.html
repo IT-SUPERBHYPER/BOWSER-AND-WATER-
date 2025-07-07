@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
     html { box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
@@ -101,7 +102,6 @@
     .dark-btn { background: var(--card-bg); color: var(--primary);}
     .dark-btn:hover { background: var(--primary); color: #fff;}
     @media (max-width: 700px) { .top-bar { flex-direction: column; align-items: stretch; gap: 7px;} }
-
     .form-row { margin-bottom: 17px; }
     label { font-weight: 600; color: var(--primary); display: block; margin-bottom: 6px;}
     .row {
@@ -172,10 +172,7 @@
     .success-msg { background: var(--success);}
     .error-msg   { background: var(--danger);}
     @keyframes fadeInMsg { from { opacity:0; transform:translateY(-10px);} to {opacity:1;transform:none;} }
-
-    .history-section {
-      overflow-x: auto; width: 100%;
-    }
+    .history-section { overflow-x: auto; width: 100%; }
     .history-table {
       width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 1em;
       background: #fafcff;
@@ -262,6 +259,7 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(24px);} to   { opacity: 1; transform: translateY(0);} }
     @keyframes popupIn { from { opacity: 0; transform: scale(0.89);} to   { opacity: 1; transform: scale(1);} }
   </style>
+</head>
 <body>
   <div class="container">
     <h1>Daily Water Readings (Cloud)</h1>
@@ -269,7 +267,7 @@
     <div id="msg"></div>
     <div class="top-bar">
       <button class="csv-btn" onclick="exportCSV()" title="Export to CSV">Export CSV</button>
-      <button class="pdf-btn" onclick="exportPDF()" title="Export to PDF">Export PDF</button>
+      <button class="pdf-btn" onclick="exportPDF()" title="Export PDF">Export PDF</button>
       <button class="stat-btn" onclick="showStats()" title="Stats & Analytics">View Stats</button>
       <button class="chart-btn" onclick="showChart()" title="Charts & Trends">Show Chart</button>
       <button class="backup-btn" onclick="backupJSON()" title="Backup Data (JSON)">Backup</button>
@@ -402,7 +400,7 @@
     </div>
   </div>
   <script>
-    // --- Tooltips ---
+    // Tooltips for table headers
     const tooltips = {
       "Date": "The date of the reading.\nSelect or type to add/edit past/future readings.",
       "Bowser": "Manual water bowser readings.\nShows opening, closing, and usage.",
@@ -427,7 +425,8 @@
         });
       }, 400);
     });
-    // --- Main App Logic ---
+
+    // JSONBin Setup
     const binId = "686b9c1b8561e97a5032ef3e";
     const apiKey = "$2a$10$rMDjhTzn1yDfnMMAec0fW.Ok54iIQijr5K2OixHy8gaxSF.UMSw.S";
     const url = `https://api.jsonbin.io/v3/b/${binId}`;
@@ -449,9 +448,9 @@
       const close = Number(document.getElementById(section + 'Close').value) || 0;
       let diff;
       if (section === "dip") {
-        diff = open - close;
+        diff = open - close; // Dipstick: opening minus closing
       } else {
-        diff = close - open;
+        diff = close - open; // Others: closing minus opening
       }
       document.getElementById(section + 'Diff').textContent = (open || close) ? diff : '-';
     }
@@ -517,10 +516,12 @@
         const data = await res.json();
         readingsHistory = data.record.dailyReadings || [];
         renderHistory();
+        fillOpeningsFromLast();
       } catch (e) {
         showMsg("Could not load from cloud: " + e.message, false);
         readingsHistory = [];
         renderHistory();
+        fillOpeningsFromLast();
       } finally {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('saveBtn').disabled = false;
@@ -542,11 +543,26 @@
         const data = await res.json();
         if (!res.ok) throw new Error((data && data.message) ? data.message : 'Failed to save to cloud.');
         showMsg("Saved!",true);
+        fillOpeningsFromLast();
       } catch (e) {
         showMsg("Cloud save failed: " + (e && e.message ? e.message : e),false);
       } finally {
         showSavingSpinner(false);
         document.getElementById('saveBtn').disabled = false;
+      }
+    }
+    function fillOpeningsFromLast() {
+      if (!readingsHistory.length) return;
+      const latest = [...readingsHistory].sort((a,b)=>b.date.localeCompare(a.date))[0];
+      if (editingIdx === null) {
+        document.getElementById('bowserOpen').value = latest.bowserClose ?? '';
+        document.getElementById('dipOpen').value = latest.dipClose ?? '';
+        document.getElementById('ilembeOpen').value = latest.ilembeClose ?? '';
+        document.getElementById('hydrantOpen').value = latest.hydrantClose ?? '';
+        ['bowser','dip','ilembe','hydrant'].forEach(s=>{
+          document.getElementById(s+'Close').value = '';
+          document.getElementById(s+'Diff').textContent = '-';
+        });
       }
     }
     function cancelEdit() {
@@ -556,6 +572,7 @@
       document.getElementById('readingDate').disabled = false;
       readingsForm.reset();
       ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
+      fillOpeningsFromLast();
     }
     document.getElementById('readingsForm').onsubmit = async function(e) {
       e.preventDefault();
@@ -607,6 +624,7 @@
       await saveHistory();
       readingsForm.reset();
       ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
+      fillOpeningsFromLast();
     }
     function renderHistory() {
       if (readingsHistory.length === 0) {
@@ -689,6 +707,7 @@
       renderHistory();
       await saveHistory();
     }
+    // Export CSV
     window.exportCSV = function() {
       if (readingsHistory.length === 0) return alert("No data to export.");
       let csv = [
@@ -722,6 +741,7 @@
       a.click();
       document.body.removeChild(a);
     };
+    // Export PDF
     window.exportPDF = function() {
       if (readingsHistory.length === 0) { alert("No data to export."); return; }
       const { jsPDF } = window.jspdf;
@@ -733,17 +753,18 @@
       readingsHistory.slice(-25).reverse().forEach(e=>{
         rows.push([e.date,e.bowserDiff,e.dipDiff,e.ilembeDiff,e.hydrantDiff,e.countedBy,e.checkedBy,e.notes||""]);
       });
-      if (doc.autoTable) {
+      if (typeof doc.autoTable === "function") {
         doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 25, styles:{font:"helvetica",fontSize:10,cellPadding:2}});
       } else {
         let y = 30;
-        rows.forEach(row=>{
-          doc.text(row.join(" | "), 13, y);
-          y += 8;
+        rows.forEach(r=>{
+          doc.text(r.join(' | '),10,y);
+          y += 7;
         });
       }
       doc.save("daily_water_readings.pdf");
     };
+    // Backup/Restore
     window.backupJSON = function() {
       if (readingsHistory.length === 0) return alert("No data to backup.");
       const blob = new Blob([JSON.stringify({dailyReadings: readingsHistory},null,2)], {type: 'application/json'});
@@ -782,6 +803,7 @@
       };
       reader.readAsText(file);
     }
+    // Stats
     function getWeekNum(dateStr) {
       const d = new Date(dateStr);
       d.setHours(0,0,0,0);
@@ -855,6 +877,7 @@
     window.closeStats = function() {
       document.getElementById('statModal').classList.remove("active");
     };
+    // Charts (Line, Bar, Stacked, Pie, Daily Total)
     window.showChart = function() {
       document.getElementById('chartModal').classList.add('active');
       setTimeout(updateChart, 50);
@@ -959,25 +982,23 @@
           }
         }
       };
-      if (chartType==="stacked") {
-        opts.scales.x.stacked = true;
-        opts.scales.y.stacked = true;
+      if (chartType==='stacked') {
+        opts.scales.x.stacked = true; opts.scales.y.stacked = true;
       }
       chartInstance = new Chart(ctx, {
-        type: (chartType==='stacked'?'bar':chartType),
+        type: (chartType==='line'||chartType==='stacked')?'line':'bar',
         data: { labels, datasets },
         options: opts
       });
     };
-
     // Startup
     document.addEventListener("DOMContentLoaded", ()=>{
       document.getElementById('readingDate').value = getTodayString();
       setDarkMode(localStorage.getItem("darkMode")==="1");
       loadHistory();
-    });
-    document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
-      if (e.key==="Enter") submitAdminPassword();
+      document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
+        if (e.key==="Enter") submitAdminPassword();
+      });
     });
   </script>
 </body>
