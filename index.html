@@ -112,12 +112,23 @@
     }
     .dark .row { background: #242c3c; }
     .row input[type="number"] {
-      width: 82px; padding: 7px; border: 1px solid #e2e6ed;
-      border-radius: 8px; font-size: 1.06em; text-align: right; background: #f6fafd; color: var(--text-main);
+      width: 100px;           /* Increased width */
+      min-width: 100px;
+      padding: 8px 10px;      /* Slightly more padding */
+      border: 1px solid #e2e6ed;
+      border-radius: 8px;
+      font-size: 1.1em;       /* Larger font */
+      text-align: right;
+      background: #f6fafd;
+      color: var(--text-main);
       box-shadow: 0 1px 2px #eaf2fa;
-      transition: border 0.14s;
+      transition: all 0.14s ease;
     }
-    .row input[type="number"]:focus { border: 1.7px solid var(--primary);}
+    .row input[type="number"]:focus {
+      border: 1.7px solid var(--primary);
+      outline: none;
+      box-shadow: 0 1px 4px rgba(40,112,234,0.2);
+    }
     .row .diff {
       font-weight: 700; color: var(--success); min-width: 54px; text-align: right;
       font-size: 1.07em; letter-spacing: 1.2px;
@@ -128,7 +139,10 @@
       box-shadow: 0 1px 3px #eaf2fa;
       color: var(--text-main);
     }
-    textarea:focus, input[type="text"]:focus, input[type="date"]:focus { border: 1.7px solid var(--primary);}
+    textarea:focus, input[type="text"]:focus, input[type="date"]:focus {
+      border: 1.7px solid var(--primary);
+      outline: none;
+    }
     button[type="submit"], .cancel-edit-btn {
       width: 100%;
       background: var(--primary);
@@ -216,7 +230,12 @@
     @media (max-width: 700px) {
       .container { padding: 8px 1vw; }
       h1 { font-size: 1.11rem; }
-      .row input[type="number"] { width: 49px; }
+      .row input[type="number"] { 
+        width: 60px; 
+        min-width: 60px; 
+        font-size: 1em; 
+        padding: 6px 8px; 
+      }
       .brand { font-size: .97rem; }
     }
     @media print {
@@ -284,9 +303,9 @@
         <label>Bowser Reading</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" aria-label="Bowser Opening">
+          <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" aria-label="Bowser Opening" inputmode="numeric">
           <span>Close</span>
-          <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" aria-label="Bowser Closing">
+          <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" aria-label="Bowser Closing" inputmode="numeric">
           <span class="diff" id="bowserDiff">-</span>
         </div>
       </div>
@@ -294,9 +313,9 @@
         <label>Dipstick</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="dipOpen" required oninput="calcDiff('dip')" aria-label="Dipstick Opening">
+          <input type="number" id="dipOpen" required oninput="calcDiff('dip')" aria-label="Dipstick Opening" inputmode="numeric">
           <span>Close</span>
-          <input type="number" id="dipClose" required oninput="calcDiff('dip')" aria-label="Dipstick Closing">
+          <input type="number" id="dipClose" required oninput="calcDiff('dip')" aria-label="Dipstick Closing" inputmode="numeric">
           <span class="diff" id="dipDiff">-</span>
         </div>
       </div>
@@ -304,9 +323,9 @@
         <label>iLembe Water</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" aria-label="iLembe Opening">
+          <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" aria-label="iLembe Opening" inputmode="numeric">
           <span>Close</span>
-          <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" aria-label="iLembe Closing">
+          <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" aria-label="iLembe Closing" inputmode="numeric">
           <span class="diff" id="ilembeDiff">-</span>
         </div>
       </div>
@@ -314,9 +333,9 @@
         <label>Hydrant</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" aria-label="Hydrant Opening">
+          <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" aria-label="Hydrant Opening" inputmode="numeric">
           <span>Close</span>
-          <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" aria-label="Hydrant Closing">
+          <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" aria-label="Hydrant Closing" inputmode="numeric">
           <span class="diff" id="hydrantDiff">-</span>
         </div>
       </div>
@@ -425,14 +444,12 @@
         });
       }, 400);
     });
-
     // JSONBin Setup
     const binId = "686b9c1b8561e97a5032ef3e";
     const apiKey = "$2a$10$rMDjhTzn1yDfnMMAec0fW.Ok54iIQijr5K2OixHy8gaxSF.UMSw.S";
     const url = `https://api.jsonbin.io/v3/b/${binId}`;
     const ADMIN_PASS = "Superb@123";
     const COMPANY_NAME = "Superb Hyper";
-
     let readingsHistory = [];
     let editingIdx = null;
     let editingDate = null;
@@ -442,7 +459,6 @@
     let chartType = 'line';
     let lastMsgTimeout = null;
     let darkMode = false;
-
     function calcDiff(section) {
       const open = Number(document.getElementById(section + 'Open').value) || 0;
       const close = Number(document.getElementById(section + 'Close').value) || 0;
