@@ -112,7 +112,7 @@
     }
     .dark .row { background: #242c3c; }
     .row input[type="number"] {
-      width: 110px;           /* Wider than before */
+      width: 110px;
       min-width: 110px;
       padding: 8px 10px;
       border: 1px solid #e2e6ed;
@@ -272,22 +272,24 @@
     .history-table th:hover .tooltip { display: block;}
     @keyframes fadeIn { from { opacity: 0; transform: translateY(24px);} to   { opacity: 1; transform: translateY(0);} }
     @keyframes popupIn { from { opacity: 0; transform: scale(0.89);} to   { opacity: 1; transform: scale(1);} }
-
-    /* Number Pad Styles */
-    #number-pad {
-      position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 2px solid #e2e6ed;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.1); z-index: 1000; padding: 16px 0; display: none;
-      font-family: 'Inter', sans-serif; text-align: center; border-radius: 18px 18px 0 0;
+    /* Floating Value Display */
+    .floating-value {
+      position: fixed;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 14px;
+      z-index: 1000;
+      pointer-events: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      color: #333;
+      display: none;
     }
-    #number-pad .key {
-      padding: 14px; font-size: 1.3em; font-weight: 600; border: 1px solid #e2e6ed;
-      background: #f6fafd; border-radius: 8px; cursor: pointer;
-      transition: all 0.1s ease;
-    }
-    #number-pad .key:active {
-      background: #e2e6ed;
-      transform: scale(0.95);
-      border-color: #ccc;
+    .dark .floating-value {
+      background: rgba(35, 45, 64, 0.9);
+      color: #e9f2ff;
+      border-color: #4a5a7a;
     }
   </style>
 </head>
@@ -315,9 +317,9 @@
         <label>Bowser Reading</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" onclick="openNumberPad(this)" aria-label="Bowser Opening">
+          <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" aria-label="Bowser Opening">
           <span>Close</span>
-          <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" onclick="openNumberPad(this)" aria-label="Bowser Closing">
+          <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" aria-label="Bowser Closing">
           <span class="diff" id="bowserDiff">-</span>
         </div>
       </div>
@@ -325,9 +327,9 @@
         <label>Dipstick</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="dipOpen" required oninput="calcDiff('dip')" onclick="openNumberPad(this)" aria-label="Dipstick Opening">
+          <input type="number" id="dipOpen" required oninput="calcDiff('dip')" aria-label="Dipstick Opening">
           <span>Close</span>
-          <input type="number" id="dipClose" required oninput="calcDiff('dip')" onclick="openNumberPad(this)" aria-label="Dipstick Closing">
+          <input type="number" id="dipClose" required oninput="calcDiff('dip')" aria-label="Dipstick Closing">
           <span class="diff" id="dipDiff">-</span>
         </div>
       </div>
@@ -335,9 +337,9 @@
         <label>iLembe Water</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" onclick="openNumberPad(this)" aria-label="iLembe Opening">
+          <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" aria-label="iLembe Opening">
           <span>Close</span>
-          <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" onclick="openNumberPad(this)" aria-label="iLembe Closing">
+          <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" aria-label="iLembe Closing">
           <span class="diff" id="ilembeDiff">-</span>
         </div>
       </div>
@@ -345,9 +347,9 @@
         <label>Hydrant</label>
         <div class="row">
           <span>Open</span>
-          <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" onclick="openNumberPad(this)" aria-label="Hydrant Opening">
+          <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" aria-label="Hydrant Opening">
           <span>Close</span>
-          <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" onclick="openNumberPad(this)" aria-label="Hydrant Closing">
+          <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" aria-label="Hydrant Closing">
           <span class="diff" id="hydrantDiff">-</span>
         </div>
       </div>
@@ -369,27 +371,8 @@
     <div id="loader" class="loader" style="display:none;">Loading history...</div>
     <div class="history-section" id="historySection"></div>
   </div>
-
-  <!-- Number Pad Popup -->
-  <div id="number-pad">
-    <div id="pad-title" style="font-size:1.3em; margin-bottom:12px; color:#183d5c;">Enter Value</div>
-    <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:12px; max-width:300px; margin:0 auto;">
-      <button onclick="numberPad.add('1')" class="key">1</button>
-      <button onclick="numberPad.add('2')" class="key">2</button>
-      <button onclick="numberPad.add('3')" class="key">3</button>
-      <button onclick="numberPad.add('4')" class="key">4</button>
-      <button onclick="numberPad.add('5')" class="key">5</button>
-      <button onclick="numberPad.add('6')" class="key">6</button>
-      <button onclick="numberPad.add('7')" class="key">7</button>
-      <button onclick="numberPad.add('8')" class="key">8</button>
-      <button onclick="numberPad.add('9')" class="key">9</button>
-      <button onclick="numberPad.clear()" class="key" style="background:#e62739;color:white;">C</button>
-      <button onclick="numberPad.add('0')" class="key">0</button>
-      <button onclick="numberPad.backspace()" class="key" style="background:#ffa502;">←</button>
-    </div>
-    <button onclick="numberPad.close()" style="margin-top:16px; padding:10px 20px; background:#888; color:white; border:none; border-radius:8px; font-size:1.1em; font-weight:600;">Done</button>
-  </div>
-
+  <!-- Floating Value Display -->
+  <div id="floatingValue" class="floating-value"></div>
   <!-- Stats Popup -->
   <div class="stat-modal" id="statModal">
     <div class="stat-panel" id="statPanel">
@@ -451,56 +434,66 @@
       <div style="color:var(--danger);font-weight:600;margin-top:10px;">Warning: This will replace all data!</div>
     </div>
   </div>
-
   <script>
-    // --- Virtual Number Pad ---
-    const numberPad = {
-      activeInput: null,
+    // --- Floating Value Display ---
+    let floatingValueTimeout = null;
 
-      open(input) {
-        this.activeInput = input;
-        document.getElementById('number-pad').style.display = 'block';
-        document.getElementById('pad-title').textContent = `Value: ${input.value || '0'}`;
-        input.blur(); // Prevent default keyboard
-      },
+    function showFloatingValue(inputElement) {
+        clearTimeout(floatingValueTimeout);
+        const floatingValue = document.getElementById('floatingValue');
+        const value = inputElement.value;
 
-      add(digit) {
-        const input = this.activeInput;
-        input.value = (input.value || '') + digit;
-        document.getElementById('pad-title').textContent = `Value: ${input.value}`;
-        this.triggerCalc();
-      },
+        if (value !== '' && !isNaN(value) && value !== null) {
+            floatingValue.textContent = value;
+            floatingValue.style.display = 'block';
 
-      clear() {
-        this.activeInput.value = '';
-        document.getElementById('pad-title').textContent = 'Value: 0';
-        this.triggerCalc();
-      },
-
-      backspace() {
-        const val = this.activeInput.value || '';
-        this.activeInput.value = val.slice(0, -1);
-        document.getElementById('pad-title').textContent = `Value: ${this.activeInput.value || '0'}`;
-        this.triggerCalc();
-      },
-
-      close() {
-        document.getElementById('number-pad').style.display = 'none';
-        this.activeInput = null;
-      },
-
-      triggerCalc() {
-        const id = this.activeInput.id;
-        if (id.includes('bowser')) calcDiff('bowser');
-        else if (id.includes('dip')) calcDiff('dip');
-        else if (id.includes('ilembe')) calcDiff('ilembe');
-        else if (id.includes('hydrant')) calcDiff('hydrant');
-      }
-    };
-
-    function openNumberPad(input) {
-      numberPad.open(input);
+            // Position it near the input
+            const rect = inputElement.getBoundingClientRect();
+            floatingValue.style.left = (rect.left + window.scrollX + rect.width / 2 - floatingValue.offsetWidth / 2) + 'px';
+            floatingValue.style.top = (rect.top + window.scrollY - 40) + 'px'; // 40px above
+        } else {
+            hideFloatingValue();
+        }
     }
+
+    function hideFloatingValue() {
+        clearTimeout(floatingValueTimeout);
+        // Delay hiding slightly to allow for transitions
+        floatingValueTimeout = setTimeout(() => {
+            document.getElementById('floatingValue').style.display = 'none';
+        }, 150);
+    }
+
+    // Add event listeners for focus and blur to show/hide floating values
+    document.addEventListener('DOMContentLoaded', () => {
+        const numberInputs = document.querySelectorAll('.row input[type="number"]');
+        numberInputs.forEach(input => {
+            // Show on focus
+            input.addEventListener('focus', (e) => {
+                showFloatingValue(e.target);
+            });
+            // Update position/value on input
+            input.addEventListener('input', (e) => {
+                 if (document.getElementById('floatingValue').style.display === 'block') {
+                     showFloatingValue(e.target); // Re-show to update value/position
+                 }
+            });
+            // Hide on blur
+            input.addEventListener('blur', () => {
+                 hideFloatingValue();
+            });
+            // Also trigger calculation on input change
+            const originalOnInput = input.oninput;
+            input.oninput = function(e) {
+                if (originalOnInput) originalOnInput.call(this, e);
+                // If floating value is visible, update it
+                if (document.getElementById('floatingValue').style.display === 'block') {
+                    showFloatingValue(this);
+                }
+            };
+        });
+    });
+
 
     // Tooltips for table headers
     const tooltips = {
@@ -527,7 +520,6 @@
         });
       }, 400);
     });
-
     // JSONBin Setup
     const binId = "686b9c1b8561e97a5032ef3e";
     const apiKey = "$2a$10$rMDjhTzn1yDfnMMAec0fW.Ok54iIQijr5K2OixHy8gaxSF.UMSw.S";
@@ -543,7 +535,6 @@
     let chartType = 'line';
     let lastMsgTimeout = null;
     let darkMode = false;
-
     function calcDiff(section) {
       const open = Number(document.getElementById(section + 'Open').value) || 0;
       const close = Number(document.getElementById(section + 'Close').value) || 0;
@@ -555,55 +546,45 @@
       }
       document.getElementById(section + 'Diff').textContent = (open || close) ? diff : '-';
     }
-
     function getTodayString() {
       const d = new Date();
       return d.toISOString().slice(0,10);
     }
-
     function initials(name) {
       if (!name) return "";
       return name.split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);
     }
-
     function randomColor(str) {
       let hash = 0; for (let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
       let h = hash%360; return `hsl(${h}, 60%, 80%)`;
     }
-
     function showMsg(text, ok=true) {
       clearTimeout(lastMsgTimeout);
       let msg = document.getElementById('msg');
       msg.innerHTML = `<div class="${ok?'success-msg':'error-msg'}">${text}</div>`;
       lastMsgTimeout = setTimeout(()=>{ msg.innerHTML=''; }, 3200);
     }
-
     function showSavingSpinner(show) {
       document.getElementById('saveBtn').innerHTML = show
         ? `<span class="saving-spinner"></span>Saving...`
         : (editingIdx!==null?"Update":"Save Reading");
     }
-
     function setDarkMode(on) {
       document.body.classList.toggle("dark", !!on);
       darkMode = !!on;
       document.querySelector('.dark-btn').textContent = darkMode ? "☀️" : "🌙";
       localStorage.setItem("darkMode", darkMode ? "1" : "");
     }
-
     function toggleDarkMode() { setDarkMode(!darkMode); }
-
     function showAdminPopup() {
       document.getElementById('adminPopup').classList.add("active");
       document.getElementById('adminPassInput').focus();
     }
-
     function closeAdminPopup() {
       document.getElementById('adminPopup').classList.remove("active");
       document.getElementById('adminMsg').textContent = "";
       document.getElementById('adminPassInput').value = "";
     }
-
     function submitAdminPassword() {
       let val = document.getElementById('adminPassInput').value.trim();
       if (val === ADMIN_PASS) {
@@ -615,7 +596,6 @@
         document.getElementById('adminMsg').textContent = "Incorrect password!";
       }
     }
-
     async function loadHistory() {
       loading = true;
       document.getElementById('loader').style.display = '';
@@ -640,7 +620,6 @@
         loading = false;
       }
     }
-
     async function saveHistory() {
       showSavingSpinner(true);
       document.getElementById('saveBtn').disabled = true;
@@ -664,7 +643,6 @@
         document.getElementById('saveBtn').disabled = false;
       }
     }
-
     function fillOpeningsFromLast() {
       if (!readingsHistory.length) return;
       const latest = [...readingsHistory].sort((a,b)=>b.date.localeCompare(a.date))[0];
@@ -679,7 +657,6 @@
         });
       }
     }
-
     function cancelEdit() {
       editingIdx = null; editingDate = null;
       document.getElementById('cancelEditBtn').style.display = 'none';
@@ -689,7 +666,6 @@
       ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
       fillOpeningsFromLast();
     }
-
     document.getElementById('readingsForm').onsubmit = async function(e) {
       e.preventDefault();
       if (loading) return false;
@@ -732,7 +708,7 @@
         editingIdx = null; editingDate = null;
         document.getElementById('cancelEditBtn').style.display = 'none';
         document.getElementById('readingDate').disabled = false;
-        document.getElementById('saveBtn').textContent = "Save Reading";
+        document.getElementById('saveBtn').textContent = "Update";
       } else {
         readingsHistory.push(data);
       }
@@ -742,7 +718,6 @@
       ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
       fillOpeningsFromLast();
     }
-
     function renderHistory() {
       if (readingsHistory.length === 0) {
         document.getElementById('historySection').innerHTML = '<p style="text-align:center;margin-top:15px;">No previous readings saved.</p>';
@@ -790,7 +765,6 @@
       table += '</table>';
       document.getElementById('historySection').innerHTML = table;
     }
-
     window.editEntryByDate = function(date) {
       if (!adminMode) { showAdminPopup(); return; }
       let idx = readingsHistory.findIndex(e=>e.date===date);
@@ -816,7 +790,6 @@
       document.getElementById('saveBtn').textContent = "Update";
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
-
     window.deleteEntryByDate = async function(date) {
       if (!adminMode) { showAdminPopup(); return; }
       let idx = readingsHistory.findIndex(e=>e.date===date);
@@ -826,7 +799,6 @@
       renderHistory();
       await saveHistory();
     };
-
     window.exportCSV = function() {
       if (readingsHistory.length === 0) return alert("No data to export.");
       let csv = [
@@ -860,7 +832,6 @@
       a.click();
       document.body.removeChild(a);
     };
-
     window.exportPDF = function() {
       if (readingsHistory.length === 0) { alert("No data to export."); return; }
       const { jsPDF } = window.jspdf;
@@ -883,7 +854,6 @@
       }
       doc.save("daily_water_readings.pdf");
     };
-
     window.backupJSON = function() {
       if (readingsHistory.length === 0) return alert("No data to backup.");
       const blob = new Blob([JSON.stringify({dailyReadings: readingsHistory},null,2)], {type: 'application/json'});
@@ -894,17 +864,14 @@
       a.click();
       document.body.removeChild(a);
     };
-
     function openRestore() {
       if (!adminMode) { showAdminPopup(); return; }
       document.getElementById('restoreModal').classList.add("active");
     }
-
     function closeRestore() {
       document.getElementById('restoreModal').classList.remove("active");
       document.getElementById('restoreFile').value = "";
     }
-
     function doRestore() {
       const file = document.getElementById('restoreFile').files[0];
       if (!file) return;
@@ -925,7 +892,6 @@
       };
       reader.readAsText(file);
     }
-
     window.showStats = function() {
       if (readingsHistory.length === 0) {
         document.getElementById('statsContent').innerHTML = `<div style="margin:13px;">No stats available yet.</div>`;
@@ -939,21 +905,17 @@
       }
       document.getElementById('statModal').classList.add("active");
     };
-
     window.closeStats = function() {
       document.getElementById('statModal').classList.remove("active");
     };
-
     window.showChart = function() {
       document.getElementById('chartModal').classList.add('active');
       setTimeout(updateChart, 50);
     };
-
     window.closeChart = function() {
       document.getElementById('chartModal').classList.remove('active');
       if (chartInstance) chartInstance.destroy();
     };
-
     window.setChartType = function(type) {
       chartType = type;
       document.getElementById('btnLine').classList.toggle('selected', type === 'line');
@@ -962,7 +924,6 @@
       document.getElementById('btnPie').classList.toggle('selected', type === 'pie');
       updateChart();
     };
-
     window.updateChart = function() {
       if (!readingsHistory.length) return;
       const sorted = [...readingsHistory].sort((a,b)=>a.date.localeCompare(b.date));
@@ -1060,7 +1021,6 @@
         options: opts
       });
     };
-
     function groupStats(data) {
       const daily = {}, weekly = {}, monthly = {};
       data.forEach(e => {
@@ -1073,7 +1033,6 @@
       });
       return {daily, weekly, monthly};
     }
-
     function statsTable(label, groups, count=5) {
       let keys = Object.keys(groups).sort().reverse();
       if (count) keys = keys.slice(0, count);
@@ -1085,7 +1044,6 @@
       html += "</div>";
       return html;
     }
-
     function statRows(entries) {
       function sum(field) { return entries.reduce((a,b)=>a+(Number(b[field])||0),0); }
       function avg(field) { return entries.length ? sum(field)/entries.length : 0; }
@@ -1112,7 +1070,6 @@
         </tr>
       `;
     }
-
     function getWeekNum(dateStr) {
       const d = new Date(dateStr);
       d.setHours(0,0,0,0);
@@ -1120,9 +1077,7 @@
       const yearStart = new Date(d.getFullYear(),0,1);
       return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
     }
-
     function getMonthStr(dateStr) { return dateStr.slice(0,7); }
-
     // Startup
     document.addEventListener("DOMContentLoaded", ()=>{
       document.getElementById('readingDate').value = getTodayString();
