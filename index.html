@@ -9,6 +9,13 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <!-- Firestore SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <!-- Add other SDKs here if needed (e.g., Auth) -->
+
   <style>
     html { box-sizing: border-box; }
     *, *:before, *:after { box-sizing: inherit; }
@@ -192,7 +199,7 @@
       background: #fafcff;
       border-radius: 10px;
       box-shadow: 0 1px 7px #eaf2fa;
-      min-width: 800px;
+      min-width: 800px; /* Adjusted min-width */
     }
     .dark .history-table { background: #232d40;}
     .history-table th, .history-table td {
@@ -225,7 +232,7 @@
     }
     @media (max-width: 1000px) {
       .history-section { overflow-x: auto; }
-      .history-table { min-width: 650px; }
+      .history-table { min-width: 650px; /* Adjusted min-width */ }
     }
     @media (max-width: 700px) {
       .container { padding: 8px 1vw; }
@@ -272,6 +279,7 @@
     .history-table th:hover .tooltip { display: block;}
     @keyframes fadeIn { from { opacity: 0; transform: translateY(24px);} to   { opacity: 1; transform: translateY(0);} }
     @keyframes popupIn { from { opacity: 0; transform: scale(0.89);} to   { opacity: 1; transform: scale(1);} }
+    /* Floating Value Display */
     .floating-value {
       position: fixed;
       background: rgba(255, 255, 255, 0.9);
@@ -290,77 +298,6 @@
       color: #e9f2ff;
       border-color: #4a5a7a;
     }
-    .chart-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    .chart-type-group {
-      display: flex;
-      gap: 5px;
-      justify-content: center;
-    }
-    .chart-type-btn {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      background: #f0f0f0;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .chart-type-btn.selected {
-      background: var(--primary);
-      color: white;
-    }
-    .series-label {
-      display: inline-flex;
-      align-items: center;
-      margin-right: 10px;
-      font-weight: 600;
-    }
-    .series-toggle {
-      margin-right: 5px;
-    }
-    .stat-section {
-      margin-bottom: 20px;
-    }
-    .stat-label {
-      font-weight: 700;
-      font-size: 1.1em;
-      margin-bottom: 10px;
-      color: var(--primary);
-    }
-    .stat-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 10px;
-    }
-    .stat-table th, .stat-table td {
-      padding: 5px;
-      text-align: center;
-      border: 1px solid #ddd;
-    }
-    .dark .stat-table th, .dark .stat-table td {
-      border-color: #444;
-    }
-    .stat-table th {
-      background: #f0f0f0;
-      font-weight: 600;
-    }
-    .dark .stat-table th {
-      background: #333;
-    }
-    .cors-status {
-      font-size: 0.8rem;
-      color: var(--danger);
-      text-align: center;
-      margin-top: 5px;
-      display: none;
-    }
-    .cors-status.active {
-      display: block;
-    }
   </style>
 </head>
 <body>
@@ -368,7 +305,6 @@
     <h1>Daily Water Readings (Cloud)</h1>
     <div class="brand">Superb Hyper</div>
     <div id="msg"></div>
-    <div class="cors-status" id="corsStatus">Using CORS proxy due to browser restrictions</div>
     <div class="top-bar">
       <button class="csv-btn" onclick="exportCSV()" title="Export to CSV">Export CSV</button>
       <button class="pdf-btn" onclick="exportPDF()" title="Export PDF">Export PDF</button>
@@ -428,6 +364,7 @@
         <label class="mini-label" for="countedBy">Counted By</label>
         <input type="text" id="countedBy" maxlength="50" required placeholder="Name of person who counted" aria-label="Counted By">
       </div>
+      <!-- Removed Checked By Field -->
       <div>
         <label class="note-label" for="notes">Notes</label>
         <textarea id="notes" placeholder="Add any notes here..." aria-label="Notes"></textarea>
@@ -438,10 +375,8 @@
     <div id="loader" class="loader" style="display:none;">Loading history...</div>
     <div class="history-section" id="historySection"></div>
   </div>
-  
   <!-- Floating Value Display -->
   <div id="floatingValue" class="floating-value"></div>
-  
   <!-- Stats Popup -->
   <div class="stat-modal" id="statModal">
     <div class="stat-panel" id="statPanel">
@@ -450,7 +385,6 @@
       <div id="statsContent"></div>
     </div>
   </div>
-  
   <!-- Chart Popup -->
   <div class="chart-modal" id="chartModal">
     <div class="chart-panel" id="chartPanel">
@@ -484,7 +418,6 @@
       <canvas id="chartCanvas"></canvas>
     </div>
   </div>
-  
   <!-- Admin password popup -->
   <div class="admin-popup" id="adminPopup">
     <div class="admin-panel">
@@ -495,7 +428,6 @@
       <div id="adminMsg" style="margin-top:10px;color:var(--danger);font-weight:600;"></div>
     </div>
   </div>
-  
   <!-- Restore backup popup -->
   <div class="restore-modal" id="restoreModal">
     <div class="restore-panel">
@@ -506,24 +438,110 @@
       <div style="color:var(--danger);font-weight:600;margin-top:10px;">Warning: This will replace all data!</div>
     </div>
   </div>
-
   <script>
-    // --- CORS Configuration ---
-    const CORS_PROXIES = [
-      'https://cors-anywhere.herokuapp.com/',
-      'https://api.allorigins.win/raw?url=',
-      'https://yacdn.org/proxy/'
-    ];
-    let currentProxyIndex = 0;
-    let usingProxy = false;
-    
-    // --- JSONBin Configuration ---
-    const binId = "686b9c1b8561e97a5032ef3e";
-    const apiKey = "$2a$10$rMDjhTzn1yDfnMMAec0fW.Ok54iIQijr5K2OixHy8gaxSF.UMSw.S";
+    // --- Floating Value Display ---
+    let floatingValueTimeout = null;
+    function showFloatingValue(inputElement) {
+        clearTimeout(floatingValueTimeout);
+        const floatingValue = document.getElementById('floatingValue');
+        const value = inputElement.value;
+        if (value !== '' && !isNaN(value) && value !== null) {
+            floatingValue.textContent = value;
+            floatingValue.style.display = 'block';
+            // Position it near the input
+            const rect = inputElement.getBoundingClientRect();
+            floatingValue.style.left = (rect.left + window.scrollX + rect.width / 2 - floatingValue.offsetWidth / 2) + 'px';
+            floatingValue.style.top = (rect.top + window.scrollY - 40) + 'px'; // 40px above
+        } else {
+            hideFloatingValue();
+        }
+    }
+    function hideFloatingValue() {
+        clearTimeout(floatingValueTimeout);
+        // Delay hiding slightly to allow for transitions
+        floatingValueTimeout = setTimeout(() => {
+            document.getElementById('floatingValue').style.display = 'none';
+        }, 150);
+    }
+    // Add event listeners for focus and blur to show/hide floating values
+    document.addEventListener('DOMContentLoaded', () => {
+        const numberInputs = document.querySelectorAll('.row input[type="number"]');
+        numberInputs.forEach(input => {
+            // Show on focus
+            input.addEventListener('focus', (e) => {
+                showFloatingValue(e.target);
+            });
+            // Update position/value on input
+            input.addEventListener('input', (e) => {
+                 if (document.getElementById('floatingValue').style.display === 'block') {
+                     showFloatingValue(e.target); // Re-show to update value/position
+                 }
+            });
+            // Hide on blur
+            input.addEventListener('blur', () => {
+                 hideFloatingValue();
+            });
+            // Also trigger calculation on input change
+            const originalOnInput = input.oninput;
+            input.oninput = function(e) {
+                if (originalOnInput) originalOnInput.call(this, e);
+                // If floating value is visible, update it
+                if (document.getElementById('floatingValue').style.display === 'block') {
+                    showFloatingValue(this);
+                }
+            };
+        });
+    });
+    // Tooltips for table headers
+    const tooltips = {
+      "Date": "The date of the reading.\nSelect or type to add/edit past/future readings.",
+      "Bowser": "Manual water bowser readings.\nShows opening, closing, and usage.",
+      "Dipstick": "Fuel dipstick tank readings.\nOpening, closing, and daily usage.",
+      "iLembe": "iLembe Water meter readings.",
+      "Hydrant": "Fire hydrant readings (if used for water).",
+      "Counted By": "Who counted/measured these readings.",
+      "Notes": "Optional remarks about the day.",
+      "Action": "Edit or delete (admin only)."
+    };
+    window.addEventListener('DOMContentLoaded', ()=>{
+      setTimeout(()=>{
+        document.querySelectorAll('.history-table th').forEach(th=>{
+          const text = th.textContent.trim();
+          if (tooltips[text]) {
+            let tooltip = document.createElement('div');
+            tooltip.className = "tooltip";
+            tooltip.innerHTML = tooltips[text].replace(/\n/g,"<br>");
+            th.appendChild(tooltip);
+          }
+        });
+      }, 400);
+    });
+
+    // --- Firebase Configuration and Initialization ---
+    // Your Firebase configuration object (from Firebase Console)
+    const firebaseConfig = {
+      apiKey: "AIzaSyB9wieA97XLeZqlSheLXMIQY7wchnJ5sYo",
+      authDomain: "bowser-and-water.firebaseapp.com",
+      projectId: "bowser-and-water",
+      storageBucket: "bowser-and-water.firebasestorage.app",
+      messagingSenderId: "437908705363",
+      appId: "1:437908705363:web:96ad19ecdd4410a938b6a6",
+      measurementId: "G-0VFHEDYWYV"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Initialize Firestore
+    const db = firebase.firestore();
+
+    // Define the collection name where data will be stored in Firestore
+    const readingsCollection = "dailyReadings";
+
+    // --- End Firebase Configuration ---
+
     const ADMIN_PASS = "Superb@123";
     const COMPANY_NAME = "Superb Hyper";
-    
-    // --- Application State ---
     let readingsHistory = [];
     let editingIdx = null;
     let editingDate = null;
@@ -533,8 +551,6 @@
     let chartType = 'line';
     let lastMsgTimeout = null;
     let darkMode = false;
-    
-    // --- Helper Functions ---
     function calcDiff(section) {
       const open = Number(document.getElementById(section + 'Open').value) || 0;
       const close = Number(document.getElementById(section + 'Close').value) || 0;
@@ -546,59 +562,45 @@
       }
       document.getElementById(section + 'Diff').textContent = (open || close) ? diff : '-';
     }
-    
     function getTodayString() {
       const d = new Date();
       return d.toISOString().slice(0,10);
     }
-    
     function initials(name) {
       if (!name) return "";
       return name.split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,2);
     }
-    
     function randomColor(str) {
-      let hash = 0; 
-      for (let i=0; i<str.length; i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
-      let h = hash%360; 
-      return `hsl(${h}, 60%, 80%)`;
+      let hash = 0; for (let i=0;i<str.length;i++) hash = str.charCodeAt(i) + ((hash<<5)-hash);
+      let h = hash%360; return `hsl(${h}, 60%, 80%)`;
     }
-    
     function showMsg(text, ok=true) {
       clearTimeout(lastMsgTimeout);
       let msg = document.getElementById('msg');
       msg.innerHTML = `<div class="${ok?'success-msg':'error-msg'}">${text}</div>`;
       lastMsgTimeout = setTimeout(()=>{ msg.innerHTML=''; }, 3200);
     }
-    
     function showSavingSpinner(show) {
       document.getElementById('saveBtn').innerHTML = show
         ? `<span class="saving-spinner"></span>Saving...`
         : (editingIdx!==null?"Update":"Save Reading");
     }
-    
     function setDarkMode(on) {
       document.body.classList.toggle("dark", !!on);
       darkMode = !!on;
       document.querySelector('.dark-btn').textContent = darkMode ? "☀️" : "🌙";
       localStorage.setItem("darkMode", darkMode ? "1" : "");
     }
-    
-    function toggleDarkMode() { 
-      setDarkMode(!darkMode); 
-    }
-    
+    function toggleDarkMode() { setDarkMode(!darkMode); }
     function showAdminPopup() {
       document.getElementById('adminPopup').classList.add("active");
       document.getElementById('adminPassInput').focus();
     }
-    
     function closeAdminPopup() {
       document.getElementById('adminPopup').classList.remove("active");
       document.getElementById('adminMsg').textContent = "";
       document.getElementById('adminPassInput').value = "";
     }
-    
     function submitAdminPassword() {
       let val = document.getElementById('adminPassInput').value.trim();
       if (val === ADMIN_PASS) {
@@ -610,129 +612,58 @@
         document.getElementById('adminMsg').textContent = "Incorrect password!";
       }
     }
-    
-    // --- API Functions with CORS Support ---
-    async function tryFetch(url, options = {}) {
-      // Try direct fetch first
-      try {
-        const response = await fetch(url, options);
-        if (response.ok) {
-          usingProxy = false;
-          document.getElementById('corsStatus').classList.remove('active');
-          return await response.json();
-        }
-      } catch (error) {
-        console.log('Direct fetch failed, trying proxy');
-      }
-      
-      // If direct fetch fails, try proxies
-      usingProxy = true;
-      document.getElementById('corsStatus').classList.add('active');
-      
-      for (let i = 0; i < CORS_PROXIES.length; i++) {
-        const proxyUrl = CORS_PROXIES[currentProxyIndex];
-        try {
-          const fullUrl = proxyUrl + url;
-          console.log(`Trying proxy: ${proxyUrl}`);
-          
-          const response = await fetch(fullUrl, options);
-          if (response.ok) {
-            // For some proxies like allorigins, we need to parse the contents
-            if (proxyUrl.includes('allorigins.win')) {
-              const data = await response.json();
-              return JSON.parse(data.contents);
-            }
-            return await response.json();
-          }
-        } catch (error) {
-          console.warn(`Proxy ${proxyUrl} failed:`, error);
-        }
-        
-        // Move to next proxy for the next request
-        currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
-      }
-      
-      throw new Error('All CORS proxies failed. Please check your network connection.');
-    }
-    
-    async function fetchWithCORS(url, options = {}) {
-      const defaultOptions = {
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Access-Key': apiKey
-        }
-      };
-      
-      const fetchOptions = {
-        ...defaultOptions,
-        ...options,
-        headers: {
-          ...defaultOptions.headers,
-          ...(options.headers || {})
-        }
-      };
-      
-      try {
-        return await tryFetch(url, fetchOptions);
-      } catch (error) {
-        console.error('Fetch error:', error);
-        if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-          throw new Error('Network error or CORS issue. Please check your connection and try again.');
-        }
-        throw error;
-      }
-    }
-    
     async function loadHistory() {
       loading = true;
       document.getElementById('loader').style.display = '';
       document.getElementById('saveBtn').disabled = true;
-      
       try {
-        const url = `https://api.jsonbin.io/v3/b/${binId}/latest`;
-        const data = await fetchWithCORS(url, { method: 'GET' });
-        
-        readingsHistory = data.record?.dailyReadings || [];
+        // --- Load from Firebase Firestore ---
+        const querySnapshot = await db.collection(readingsCollection).get();
+        readingsHistory = [];
+        querySnapshot.forEach((doc) => {
+          readingsHistory.push({ id: doc.id, ...doc.data() }); // Include doc ID if needed for updates/deletes later, though date is the key here
+        });
+        // --- End Firebase Load ---
+
         renderHistory();
         fillOpeningsFromLast();
       } catch (e) {
-        console.error('Load history error:', e);
-        showMsg("Could not load from cloud: " + e.message, false);
-        readingsHistory = [];
+        // --- Modified Error Message ---
+        showMsg("Could not load from Firebase: " + e.message, false);
+        readingsHistory = []; // Initialize as empty on error
         renderHistory();
         fillOpeningsFromLast();
+        // --- End Modify ---
       } finally {
         document.getElementById('loader').style.display = 'none';
         document.getElementById('saveBtn').disabled = false;
         loading = false;
       }
     }
-    
     async function saveHistory() {
       showSavingSpinner(true);
       document.getElementById('saveBtn').disabled = true;
-      
       try {
-        const url = `https://api.jsonbin.io/v3/b/${binId}`;
-        const payload = { dailyReadings: readingsHistory };
-        
-        await fetchWithCORS(url, {
-          method: 'PUT',
-          body: JSON.stringify(payload)
-        });
-        
-        showMsg("Saved!", true);
+        // --- Save to Firebase Firestore (using batch write) ---
+        const batch = db.batch(); // Use a batch write for efficiency
+        for (const reading of readingsHistory) {
+          const docRef = db.collection(readingsCollection).doc(reading.date); // Use date as document ID
+          batch.set(docRef, reading);
+        }
+        await batch.commit();
+        // --- End Firebase Save ---
+
+        showMsg("Saved to Firebase!", true); // --- Modified Message ---
         fillOpeningsFromLast();
       } catch (e) {
-        console.error('Save history error:', e);
-        showMsg("Cloud save failed: " + e.message, false);
+        // --- Modified Error Message ---
+        showMsg("Firebase save failed: " + (e && e.message ? e.message : e), false);
+        // --- End Modify ---
       } finally {
         showSavingSpinner(false);
         document.getElementById('saveBtn').disabled = false;
       }
     }
-    
     function fillOpeningsFromLast() {
       if (!readingsHistory.length) return;
       const latest = [...readingsHistory].sort((a,b)=>b.date.localeCompare(a.date))[0];
@@ -747,10 +678,8 @@
         });
       }
     }
-    
     function cancelEdit() {
-      editingIdx = null; 
-      editingDate = null;
+      editingIdx = null; editingDate = null;
       document.getElementById('cancelEditBtn').style.display = 'none';
       document.getElementById('saveBtn').textContent = "Save Reading";
       document.getElementById('readingDate').disabled = false;
@@ -758,131 +687,95 @@
       ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
       fillOpeningsFromLast();
     }
-    
-    // --- Form Submission ---
     document.getElementById('readingsForm').onsubmit = async function(e) {
       e.preventDefault();
       if (loading) return false;
-      
       const date = document.getElementById('readingDate').value;
-      const counted = document.getElementById('countedBy').value.trim();
-      const notesVal = document.getElementById('notes').value.trim();
-      
-      // Validation
-      const sections = ['bowser', 'dip', 'ilembe', 'hydrant'];
-      for (const section of sections) {
-        const open = +document.getElementById(`${section}Open`).value;
-        const close = +document.getElementById(`${section}Close`).value;
-        
-        if (section === "dip") {
-          if (open < close) {
-            showMsg("Error: Dipstick opening cannot be less than closing!", false); 
-            return;
+      const counted = countedBy.value.trim();
+      const notesVal = notes.value.trim();
+      const openCloseDiffs = [
+        {s:"bowser",open:+bowserOpen.value,close:+bowserClose.value},
+        {s:"dip",open:+dipOpen.value,close:+dipClose.value},
+        {s:"ilembe",open:+ilembeOpen.value,close:+ilembeClose.value},
+        {s:"hydrant",open:+hydrantOpen.value,close:+hydrantClose.value},
+      ];
+      for(let i=0;i<openCloseDiffs.length;i++) {
+        if (openCloseDiffs[i].s === "dip") {
+          if (openCloseDiffs[i].open < openCloseDiffs[i].close) {
+            showMsg("Error: Dipstick opening cannot be less than closing!", false); return;
           }
         } else {
-          if (close < open) {
-            showMsg(`Error: ${section.charAt(0).toUpperCase() + section.slice(1)} closing < opening!`, false); 
-            return;
+          if (openCloseDiffs[i].close < openCloseDiffs[i].open) {
+            showMsg(`Error: ${openCloseDiffs[i].s.charAt(0).toUpperCase()+openCloseDiffs[i].s.slice(1)} closing < opening!`,false); return;
           }
         }
       }
-      
-      if (!counted) { 
-        showMsg("Counted By is required.", false); 
-        return; 
-      }
-      if (!date) { 
-        showMsg("Please select a date.", false); 
-        return; 
-      }
-      
-      // Check for existing entry
+      if (!counted) { showMsg("Counted By is required.",false); return; }
+      if (!date) { showMsg("Please select a date.",false); return; }
       let existingIdx = readingsHistory.findIndex(h => h.date === date);
       if (editingIdx === null && existingIdx !== -1) {
-        showMsg("A reading for this date already exists. Use Edit.", false); 
-        return;
+        showMsg("A reading for this date already exists. Use Edit.",false); return;
       }
-      
-      // Prepare data
       const data = {
         date,
-        bowserOpen: +document.getElementById('bowserOpen').value,
-        bowserClose: +document.getElementById('bowserClose').value,
-        bowserDiff: +document.getElementById('bowserClose').value - +document.getElementById('bowserOpen').value,
-        dipOpen: +document.getElementById('dipOpen').value,
-        dipClose: +document.getElementById('dipClose').value,
-        dipDiff: +document.getElementById('dipOpen').value - +document.getElementById('dipClose').value,
-        ilembeOpen: +document.getElementById('ilembeOpen').value,
-        ilembeClose: +document.getElementById('ilembeClose').value,
-        ilembeDiff: +document.getElementById('ilembeClose').value - +document.getElementById('ilembeOpen').value,
-        hydrantOpen: +document.getElementById('hydrantOpen').value,
-        hydrantClose: +document.getElementById('hydrantClose').value,
-        hydrantDiff: +document.getElementById('hydrantClose').value - +document.getElementById('hydrantOpen').value,
-        countedBy: counted,
-        notes: notesVal
+        bowserOpen:+bowserOpen.value, bowserClose:+bowserClose.value, bowserDiff:+bowserClose.value-+bowserOpen.value,
+        dipOpen:+dipOpen.value, dipClose:+dipClose.value, dipDiff:+dipOpen.value-+dipClose.value,
+        ilembeOpen:+ilembeOpen.value, ilembeClose:+ilembeClose.value, ilembeDiff:+ilembeClose.value-+ilembeOpen.value,
+        hydrantOpen:+hydrantOpen.value, hydrantClose:+hydrantClose.value, hydrantDiff:+hydrantClose.value-+hydrantOpen.value,
+        countedBy:counted,
+        notes:notesVal
       };
-      
-      // Save data
+      // Removed checkedBy from data object
       if (editingIdx !== null) {
         readingsHistory[editingIdx] = data;
-        editingIdx = null; 
-        editingDate = null;
+        editingIdx = null; editingDate = null;
         document.getElementById('cancelEditBtn').style.display = 'none';
         document.getElementById('readingDate').disabled = false;
-        document.getElementById('saveBtn').textContent = "Update";
+        document.getElementById('saveBtn').textContent = "Save Reading"; // Changed back to "Save Reading" after update
       } else {
         readingsHistory.push(data);
       }
-      
       renderHistory();
       await saveHistory();
       readingsForm.reset();
-      sections.forEach(s => document.getElementById(s+'Diff').textContent='-');
+      ['bowser','dip','ilembe','hydrant'].forEach(s => document.getElementById(s+'Diff').textContent='-');
       fillOpeningsFromLast();
     };
-    
-    // --- History Rendering ---
     function renderHistory() {
       if (readingsHistory.length === 0) {
         document.getElementById('historySection').innerHTML = '<p style="text-align:center;margin-top:15px;">No previous readings saved.</p>';
         return;
       }
-      
       const sorted = [...readingsHistory].sort((a,b)=>b.date.localeCompare(a.date));
-      let table = `<table class="history-table" aria-label="Reading History Table"><tr>`;
-      
+      let table = `<table class="history-table" aria-label="Reading History Table">
+        <tr>`;
+      // Removed "Checked By" from table headers
       ["Date","Bowser","Dipstick","iLembe","Hydrant","Counted By","Notes","Action"].forEach(h=>{
-        table += `<th>${h}</th>`;
+        table += `<th>${h}${tooltips[h]?'<div class="tooltip">'+tooltips[h].replace(/\n/g,"<br>")+'</div>':''}</th>`;
       });
-      
       table += "</tr>";
-      
       for (let i=0; i<sorted.length; i++) {
         const entry = sorted[i];
         const prev = sorted[i+1];
-        
         function arrow(curr,prev) {
           if (!prev) return "";
           if (curr>prev) return '<span title="Increased" style="color:var(--success);font-size:1.05em">&#8593;</span>';
           if (curr<prev) return '<span title="Decreased" style="color:var(--danger);font-size:1.05em">&#8595;</span>';
           return '<span title="No Change" style="color:#aaa">&#8596;</span>';
         }
-        
         function avatar(name) {
           if (!name) return "";
           return `<span class="avatar" style="background:${randomColor(name)}" aria-label="Initials">${initials(name)}</span>`;
         }
-        
         table += `<tr>
           <td>${entry.date}</td>
-          <td>${entry.bowserOpen}&rarr;${entry.bowserClose} <b>(${entry.bowserDiff})</b> ${arrow(entry.bowserDiff,prev?.bowserDiff)}</td>
-          <td>${entry.dipOpen}&rarr;${entry.dipClose} <b>(${entry.dipDiff})</b> ${arrow(entry.dipDiff,prev?.dipDiff)}</td>
-          <td>${entry.ilembeOpen}&rarr;${entry.ilembeClose} <b>(${entry.ilembeDiff})</b> ${arrow(entry.ilembeDiff,prev?.ilembeDiff)}</td>
-          <td>${entry.hydrantOpen}&rarr;${entry.hydrantClose} <b>(${entry.hydrantDiff})</b> ${arrow(entry.hydrantDiff,prev?.hydrantDiff)}</td>
+          <td>${entry.bowserOpen}&rarr;${entry.bowserClose} <b>(${entry.bowserDiff})</b> ${arrow(entry.bowserDiff,prev?prev.bowserDiff:undefined)}</td>
+          <td>${entry.dipOpen}&rarr;${entry.dipClose} <b>(${entry.dipDiff})</b> ${arrow(entry.dipDiff,prev?prev.dipDiff:undefined)}</td>
+          <td>${entry.ilembeOpen}&rarr;${entry.ilembeClose} <b>(${entry.ilembeDiff})</b> ${arrow(entry.ilembeDiff,prev?prev.ilembeDiff:undefined)}</td>
+          <td>${entry.hydrantOpen}&rarr;${entry.hydrantClose} <b>(${entry.hydrantDiff})</b> ${arrow(entry.hydrantDiff,prev?prev.hydrantDiff:undefined)}</td>
           <td>${avatar(entry.countedBy)}${entry.countedBy||""}</td>
           <td style="max-width:110px;overflow-x:auto;">${entry.notes||''}</td>
           <td>`;
-          
         if (adminMode) {
           table += `<button class="action-btn" title="Edit" onclick="editEntryByDate('${entry.date}')">&#9998;</button>
             <button class="action-btn" title="Delete" onclick="deleteEntryByDate('${entry.date}')">&#10006;</button>`;
@@ -890,37 +783,15 @@
           table += `<button class="action-btn" title="Edit (admin only)" onclick="showAdminPopup()">&#9998;</button>
             <button class="action-btn" title="Delete (admin only)" onclick="showAdminPopup()">&#10006;</button>`;
         }
-        
         table += `</td></tr>`;
       }
-      
       table += '</table>';
       document.getElementById('historySection').innerHTML = table;
-      
-      // Add tooltips after rendering
-      setTimeout(() => {
-        document.querySelectorAll('.history-table th').forEach(th => {
-          const text = th.textContent.trim();
-          if (tooltips[text]) {
-            let tooltip = document.createElement('div');
-            tooltip.className = "tooltip";
-            tooltip.innerHTML = tooltips[text].replace(/\n/g,"<br>");
-            th.appendChild(tooltip);
-          }
-        });
-      }, 100);
     }
-    
-    // --- Entry Management ---
     window.editEntryByDate = function(date) {
-      if (!adminMode) { 
-        showAdminPopup(); 
-        return; 
-      }
-      
+      if (!adminMode) { showAdminPopup(); return; }
       let idx = readingsHistory.findIndex(e=>e.date===date);
       if (idx === -1) return;
-      
       const entry = readingsHistory[idx];
       document.getElementById('readingDate').value = entry.date;
       document.getElementById('readingDate').disabled = true;
@@ -933,37 +804,28 @@
       document.getElementById('hydrantOpen').value = entry.hydrantOpen;
       document.getElementById('hydrantClose').value = entry.hydrantClose;
       document.getElementById('countedBy').value = entry.countedBy || '';
+      // Removed setting checkedBy value
       document.getElementById('notes').value = entry.notes || '';
-      
-      ['bowser','dip','ilembe','hydrant'].forEach(calcDiff);
-      
+      calcDiff('bowser'); calcDiff('dip'); calcDiff('ilembe'); calcDiff('hydrant');
       editingIdx = idx;
       editingDate = entry.date;
       document.getElementById('cancelEditBtn').style.display = '';
       document.getElementById('saveBtn').textContent = "Update";
       window.scrollTo({top: 0, behavior: 'smooth'});
     };
-    
     window.deleteEntryByDate = async function(date) {
-      if (!adminMode) { 
-        showAdminPopup(); 
-        return; 
-      }
-      
+      if (!adminMode) { showAdminPopup(); return; }
       let idx = readingsHistory.findIndex(e=>e.date===date);
       if (idx === -1) return;
-      
       if (!confirm("Delete this day's readings?")) return;
-      
-      readingsHistory.splice(idx, 1);
-      renderHistory();
-      await saveHistory();
+      readingsHistory.splice(idx, 1); // Remove from array
+      renderHistory(); // Update the table view
+      // --- Call Firebase Save ---
+      await saveHistory(); // This saves the updated array to Firestore
+      // --- End Call ---
     };
-    
-    // --- Export Functions ---
     window.exportCSV = function() {
       if (readingsHistory.length === 0) return alert("No data to export.");
-      
       let csv = [
         [
           "Date",
@@ -975,7 +837,6 @@
           "Notes"
         ].join(",")
       ];
-      
       readingsHistory.forEach(e=>{
         csv.push([
           e.date,
@@ -987,7 +848,6 @@
           '"' + (e.notes||"").replace(/"/g, '""') + '"'
         ].join(","));
       });
-      
       const blob = new Blob([csv.join("\r\n")], {type: 'text/csv'});
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -996,31 +856,19 @@
       a.click();
       document.body.removeChild(a);
     };
-    
     window.exportPDF = function() {
-      if (readingsHistory.length === 0) { 
-        alert("No data to export."); 
-        return; 
-      }
-      
+      if (readingsHistory.length === 0) { alert("No data to export."); return; }
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       doc.setFontSize(18);
       doc.text(COMPANY_NAME + " – Daily Water Readings", 13, 18);
       doc.setFontSize(12);
-      
       let rows = [["Date","Bowser Diff","Dipstick Diff","iLembe Diff","Hydrant Diff","Counted By","Notes"]];
       readingsHistory.slice(-25).reverse().forEach(e=>{
         rows.push([e.date,e.bowserDiff,e.dipDiff,e.ilembeDiff,e.hydrantDiff,e.countedBy,e.notes||""]);
       });
-      
       if (typeof doc.autoTable === "function") {
-        doc.autoTable({ 
-          head: [rows[0]], 
-          body: rows.slice(1), 
-          startY: 25, 
-          styles:{font:"helvetica",fontSize:10,cellPadding:2}
-        });
+        doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 25, styles:{font:"helvetica",fontSize:10,cellPadding:2}});
       } else {
         let y = 30;
         rows.forEach(r=>{
@@ -1028,13 +876,10 @@
           y += 7;
         });
       }
-      
       doc.save("daily_water_readings.pdf");
     };
-    
     window.backupJSON = function() {
       if (readingsHistory.length === 0) return alert("No data to backup.");
-      
       const blob = new Blob([JSON.stringify({dailyReadings: readingsHistory},null,2)], {type: 'application/json'});
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -1043,35 +888,26 @@
       a.click();
       document.body.removeChild(a);
     };
-    
-    // --- Restore Functions ---
     function openRestore() {
-      if (!adminMode) { 
-        showAdminPopup(); 
-        return; 
-      }
+      if (!adminMode) { showAdminPopup(); return; }
       document.getElementById('restoreModal').classList.add("active");
     }
-    
     function closeRestore() {
       document.getElementById('restoreModal').classList.remove("active");
       document.getElementById('restoreFile').value = "";
     }
-    
-    function doRestore() {
+    async function doRestore() {
       const file = document.getElementById('restoreFile').files[0];
       if (!file) return;
-      
       const reader = new FileReader();
       reader.onload = async function(e) {
         try {
           const obj = JSON.parse(e.target.result);
           if (!obj.dailyReadings) throw "File missing dailyReadings array.";
           if (!confirm("Are you sure? This will replace ALL current data.")) return;
-          
           readingsHistory = obj.dailyReadings;
           renderHistory();
-          await saveHistory();
+          await saveHistory(); // Save restored data to Firebase
           closeRestore();
           showMsg("Restore complete!", true);
         } catch(err) {
@@ -1080,8 +916,6 @@
       };
       reader.readAsText(file);
     }
-    
-    // --- Stats Functions ---
     window.showStats = function() {
       if (readingsHistory.length === 0) {
         document.getElementById('statsContent').innerHTML = `<div style="margin:13px;">No stats available yet.</div>`;
@@ -1095,11 +929,122 @@
       }
       document.getElementById('statModal').classList.add("active");
     };
-    
     window.closeStats = function() {
       document.getElementById('statModal').classList.remove("active");
     };
-    
+    window.showChart = function() {
+      document.getElementById('chartModal').classList.add('active');
+      setTimeout(updateChart, 50);
+    };
+    window.closeChart = function() {
+      document.getElementById('chartModal').classList.remove('active');
+      if (chartInstance) chartInstance.destroy();
+    };
+    window.setChartType = function(type) {
+      chartType = type;
+      document.getElementById('btnLine').classList.toggle('selected', type === 'line');
+      document.getElementById('btnBar').classList.toggle('selected', type === 'bar');
+      document.getElementById('btnStacked').classList.toggle('selected', type === 'stacked');
+      document.getElementById('btnPie').classList.toggle('selected', type === 'pie');
+      updateChart();
+    };
+    window.updateChart = function() {
+      if (!readingsHistory.length) return;
+      const sorted = [...readingsHistory].sort((a,b)=>a.date.localeCompare(b.date));
+      const labels = sorted.map(e=>e.date);
+      const bowser = sorted.map(e=>e.bowserDiff);
+      const dip = sorted.map(e=>e.dipDiff);
+      const ilembe = sorted.map(e=>e.ilembeDiff);
+      const hydrant = sorted.map(e=>e.hydrantDiff);
+      const total = sorted.map((e,i)=>bowser[i]+dip[i]+ilembe[i]+hydrant[i]);
+      const showBowser = document.getElementById('showBowser').checked;
+      const showDip = document.getElementById('showDip').checked;
+      const showIlembe = document.getElementById('showIlembe').checked;
+      const showHydrant = document.getElementById('showHydrant').checked;
+      const showTotal = document.getElementById('showTotal').checked;
+      if (chartInstance) chartInstance.destroy();
+      const ctx = document.getElementById('chartCanvas').getContext('2d');
+      let datasets = [];
+      if (chartType==="pie") {
+        let lastIdx = labels.length-1;
+        let dataPie = [];
+        if (showBowser) dataPie.push(bowser[lastIdx]);
+        if (showDip) dataPie.push(dip[lastIdx]);
+        if (showIlembe) dataPie.push(ilembe[lastIdx]);
+        if (showHydrant) dataPie.push(hydrant[lastIdx]);
+        let bg = [];
+        if (showBowser) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--bowser'));
+        if (showDip) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--dip'));
+        if (showIlembe) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--ilembe'));
+        if (showHydrant) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--hydrant'));
+        datasets = [{
+          label: "Latest Day's Usage",
+          data: dataPie, // Fixed: Added 'data:' key
+          backgroundColor: bg
+        }];
+        chartInstance = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: ["Bowser","Dipstick","iLembe","Hydrant"].filter((v,i)=>[showBowser,showDip,showIlembe,showHydrant][i]),
+            datasets
+          },
+          options: { plugins:{ legend:{position:'top'} }, responsive:true }
+        });
+        return;
+      }
+      if (showBowser) datasets.push({
+        label: 'Bowser', data: bowser,
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bowser'),
+        backgroundColor: 'rgba(40,112,234,0.14)',
+        pointRadius: 3, fill: chartType==='line'||chartType==='stacked'
+      });
+      if (showDip) datasets.push({
+        label: 'Dipstick', data: dip,
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--dip'),
+        backgroundColor: 'rgba(255,165,2,0.16)',
+        pointRadius: 3, fill: chartType==='line'||chartType==='stacked'
+      });
+      if (showIlembe) datasets.push({
+        label: 'iLembe', data: ilembe, // Fixed: Added 'data:' key
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--ilembe'),
+        backgroundColor: 'rgba(35,193,129,0.18)',
+        pointRadius: 3, fill: chartType==='line'||chartType==='stacked'
+      });
+      if (showHydrant) datasets.push({
+        label: 'Hydrant', data: hydrant, // Fixed: Added 'data:' key
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--hydrant'),
+        backgroundColor: 'rgba(230,39,57,0.19)',
+        pointRadius: 3, fill: chartType==='line'||chartType==='stacked'
+      });
+      if (showTotal) datasets.push({
+        label: 'Total', data: total, // Fixed: Added 'data:' key
+        borderColor: '#111', backgroundColor: '#aaa', borderDash: [6,4], borderWidth: 2, pointRadius: 3
+      });
+      let opts = {
+        responsive: true,
+        plugins: {
+          legend: { display:true, position:'top', labels:{font:{weight:'bold'}} },
+          title: { display: false }
+        },
+        elements: {
+          line: { tension: 0.32, fill: chartType==='stacked' }
+        },
+        scales: {
+          x: { ticks: { font: { size: 13 }, color: '#888' } },
+          y: { title: { display: true, text: 'Difference', color: '#333', font:{size:13, weight:'bold'}},
+                ticks: { font: { size: 13 }, color: '#888' }, grid: { color:'#eaf2fa' }
+          }
+        }
+      };
+      if (chartType==='stacked') {
+        opts.scales.x.stacked = true; opts.scales.y.stacked = true;
+      }
+      chartInstance = new Chart(ctx, {
+        type: (chartType==='line'||chartType==='stacked')?'line':'bar',
+        data: { labels, datasets }, // Fixed: Added 'data:' key
+        options: opts
+      });
+    };
     function groupStats(data) {
       const daily = {}, weekly = {}, monthly = {};
       data.forEach(e => {
@@ -1112,7 +1057,6 @@
       });
       return {daily, weekly, monthly};
     }
-    
     function statsTable(label, groups, count=5) {
       let keys = Object.keys(groups).sort().reverse();
       if (count) keys = keys.slice(0, count);
@@ -1124,15 +1068,9 @@
       html += "</div>";
       return html;
     }
-    
     function statRows(entries) {
-      function sum(field) { 
-        return entries.reduce((a,b)=>a+(Number(b[field])||0),0); 
-      }
-      function avg(field) { 
-        return entries.length ? sum(field)/entries.length : 0; 
-      }
-      
+      function sum(field) { return entries.reduce((a,b)=>a+(Number(b[field])||0),0); }
+      function avg(field) { return entries.length ? sum(field)/entries.length : 0; }
       return `
         <tr><th></th>
             <th>Bowser</th>
@@ -1156,7 +1094,6 @@
         </tr>
       `;
     }
-    
     function getWeekNum(dateStr) {
       const d = new Date(dateStr);
       d.setHours(0,0,0,0);
@@ -1164,251 +1101,12 @@
       const yearStart = new Date(d.getFullYear(),0,1);
       return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
     }
-    
-    function getMonthStr(dateStr) { 
-      return dateStr.slice(0,7); 
-    }
-    
-    // --- Chart Functions ---
-    window.showChart = function() {
-      document.getElementById('chartModal').classList.add('active');
-      setTimeout(updateChart, 50);
-    };
-    
-    window.closeChart = function() {
-      document.getElementById('chartModal').classList.remove('active');
-      if (chartInstance) chartInstance.destroy();
-    };
-    
-    window.setChartType = function(type) {
-      chartType = type;
-      document.getElementById('btnLine').classList.toggle('selected', type === 'line');
-      document.getElementById('btnBar').classList.toggle('selected', type === 'bar');
-      document.getElementById('btnStacked').classList.toggle('selected', type === 'stacked');
-      document.getElementById('btnPie').classList.toggle('selected', type === 'pie');
-      updateChart();
-    };
-    
-    window.updateChart = function() {
-      if (!readingsHistory.length) return;
-      
-      const sorted = [...readingsHistory].sort((a,b)=>a.date.localeCompare(b.date));
-      const labels = sorted.map(e=>e.date);
-      const bowser = sorted.map(e=>e.bowserDiff);
-      const dip = sorted.map(e=>e.dipDiff);
-      const ilembe = sorted.map(e=>e.ilembeDiff);
-      const hydrant = sorted.map(e=>e.hydrantDiff);
-      const total = sorted.map((e,i)=>bowser[i]+dip[i]+ilembe[i]+hydrant[i]);
-      
-      const showBowser = document.getElementById('showBowser').checked;
-      const showDip = document.getElementById('showDip').checked;
-      const showIlembe = document.getElementById('showIlembe').checked;
-      const showHydrant = document.getElementById('showHydrant').checked;
-      const showTotal = document.getElementById('showTotal').checked;
-      
-      if (chartInstance) chartInstance.destroy();
-      const ctx = document.getElementById('chartCanvas').getContext('2d');
-      let datasets = [];
-      
-      if (chartType==="pie") {
-        let lastIdx = labels.length-1;
-        let dataPie = [];
-        if (showBowser) dataPie.push(bowser[lastIdx]);
-        if (showDip) dataPie.push(dip[lastIdx]);
-        if (showIlembe) dataPie.push(ilembe[lastIdx]);
-        if (showHydrant) dataPie.push(hydrant[lastIdx]);
-        
-        let bg = [];
-        if (showBowser) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--bowser'));
-        if (showDip) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--dip'));
-        if (showIlembe) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--ilembe'));
-        if (showHydrant) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--hydrant'));
-        
-        datasets = [{
-          label: "Latest Day's Usage",
-          data: dataPie,
-          backgroundColor: bg
-        }];
-        
-        chartInstance = new Chart(ctx, {
-          type: 'pie',
-          data: {
-            labels: ["Bowser","Dipstick","iLembe","Hydrant"].filter((v,i)=>[showBowser,showDip,showIlembe,showHydrant][i]),
-            datasets
-          },
-          options: { 
-            plugins:{ 
-              legend:{ 
-                position:'top',
-                labels: {
-                  color: darkMode ? '#e9f2ff' : '#183d5c'
-                }
-              } 
-            }, 
-            responsive:true 
-          }
-        });
-        return;
-      }
-      
-      if (showBowser) datasets.push({
-        label: 'Bowser', 
-        data: bowser,
-        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bowser'),
-        backgroundColor: 'rgba(40,112,234,0.14)',
-        pointRadius: 3, 
-        fill: chartType==='line'||chartType==='stacked'
-      });
-      
-      if (showDip) datasets.push({
-        label: 'Dipstick', 
-        data: dip,
-        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--dip'),
-        backgroundColor: 'rgba(255,165,2,0.16)',
-        pointRadius: 3, 
-        fill: chartType==='line'||chartType==='stacked'
-      });
-      
-      if (showIlembe) datasets.push({
-        label: 'iLembe', 
-        data: ilembe,
-        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--ilembe'),
-        backgroundColor: 'rgba(35,193,129,0.18)',
-        pointRadius: 3, 
-        fill: chartType==='line'||chartType==='stacked'
-      });
-      
-      if (showHydrant) datasets.push({
-        label: 'Hydrant', 
-        data: hydrant,
-        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--hydrant'),
-        backgroundColor: 'rgba(230,39,57,0.19)',
-        pointRadius: 3, 
-        fill: chartType==='line'||chartType==='stacked'
-      });
-      
-      if (showTotal) datasets.push({
-        label: 'Total', 
-        data: total,
-        borderColor: darkMode ? '#aaa' : '#111', 
-        backgroundColor: darkMode ? '#444' : '#aaa', 
-        borderDash: [6,4], 
-        borderWidth: 2, 
-        pointRadius: 3
-      });
-      
-      let opts = {
-        responsive: true,
-        plugins: {
-          legend: { 
-            display:true, 
-            position:'top', 
-            labels:{
-              font:{weight:'bold'},
-              color: darkMode ? '#e9f2ff' : '#183d5c'
-            } 
-          },
-          title: { display: false }
-        },
-        elements: {
-          line: { tension: 0.32, fill: chartType==='stacked' }
-        },
-        scales: {
-          x: { 
-            ticks: { 
-              font: { size: 13 }, 
-              color: darkMode ? '#e9f2ff' : '#888' 
-            },
-            grid: {
-              color: darkMode ? '#364053' : '#eaf2fa'
-            }
-          },
-          y: { 
-            title: { 
-              display: true, 
-              text: 'Difference', 
-              color: darkMode ? '#e9f2ff' : '#333', 
-              font:{size:13, weight:'bold'}
-            },
-            ticks: { 
-              font: { size: 13 }, 
-              color: darkMode ? '#e9f2ff' : '#888' 
-            }, 
-            grid: { 
-              color: darkMode ? '#364053' : '#eaf2fa' 
-            }
-          }
-        }
-      };
-      
-      if (chartType==='stacked') {
-        opts.scales.x.stacked = true; 
-        opts.scales.y.stacked = true;
-      }
-      
-      chartInstance = new Chart(ctx, {
-        type: (chartType==='line'||chartType==='stacked')?'line':'bar',
-        data: { labels, datasets },
-        options: opts
-      });
-    };
-    
-    // --- Floating Value Display ---
-    let floatingValueTimeout = null;
-    function showFloatingValue(inputElement) {
-        clearTimeout(floatingValueTimeout);
-        const floatingValue = document.getElementById('floatingValue');
-        const value = inputElement.value;
-        if (value !== '' && !isNaN(value) && value !== null) {
-            floatingValue.textContent = value;
-            floatingValue.style.display = 'block';
-            const rect = inputElement.getBoundingClientRect();
-            floatingValue.style.left = (rect.left + window.scrollX + rect.width / 2 - floatingValue.offsetWidth / 2) + 'px';
-            floatingValue.style.top = (rect.top + window.scrollY - 40) + 'px';
-        } else {
-            hideFloatingValue();
-        }
-    }
-    
-    function hideFloatingValue() {
-        clearTimeout(floatingValueTimeout);
-        floatingValueTimeout = setTimeout(() => {
-            document.getElementById('floatingValue').style.display = 'none';
-        }, 150);
-    }
-    
-    // --- Tooltips Configuration ---
-    const tooltips = {
-      "Date": "The date of the reading.\nSelect or type to add/edit past/future readings.",
-      "Bowser": "Manual water bowser readings.\nShows opening, closing, and usage.",
-      "Dipstick": "Fuel dipstick tank readings.\nOpening, closing, and daily usage.",
-      "iLembe": "iLembe Water meter readings.",
-      "Hydrant": "Fire hydrant readings (if used for water).",
-      "Counted By": "Who counted/measured these readings.",
-      "Notes": "Optional remarks about the day.",
-      "Action": "Edit or delete (admin only)."
-    };
-    
-    // --- Initialize Application ---
+    function getMonthStr(dateStr) { return dateStr.slice(0,7); }
+    // Startup
     document.addEventListener("DOMContentLoaded", ()=>{
-      // Set up floating value display
-      const numberInputs = document.querySelectorAll('.row input[type="number"]');
-      numberInputs.forEach(input => {
-        input.addEventListener('focus', (e) => showFloatingValue(e.target));
-        input.addEventListener('input', (e) => {
-          if (document.getElementById('floatingValue').style.display === 'block') {
-            showFloatingValue(e.target);
-          }
-        });
-        input.addEventListener('blur', () => hideFloatingValue());
-      });
-      
-      // Initialize form and settings
       document.getElementById('readingDate').value = getTodayString();
       setDarkMode(localStorage.getItem("darkMode")==="1");
       loadHistory();
-      
-      // Admin password submit on Enter
       document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
         if (e.key==="Enter") submitAdminPassword();
       });
