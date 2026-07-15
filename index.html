@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Superb Hyper – Daily Water Readings (Cloud)</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2870ea">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    <title>Superb Hyper – Water Readings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#1A73E8">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
     </script>
@@ -17,730 +17,1047 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js">
     </script>
     <style>
-        html {
-            box-sizing: border-box;
-        }
-        *, *:before, *:after {
-            box-sizing: inherit;
-        }
         :root {
-            --primary: #2870ea;
-            --primary-dark: #1851b8;
-            --success: #1e843b;
-            --danger: #e62739;
-            --accent: #ffa502;
-            --bg-main: #f5fafd;
-            --card-bg: #fff;
-            --text-main: #183d5c;
-            --shadow: 0 4px 24px rgba(40, 112, 234, 0.10);
-            --radius: 18px;
-            --bowser: #2870ea;
-            --dip: #ffa502;
-            --ilembe: #23c181;
-            --hydrant: #e62739;
-            --borehole: #6c5ce7;
-            --avatar-bg: #f3f7fa;
+            --primary: #1A73E8;
+            --primary-dark: #1557B0;
+            --primary-light: #E8F0FE;
+            --surface: #FFFFFF;
+            --surface2: #F8F9FA;
+            --surface3: #F1F3F4;
+            --bg: #F0F2F5;
+            --text: #1F1F1F;
+            --text2: #5F6368;
+            --text3: #80868B;
+            --border: #E0E0E0;
+            --success: #0D904F;
+            --danger: #D93025;
+            --warning: #F9AB00;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 28px;
+            --nav-height: 64px;
+            --header-height: 56px;
+            --fab-size: 56px;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --bowser: #1A73E8;
+            --dip: #F9AB00;
+            --ilembe: #0D904F;
+            --hydrant: #D93025;
+            --borehole: #7C3AED;
         }
         .dark {
-            --bg-main: #212838;
-            --card-bg: #232d40;
-            --text-main: #e9f2ff;
-            --success: #3dcb60;
-            --danger: #ff6179;
-            --accent: #ffc752;
-            --shadow: 0 4px 36px rgba(40, 112, 234, 0.12);
-            --avatar-bg: #364053;
+            --surface: #1E1E1E;
+            --surface2: #252525;
+            --surface3: #2D2D2D;
+            --bg: #121212;
+            --text: #E8EAED;
+            --text2: #9AA0A6;
+            --text3: #6B7280;
+            --border: #3C4043;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --primary-light: #1E3A5F;
         }
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-            background: var(--bg-main);
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        html {
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            color: var(--text-main);
-            transition: background .3s, color .3s;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background var(--transition), color var(--transition);
+            padding-bottom: calc(var(--nav-height) + 20px);
+            position: relative;
         }
-        .container {
-            background: var(--card-bg);
-            max-width: 820px;
-            margin: 36px auto 28px auto;
-            padding: 32px 20px 24px 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            animation: fadeIn 0.8s cubic-bezier(.57, .21, .69, 1.25);
-        }
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            margin-bottom: 12px;
-            font-size: 2rem;
-            font-weight: 900;
-            letter-spacing: 1.2px;
-            text-shadow: 0 2px 8px #eaf2fa;
-        }
-        .brand {
-            text-align: center;
-            color: var(--primary-dark);
-            font-size: 1.17rem;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            margin-bottom: 16px;
-        }
-        .top-bar {
+        /* Header */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            padding: 0 16px;
+            height: var(--header-height);
             display: flex;
-            gap: 11px;
-            justify-content: flex-end;
             align-items: center;
-            margin-bottom: 11px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: background var(--transition), border var(--transition);
         }
-        .csv-btn,
-        .stat-btn,
-        .chart-btn,
-        .pdf-btn,
-        .backup-btn,
-        .restore-btn,
-        .dark-btn,
-        .admin-btn {
-            border: none;
-            border-radius: 11px;
-            font-weight: 700;
-            font-family: inherit;
-            padding: 9px 16px;
-            font-size: 1.04em;
-            cursor: pointer;
-            margin-bottom: 4px;
-            margin-right: 2px;
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(40, 112, 234, 0.10);
-            transition: background .16s, color .17s, box-shadow .14s;
-            outline: none;
-        }
-        .stat-btn {
-            background: var(--accent);
-            color: var(--text-main);
-        }
-        .stat-btn:hover {
-            background: #ffd66b;
-            color: var(--primary-dark);
-        }
-        .chart-btn {
-            background: var(--bowser);
-        }
-        .chart-btn:hover {
-            background: var(--primary-dark);
-        }
-        .csv-btn,
-        .pdf-btn,
-        .backup-btn,
-        .restore-btn {
-            background: var(--success);
-        }
-        .csv-btn:hover,
-        .pdf-btn:hover,
-        .backup-btn:hover,
-        .restore-btn:hover {
-            background: #156328;
-        }
-        .admin-btn {
-            background: var(--danger);
-        }
-        .admin-btn:hover {
-            background: #ad1b29;
-        }
-        .dark-btn {
-            background: var(--card-bg);
+        .app-header .logo {
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.3px;
             color: var(--primary);
-        }
-        .dark-btn:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-        @media (max-width: 700px) {
-            .top-bar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 7px;
-            }
-        }
-        .form-row {
-            margin-bottom: 17px;
-        }
-        label {
-            font-weight: 600;
-            color: var(--primary);
-            display: block;
-            margin-bottom: 6px;
-        }
-        .row {
             display: flex;
-            gap: 10px;
-            margin-bottom: 7px;
             align-items: center;
-            background: #f7fafd;
-            border-radius: 8px;
-            padding: 7px 0 7px 0;
+            gap: 8px;
         }
-        .dark .row {
-            background: #242c3c;
-        }
-        .row input[type="number"] {
-            width: 110px;
-            min-width: 110px;
-            padding: 8px 10px;
-            border: 1px solid #e2e6ed;
-            border-radius: 8px;
-            font-size: 1.1em;
-            text-align: right;
-            background: #f6fafd;
-            color: var(--text-main);
-            box-shadow: 0 1px 2px #eaf2fa;
-            transition: all 0.14s ease;
-        }
-        .row input[type="number"]:focus {
-            border: 1.7px solid var(--primary);
-            outline: none;
-            box-shadow: 0 1px 4px rgba(40, 112, 234, 0.2);
-        }
-        .row .diff {
-            font-weight: 700;
-            color: var(--success);
-            min-width: 54px;
-            text-align: right;
-            font-size: 1.07em;
-            letter-spacing: 1.2px;
-        }
-        textarea,
-        input[type="text"],
-        input[type="date"] {
-            width: 100%;
-            border-radius: 8px;
-            border: 1px solid #e2e6ed;
-            font-size: 1.04em;
-            padding: 10px 9px;
-            background: #f7fafd;
-            margin-top: 5px;
-            transition: border 0.14s;
-            box-shadow: 0 1px 3px #eaf2fa;
-            color: var(--text-main);
-        }
-        textarea:focus,
-        input[type="text"]:focus,
-        input[type="date"]:focus {
-            border: 1.7px solid var(--primary);
-            outline: none;
-        }
-        button[type="submit"],
-        .cancel-edit-btn {
-            width: 100%;
-            background: var(--primary);
-            color: #fff;
-            padding: 14px 0;
-            margin-top: 13px;
-            font-weight: 700;
-            border-radius: 11px;
-            border: none;
-            font-size: 1.11em;
-            box-shadow: 0 2px 13px #eaf2fa;
-            letter-spacing: 0.5px;
-            transition: background 0.17s, box-shadow 0.16s;
-        }
-        button[type="submit"]:hover:not(:disabled) {
-            background: var(--primary-dark);
-        }
-        button[type="submit"]:disabled {
-            background: #b1c7f4;
-            cursor: not-allowed;
-        }
-        .cancel-edit-btn {
-            background: #888;
-            margin-top: 6px;
-        }
-        .cancel-edit-btn:hover {
-            background: #444;
-        }
-        .loader,
-        .saving-spinner {
-            text-align: center;
-            margin-top: 27px;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-        .saving-spinner {
-            display: inline-block;
-            margin: 0 7px 0 7px;
-            vertical-align: middle;
-            width: 22px;
-            height: 22px;
-            border: 3px solid #e6e9f5;
-            border-top: 3px solid var(--primary);
+        .app-header .logo .dot {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            animation: spin 1.1s linear infinite;
+            background: var(--primary);
+            display: inline-block;
         }
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
         }
-        .success-msg,
-        .error-msg {
-            color: #fff;
-            border-radius: 8px;
-            padding: 8px 0;
-            text-align: center;
-            margin-bottom: 11px;
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text2);
+            transition: all var(--transition);
+            position: relative;
+        }
+        .icon-btn:active {
+            background: var(--surface3);
+            transform: scale(0.94);
+        }
+        .icon-btn.admin-active {
+            color: var(--warning);
+        }
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+            width: 90%;
+            max-width: 420px;
+        }
+        .toast {
+            padding: 12px 18px;
+            border-radius: var(--radius);
             font-weight: 600;
-            box-shadow: 0 1px 7px #eaf2fa;
-            letter-spacing: .5px;
-            animation: fadeInMsg .4s;
+            font-size: 0.9rem;
+            text-align: center;
+            animation: toastIn 0.35s cubic-bezier(0.21, 1.02, 0.58, 1);
+            pointer-events: auto;
+            box-shadow: var(--shadow-lg);
+            letter-spacing: 0.2px;
         }
-        .success-msg {
+        .toast.success {
             background: var(--success);
+            color: #fff;
         }
-        .error-msg {
+        .toast.error {
             background: var(--danger);
+            color: #fff;
         }
-        @keyframes fadeInMsg {
+        @keyframes toastIn {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-20px) scale(0.9);
             }
             to {
                 opacity: 1;
-                transform: none;
+                transform: translateY(0) scale(1);
             }
         }
-        .history-section {
-            overflow-x: auto;
-            width: 100%;
+        /* Main Content */
+        .main-content {
+            padding: 16px 16px 8px 16px;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeSlideIn 0.3s ease;
         }
-        .history-table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-            font-size: 1em;
-            background: #fafcff;
-            border-radius: 10px;
-            box-shadow: 0 1px 7px #eaf2fa;
-            min-width: 950px;
-        }
-        .dark .history-table {
-            background: #232d40;
-        }
-        .history-table th,
-        .history-table td {
-            padding: 8px 6px;
-            text-align: center;
-            border-bottom: 1px solid #e5eaf3;
-            position: relative;
-        }
-        .history-table th {
-            background: #f0f6ff;
-            font-weight: 700;
-            color: var(--primary);
-            border-bottom: 2.5px solid #e0e6f2;
-            cursor: help;
-            position: relative;
-        }
-        .history-table tr:hover {
-            background: #f3f8ff;
-        }
-        .dark .history-table tr:hover {
-            background: #232d40;
-        }
-        .action-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 1.12em;
-            margin: 0 1px;
-            padding: 0 3px;
-            font-weight: 700;
-            transition: color 0.13s;
-        }
-        .action-btn:hover {
-            color: var(--danger);
-        }
-        .avatar {
-            display: inline-block;
-            background: var(--avatar-bg);
-            color: var(--primary-dark);
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            line-height: 28px;
-            font-size: 1.06em;
-            font-weight: 700;
-            vertical-align: middle;
-            margin-right: 3px;
-            box-shadow: 0 1px 2px #eaf2fa;
-        }
-        @media (max-width: 1000px) {
-            .history-section {
-                overflow-x: auto;
-            }
-            .history-table {
-                min-width: 750px;
-            }
-        }
-        @media (max-width: 700px) {
-            .container {
-                padding: 8px 1vw;
-            }
-            h1 {
-                font-size: 1.11rem;
-            }
-            .row input[type="number"] {
-                width: 70px;
-                min-width: 70px;
-                font-size: 1.04em;
-                padding: 6px 8px;
-            }
-            .brand {
-                font-size: .97rem;
-            }
-        }
-        @media print {
-            .container,
-            .top-bar,
-            .history-section,
-            .history-table {
-                box-shadow: none !important;
-            }
-            .top-bar,
-            .stat-modal,
-            .chart-modal,
-            .admin-popup,
-            .dark-btn {
-                display: none !important;
-            }
-            body {
-                background: #fff !important;
-                color: #111 !important;
-            }
-        }
-        .stat-modal,
-        .chart-modal,
-        .admin-popup,
-        .restore-modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(40, 112, 234, 0.13);
-            justify-content: center;
-            align-items: center;
-            transition: background 0.14s;
-        }
-        .stat-modal.active,
-        .chart-modal.active,
-        .admin-popup.active,
-        .restore-modal.active {
-            display: flex;
-        }
-        .stat-panel,
-        .chart-panel,
-        .admin-panel,
-        .restore-panel {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 8px 48px rgba(40, 112, 234, 0.13), 0 1px 16px #eaf2fa;
-            padding: 29px 22px 22px 22px;
-            max-width: 540px;
-            width: 97vw;
-            max-height: 92vh;
-            overflow-y: auto;
-            color: var(--text-main);
-            animation: popupIn .4s cubic-bezier(.51, .13, .36, 1.16);
-            position: relative;
-        }
-        .dark .stat-panel,
-        .dark .chart-panel,
-        .dark .admin-panel,
-        .dark .restore-panel {
-            background: #222b3a;
-            color: #e9f2ff;
-        }
-        .stat-title,
-        .chart-title,
-        .admin-title,
-        .restore-title {
-            font-weight: 900;
-            color: var(--primary);
-            font-size: 1.19rem;
-            margin-bottom: 12px;
-            text-align: center;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 8px #eaf2fa;
-        }
-        .close-btn {
-            position: absolute;
-            right: 11px;
-            top: 9px;
-            font-size: 2em;
-            color: var(--danger);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 900;
-            padding: 2px 8px;
-            transition: color 0.15s;
-        }
-        .close-btn:hover {
-            color: #ad1b29;
-        }
-        .tooltip {
-            display: none;
-            position: absolute;
-            z-index: 1002;
-            padding: 5px 10px;
-            background: #fff;
-            border: 1px solid #e2eaf2;
-            color: #222;
-            font-size: .99em;
-            font-weight: 500;
-            border-radius: 6px;
-            box-shadow: 0 1px 6px #eaf2fa;
-            max-width: 230px;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 140%;
-            pointer-events: none;
-            white-space: pre-line;
-        }
-        .history-table th:hover .tooltip {
-            display: block;
-        }
-        @keyframes fadeIn {
+        @keyframes fadeSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(24px);
+                transform: translateY(8px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        @keyframes popupIn {
+        .view {
+            display: none;
+        }
+        .view.active {
+            display: block;
+        }
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            height: var(--nav-height);
+            padding: 0 4px;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
+            transition: background var(--transition), border var(--transition);
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text3);
+            font-size: 0.68rem;
+            font-weight: 500;
+            padding: 6px 4px;
+            border-radius: var(--radius);
+            transition: all var(--transition);
+            position: relative;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-item .nav-icon {
+            font-size: 1.4rem;
+            transition: transform var(--transition);
+        }
+        .nav-item.active {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+        .nav-item.nav-add {
+            position: relative;
+            top: -18px;
+        }
+        .nav-item.nav-add .nav-icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 16px rgba(26, 115, 232, 0.4);
+            transition: all var(--transition);
+        }
+        .nav-item.nav-add:active .nav-icon-circle {
+            transform: scale(0.9);
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+        }
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+            margin-bottom: 12px;
+        }
+        .card:active {
+            transform: scale(0.985);
+            box-shadow: var(--shadow-md);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+        }
+        .card-subtitle {
+            font-size: 0.8rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+        /* Stat Cards */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 14px 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition);
+        }
+        .stat-card .stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+        .stat-card .stat-label {
+            font-size: 0.72rem;
+            color: var(--text2);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+        .stat-card.accent .stat-value {
+            color: var(--borehole);
+        }
+        .stat-card.success .stat-value {
+            color: var(--success);
+        }
+        /* Form */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--surface2);
+            color: var(--text);
+            transition: all var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+            background: var(--surface);
+        }
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .reading-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: var(--surface2);
+            border-radius: var(--radius);
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            border: 1px solid transparent;
+            transition: all var(--transition);
+        }
+        .reading-row:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.06);
+        }
+        .reading-row .rr-label {
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--text2);
+            min-width: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .reading-row input {
+            width: 80px;
+            padding: 10px 8px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 600;
+            background: var(--surface);
+            color: var(--text);
+            transition: all var(--transition);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .reading-row input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.08);
+        }
+        .reading-row .diff-badge {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--success);
+            min-width: 40px;
+            text-align: center;
+            background: #E6F4EA;
+            border-radius: 20px;
+            padding: 4px 8px;
+        }
+        .dark .reading-row .diff-badge {
+            background: #1E3A2F;
+        }
+        .section-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+        .chip-bowser {
+            background: #E8F0FE;
+            color: #1A73E8;
+        }
+        .chip-dip {
+            background: #FEF7E0;
+            color: #E37400;
+        }
+        .chip-ilembe {
+            background: #E6F4EA;
+            color: #0D904F;
+        }
+        .chip-hydrant {
+            background: #FCE8E6;
+            color: #D93025;
+        }
+        .chip-borehole {
+            background: #EDE7F6;
+            color: #7C3AED;
+        }
+        .dark .chip-bowser {
+            background: #1E3A5F;
+        }
+        .dark .chip-dip {
+            background: #3D2E00;
+        }
+        .dark .chip-ilembe {
+            background: #1E3A2F;
+        }
+        .dark .chip-hydrant {
+            background: #3D1A1A;
+        }
+        .dark .chip-borehole {
+            background: #2A1A4A;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 24px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            letter-spacing: 0.2px;
+            min-height: 48px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(26, 115, 232, 0.35);
+        }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        .btn-block {
+            width: 100%;
+            display: flex;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            min-height: 36px;
+            border-radius: 20px;
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--primary);
+        }
+        /* History Cards */
+        .history-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .history-card .hc-date {
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .history-card .hc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 6px;
+            font-size: 0.78rem;
+        }
+        .history-card .hc-item {
+            background: var(--surface2);
+            border-radius: 8px;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        .history-card .hc-item .hc-val {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .history-card .hc-item .hc-src {
+            font-size: 0.65rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .history-card .hc-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+        .history-card .hc-actions .btn {
+            min-height: 32px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+        }
+        /* History Table (Desktop) */
+        @media (min-width: 768px) {
+            .history-cards {
+                display: none;
+            }
+            .history-table-wrap {
+                display: block;
+            }
+            .stat-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        @media (max-width: 767px) {
+            .history-cards {
+                display: block;
+            }
+            .history-table-wrap {
+                display: none;
+            }
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .reading-row input {
+                width: 60px;
+                font-size: 0.9rem;
+                padding: 8px 4px;
+            }
+        }
+        .history-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 900px;
+        }
+        .data-table th,
+        .data-table td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table th {
+            background: var(--surface2);
+            font-weight: 700;
+            color: var(--text2);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+        }
+        .data-table tr:hover {
+            background: var(--surface3);
+        }
+        /* Bottom Sheet */
+        .sheet-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            animation: fadeInOverlay 0.25s ease;
+        }
+        .sheet-overlay.active {
+            display: flex;
+        }
+        @keyframes fadeInOverlay {
             from {
                 opacity: 0;
-                transform: scale(0.89);
             }
             to {
                 opacity: 1;
-                transform: scale(1);
             }
         }
-        .floating-value {
-            position: fixed;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 14px;
-            z-index: 1000;
-            pointer-events: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            color: #333;
-            display: none;
+        .sheet {
+            background: var(--surface);
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            max-height: 85dvh;
+            overflow-y: auto;
+            padding: 8px 16px 24px 16px;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+            position: relative;
         }
-        .dark .floating-value {
-            background: rgba(35, 45, 64, 0.9);
-            color: #e9f2ff;
-            border-color: #4a5a7a;
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
         }
-        .chart-controls {
-            margin-bottom: 10px;
+        .sheet-handle {
+            width: 36px;
+            height: 5px;
+            background: var(--border);
+            border-radius: 10px;
+            margin: 8px auto 16px auto;
+        }
+        .sheet-close {
+            position: absolute;
+            right: 16px;
+            top: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--surface3);
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text2);
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
             align-items: center;
             justify-content: center;
+            z-index: 5;
         }
-        .chart-type-btn {
-            background: #f0f4ff;
-            border: 1px solid #b8c7e0;
-            border-radius: 8px;
-            padding: 5px 12px;
-            font-weight: 700;
-            font-size: 0.95em;
-            cursor: pointer;
-            color: var(--text-main);
-            transition: all 0.15s;
-        }
-        .chart-type-btn.selected {
-            background: var(--primary);
-            color: #fff;
-            border-color: var(--primary);
-        }
-        .series-label {
-            display: inline-flex;
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 400;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
             align-items: center;
-            margin-right: 12px;
-            font-weight: 600;
-            font-size: 0.95em;
-            color: var(--text-main);
+            justify-content: center;
+            padding: 20px;
         }
-        .series-toggle {
-            margin-right: 4px;
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: 24px 20px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: var(--shadow-lg);
+            animation: popIn 0.3s cubic-bezier(0.21, 1.02, 0.58, 1);
+        }
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        /* Search */
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            align-items: center;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            background: var(--surface2);
+            color: var(--text);
+            transition: all var(--transition);
+        }
+        .search-bar input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.08);
+        }
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text2);
+        }
+        .empty-state .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+        .empty-state .empty-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+        .empty-state .empty-sub {
+            font-size: 0.85rem;
+            color: var(--text3);
+        }
+        /* Spinner */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        /* Pull to refresh indicator */
+        .ptr-indicator {
+            text-align: center;
+            padding: 8px;
+            color: var(--text3);
+            font-size: 0.8rem;
+            display: none;
+        }
+        .ptr-indicator.show {
+            display: block;
+            animation: fadeSlideIn 0.2s ease;
+        }
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        /* Media Queries */
+        @media (min-width: 768px) {
+            .main-content {
+                padding: 20px 24px 8px 24px;
+            }
+            .sheet {
+                border-radius: 20px;
+                margin: auto;
+                max-height: 80vh;
+            }
+            .sheet-overlay {
+                align-items: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Daily Water Readings (Cloud)</h1>
-        <div class="brand">Superb Hyper</div>
-        <div id="msg"></div>
-        <div class="top-bar">
-            <button class="csv-btn" onclick="exportCSV()" title="Export to CSV">Export CSV</button>
-            <button class="pdf-btn" onclick="exportPDF()" title="Export PDF">Export PDF</button>
-            <button class="stat-btn" onclick="showStats()" title="Stats & Analytics">View Stats</button>
-            <button class="chart-btn" onclick="showChart()" title="Charts & Trends">Show Chart</button>
-            <button class="backup-btn" onclick="backupJSON()" title="Backup Data (JSON)">Backup</button>
-            <button class="restore-btn" onclick="openRestore()" title="Restore Backup">Restore</button>
-            <button class="admin-btn" onclick="showAdminPopup()" title="Admin Features">&#9881; Admin</button>
-            <button class="dark-btn" onclick="toggleDarkMode()" aria-label="Toggle Dark Mode" title="Toggle Dark Mode">🌙</button>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="logo"><span class="dot"></span>Superb Hyper</div>
+        <div class="header-actions">
+            <button class="icon-btn" id="btnDarkMode" title="Dark mode" aria-label="Toggle dark mode">🌙</button>
+            <button class="icon-btn" id="btnAdminIndicator" title="Admin" aria-label="Admin status" onclick="toggleAdminMode()">🔒</button>
         </div>
-        <form id="readingsForm" autocomplete="off">
-            <div class="form-row">
-                <label for="readingDate">Date</label>
-                <input type="date" id="readingDate" required>
+    </header>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Dashboard View -->
+        <div class="view active" id="viewDashboard">
+            <div class="stat-grid" id="dashboardStats"></div>
+            <div class="card" style="margin-bottom:14px;">
+                <div class="card-header"><span class="card-title">📊 Recent Trend (7 Days)</span></div>
+                <canvas id="miniChart" height="180"></canvas>
             </div>
-            <div class="section">
-                <label>Bowser Reading</label>
-                <div class="row">
-                    <span>Open</span>
-                    <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" aria-label="Bowser Opening">
-                    <span>Close</span>
-                    <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" aria-label="Bowser Closing">
-                    <span class="diff" id="bowserDiff">-</span>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <span style="font-weight:700;font-size:0.95rem;">📋 Recent Readings</span>
+                <button class="btn btn-sm btn-outline" onclick="switchView('history')">See All</button>
+            </div>
+            <div id="recentReadings"></div>
+        </div>
+
+        <!-- History View -->
+        <div class="view" id="viewHistory">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Search by date or name..." oninput="filterHistory()">
+                <button class="btn btn-sm btn-outline" onclick="switchView('add')" style="white-space:nowrap;">+ New</button>
+            </div>
+            <div class="ptr-indicator" id="ptrIndicator">↓ Pull to refresh</div>
+            <div class="history-cards" id="historyCards"></div>
+            <div class="history-table-wrap" id="historyTableWrap"></div>
+            <div class="empty-state" id="historyEmpty" style="display:none;">
+                <div class="empty-icon">📭</div>
+                <div class="empty-title">No readings yet</div>
+                <div class="empty-sub">Tap + to add your first reading</div>
+            </div>
+        </div>
+
+        <!-- Add Reading View -->
+        <div class="view" id="viewAdd">
+            <form id="readingsForm" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label" for="readingDate">📅 Date</label>
+                    <input type="date" id="readingDate" class="form-input" required>
+                </div>
+                <div class="section-chip chip-bowser">🚛 Bowser</div>
+                <div class="reading-row">
+                    <span class="rr-label">Open</span><input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" placeholder="0">
+                    <span class="rr-label">Close</span><input type="number" id="bowserClose" required oninput="calcDiff('bowser')" placeholder="0">
+                    <span class="diff-badge" id="bowserDiff">-</span>
+                </div>
+                <div class="section-chip chip-dip">📏 Dipstick</div>
+                <div class="reading-row">
+                    <span class="rr-label">Open</span><input type="number" id="dipOpen" required oninput="calcDiff('dip')" placeholder="0">
+                    <span class="rr-label">Close</span><input type="number" id="dipClose" required oninput="calcDiff('dip')" placeholder="0">
+                    <span class="diff-badge" id="dipDiff">-</span>
+                </div>
+                <div class="section-chip chip-ilembe">💧 iLembe</div>
+                <div class="reading-row">
+                    <span class="rr-label">Open</span><input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" placeholder="0">
+                    <span class="rr-label">Close</span><input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" placeholder="0">
+                    <span class="diff-badge" id="ilembeDiff">-</span>
+                </div>
+                <div class="section-chip chip-hydrant">🔥 Hydrant</div>
+                <div class="reading-row">
+                    <span class="rr-label">Open</span><input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" placeholder="0">
+                    <span class="rr-label">Close</span><input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" placeholder="0">
+                    <span class="diff-badge" id="hydrantDiff">-</span>
+                </div>
+                <div class="section-chip chip-borehole">🕳️ Borehole</div>
+                <div class="reading-row">
+                    <span class="rr-label">Open</span><input type="number" id="boreholeOpen" required oninput="calcDiff('borehole')" placeholder="0">
+                    <span class="rr-label">Close</span><input type="number" id="boreholeClose" required oninput="calcDiff('borehole')" placeholder="0">
+                    <span class="diff-badge" id="boreholeDiff">-</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="countedBy">👤 Counted By</label>
+                    <input type="text" id="countedBy" class="form-input" maxlength="50" required placeholder="Name of person who counted">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="notes">📝 Notes</label>
+                    <textarea id="notes" class="form-textarea" placeholder="Optional notes..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="saveBtn">💾 Save Reading</button>
+                <button type="button" id="cancelEditBtn" class="btn btn-outline btn-block" style="display:none;margin-top:8px;" onclick="cancelEdit()">Cancel Edit</button>
+            </form>
+        </div>
+
+        <!-- Insights View -->
+        <div class="view" id="viewInsights">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+                <button class="btn btn-sm btn-primary" onclick="showStatsSheet()">📊 Stats</button>
+                <button class="btn btn-sm btn-outline" onclick="showChartSheet()">📈 Full Chart</button>
+            </div>
+            <div class="stat-grid" id="insightsStats"></div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">📈 Usage Chart</span></div>
+                <canvas id="insightsChart" height="250"></canvas>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;justify-content:center;">
+                    <button class="btn btn-sm btn-outline chart-type-btn" onclick="setInsightsChartType('line')">Line</button>
+                    <button class="btn btn-sm btn-outline chart-type-btn" onclick="setInsightsChartType('bar')">Bar</button>
+                    <button class="btn btn-sm btn-outline chart-type-btn" onclick="setInsightsChartType('stacked')">Stacked</button>
                 </div>
             </div>
-            <div class="section">
-                <label>Dipstick</label>
-                <div class="row">
-                    <span>Open</span>
-                    <input type="number" id="dipOpen" required oninput="calcDiff('dip')" aria-label="Dipstick Opening">
-                    <span>Close</span>
-                    <input type="number" id="dipClose" required oninput="calcDiff('dip')" aria-label="Dipstick Closing">
-                    <span class="diff" id="dipDiff">-</span>
+        </div>
+
+        <!-- Settings View -->
+        <div class="view" id="viewSettings">
+            <div class="card" style="margin-bottom:10px;">
+                <div class="card-title" style="margin-bottom:10px;">📤 Export Data</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-sm btn-outline" onclick="exportCSV()">📄 CSV</button>
+                    <button class="btn btn-sm btn-outline" onclick="exportPDF()">📕 PDF</button>
+                    <button class="btn btn-sm btn-outline" onclick="backupJSON()">💾 Backup JSON</button>
                 </div>
             </div>
-            <div class="section">
-                <label>iLembe Water</label>
-                <div class="row">
-                    <span>Open</span>
-                    <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" aria-label="iLembe Opening">
-                    <span>Close</span>
-                    <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" aria-label="iLembe Closing">
-                    <span class="diff" id="ilembeDiff">-</span>
-                </div>
+            <div class="card" style="margin-bottom:10px;">
+                <div class="card-title" style="margin-bottom:10px;">📥 Restore</div>
+                <button class="btn btn-sm btn-outline" onclick="openRestore()">📂 Restore from Backup</button>
             </div>
-            <div class="section">
-                <label>Hydrant</label>
-                <div class="row">
-                    <span>Open</span>
-                    <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" aria-label="Hydrant Opening">
-                    <span>Close</span>
-                    <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" aria-label="Hydrant Closing">
-                    <span class="diff" id="hydrantDiff">-</span>
-                </div>
+            <div class="card" style="margin-bottom:10px;">
+                <div class="card-title" style="margin-bottom:10px;">🔐 Admin</div>
+                <p style="font-size:0.8rem;color:var(--text2);margin-bottom:8px;">Admin status: <strong id="adminStatusLabel">Locked</strong></p>
+                <button class="btn btn-sm btn-outline" onclick="showAdminModal()">🔑 Unlock Admin</button>
             </div>
-            <!-- NEW: Borehole section -->
-            <div class="section">
-                <label>Borehole</label>
-                <div class="row">
-                    <span>Open</span>
-                    <input type="number" id="boreholeOpen" required oninput="calcDiff('borehole')" aria-label="Borehole Opening">
-                    <span>Close</span>
-                    <input type="number" id="boreholeClose" required oninput="calcDiff('borehole')" aria-label="Borehole Closing">
-                    <span class="diff" id="boreholeDiff">-</span>
-                </div>
+            <div class="card">
+                <div class="card-title" style="margin-bottom:10px;">ℹ️ About</div>
+                <p style="font-size:0.8rem;color:var(--text2);">Superb Hyper – Daily Water Readings<br>Version 2.0 • Cloud Sync via Firebase</p>
             </div>
-            <div>
-                <label class="mini-label" for="countedBy">Counted By</label>
-                <input type="text" id="countedBy" maxlength="50" required placeholder="Name of person who counted" aria-label="Counted By">
-            </div>
-            <div>
-                <label class="note-label" for="notes">Notes</label>
-                <textarea id="notes" placeholder="Add any notes here..." aria-label="Notes"></textarea>
-            </div>
-            <button type="submit" id="saveBtn">Save Reading</button>
-            <button type="button" id="cancelEditBtn" class="cancel-edit-btn" style="display:none;" onclick="cancelEdit()">Cancel Edit</button>
-        </form>
-        <div id="loader" class="loader" style="display:none;">Loading history...</div>
-        <div class="history-section" id="historySection"></div>
-    </div>
-    <div id="floatingValue" class="floating-value"></div>
-    <div class="stat-modal" id="statModal">
-        <div class="stat-panel" id="statPanel">
-            <button class="close-btn" onclick="closeStats()" title="Close">&times;</button>
-            <div class="stat-title">Summary Stats</div>
-            <div id="statsContent"></div>
         </div>
     </div>
-    <div class="chart-modal" id="chartModal">
-        <div class="chart-panel" id="chartPanel">
-            <button class="close-btn" onclick="closeChart()" title="Close">&times;</button>
-            <div class="chart-title">Usage Chart</div>
-            <div class="chart-controls">
-                <div class="chart-type-group">
-                    <button class="chart-type-btn selected" id="btnLine" onclick="setChartType('line')" type="button">Line</button>
-                    <button class="chart-type-btn" id="btnBar" onclick="setChartType('bar')" type="button">Bar</button>
-                    <button class="chart-type-btn" id="btnStacked" onclick="setChartType('stacked')" type="button">Stacked Bar</button>
-                    <button class="chart-type-btn" id="btnPie" onclick="setChartType('pie')" type="button">Pie</button>
-                </div>
-                <div>
-                    <label class="series-label bowser"><input class="series-toggle" type="checkbox" id="showBowser" checked onchange="updateChart()"> Bowser</label>
-                    <label class="series-label dip"><input class="series-toggle" type="checkbox" id="showDip" checked onchange="updateChart()"> Dipstick</label>
-                    <label class="series-label ilembe"><input class="series-toggle" type="checkbox" id="showIlembe" checked onchange="updateChart()"> iLembe</label>
-                    <label class="series-label hydrant"><input class="series-toggle" type="checkbox" id="showHydrant" checked onchange="updateChart()"> Hydrant</label>
-                    <label class="series-label borehole"><input class="series-toggle" type="checkbox" id="showBorehole" checked onchange="updateChart()"> Borehole</label>
-                    <label class="series-label"><input class="series-toggle" type="checkbox" id="showTotal" onchange="updateChart()"> Daily Total</label>
-                </div>
-            </div>
-            <canvas id="chartCanvas"></canvas>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+            <span class="nav-icon">🏠</span>Home
+        </button>
+        <button class="nav-item" data-view="history" onclick="switchView('history')">
+            <span class="nav-icon">📋</span>History
+        </button>
+        <button class="nav-item nav-add" data-view="add" onclick="switchView('add')">
+            <span class="nav-icon-circle">+</span><span style="font-size:0.6rem;">Add</span>
+        </button>
+        <button class="nav-item" data-view="insights" onclick="switchView('insights')">
+            <span class="nav-icon">📈</span>Insights
+        </button>
+        <button class="nav-item" data-view="settings" onclick="switchView('settings')">
+            <span class="nav-icon">⚙️</span>Settings
+        </button>
+    </nav>
+
+    <!-- Bottom Sheet Overlay -->
+    <div class="sheet-overlay" id="sheetOverlay">
+        <div class="sheet" id="sheetContent">
+            <div class="sheet-handle"></div>
+            <button class="sheet-close" onclick="closeSheet()">✕</button>
+            <div id="sheetBody"></div>
         </div>
     </div>
-    <div class="admin-popup" id="adminPopup">
-        <div class="admin-panel">
-            <button class="close-btn" onclick="closeAdminPopup()" title="Close">&times;</button>
-            <div class="admin-title">Enter Admin Password</div>
-            <input type="password" id="adminPassInput" placeholder="Password" style="width:98%;margin-bottom:12px;">
-            <button onclick="submitAdminPassword()" class="csv-btn" style="width:100%;">Unlock Admin</button>
-            <div id="adminMsg" style="margin-top:10px;color:var(--danger);font-weight:600;"></div>
+
+    <!-- Admin Modal -->
+    <div class="modal-overlay" id="adminModalOverlay">
+        <div class="modal">
+            <div class="modal-title">🔐 Admin Password</div>
+            <input type="password" id="adminPassInput" class="form-input" placeholder="Enter password" style="margin-bottom:12px;">
+            <button class="btn btn-primary btn-block" onclick="submitAdminPassword()">Unlock</button>
+            <div id="adminMsg" style="margin-top:8px;color:var(--danger);font-weight:600;text-align:center;"></div>
+            <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="closeAdminModal()">Cancel</button>
         </div>
     </div>
-    <div class="restore-modal" id="restoreModal">
-        <div class="restore-panel">
-            <button class="close-btn" onclick="closeRestore()" title="Close">&times;</button>
-            <div class="restore-title">Restore Data from Backup</div>
-            <input type="file" id="restoreFile" accept="application/json" style="width:98%;margin-bottom:8px;">
-            <button onclick="doRestore()" class="csv-btn" style="width:100%;">Restore</button>
-            <div style="color:var(--danger);font-weight:600;margin-top:10px;">Warning: This will replace all data!</div>
+
+    <!-- Restore Modal -->
+    <div class="modal-overlay" id="restoreModalOverlay">
+        <div class="modal">
+            <div class="modal-title">📂 Restore Backup</div>
+            <input type="file" id="restoreFile" accept="application/json" class="form-input" style="margin-bottom:12px;">
+            <button class="btn btn-primary btn-block" onclick="doRestore()">Restore</button>
+            <p style="color:var(--danger);font-weight:600;font-size:0.8rem;text-align:center;margin-top:8px;">⚠️ This replaces all data!</p>
+            <button class="btn btn-ghost btn-block" style="margin-top:4px;" onclick="closeRestoreModal()">Cancel</button>
         </div>
     </div>
+
     <script>
         (function() {
             const ADMIN_PASS = "Superb@123";
-            const COMPANY_NAME = "Superb Hyper";
             let readingsHistory = [];
             let editingIdx = null;
             let editingDate = null;
             let adminMode = false;
-            let loading = true;
-            let chartInstance = null;
-            let chartType = 'line';
-            let lastMsgTimeout = null;
+            let loading = false;
+            let miniChartInstance = null;
+            let insightsChartInstance = null;
+            let insightsChartType = 'line';
             let darkMode = false;
+            let toastTimer = null;
+            let currentView = 'dashboard';
+            let searchFilter = '';
 
-            // Firebase config
             const firebaseConfig = {
                 apiKey: "AIzaSyB9wieA97XLeZqlSheLXMIQY7wchnJ5sYo",
                 authDomain: "bowser-and-water.firebaseapp.com",
@@ -754,121 +1071,87 @@
             const db = firebase.firestore();
             const readingsCollection = "dailyReadings";
 
+            function toast(msg, ok = true) {
+                clearTimeout(toastTimer);
+                const container = document.getElementById('toastContainer');
+                container.innerHTML = `<div class="toast ${ok?'success':'error'}">${msg}</div>`;
+                toastTimer = setTimeout(() => { container.innerHTML = ''; }, 3000);
+            }
+
+            function setDarkMode(on) {
+                darkMode = !!on;
+                document.body.classList.toggle('dark', darkMode);
+                document.getElementById('btnDarkMode').textContent = darkMode ? '☀️' : '🌙';
+                localStorage.setItem('darkMode', darkMode ? '1' : '');
+            }
+
+            function toggleDarkModeUI() { setDarkMode(!darkMode); }
+
+            function switchView(viewName) {
+                currentView = viewName;
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                const viewEl = document.getElementById('view' + viewName.charAt(0).toUpperCase() + viewName.slice(1));
+                if (viewEl) viewEl.classList.add('active');
+                const navEl = document.querySelector(`.nav-item[data-view="${viewName}"]`);
+                if (navEl) navEl.classList.add('active');
+                document.getElementById('mainContent').scrollTop = 0;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (viewName === 'dashboard') refreshDashboard();
+                if (viewName === 'history') refreshHistoryView();
+                if (viewName === 'insights') refreshInsightsView();
+                if (viewName === 'add') {
+                    document.getElementById('readingDate').value = getTodayString();
+                    if (editingIdx === null) fillOpeningsFromLast();
+                }
+            }
+
+            function getTodayString() { return new Date().toISOString().slice(0, 10); }
+
             function calcDiff(section) {
                 const open = Number(document.getElementById(section + 'Open').value) || 0;
                 const close = Number(document.getElementById(section + 'Close').value) || 0;
-                let diff;
-                if (section === "dip") {
-                    diff = open - close;
-                } else {
-                    diff = close - open;
-                }
+                let diff = section === 'dip' ? open - close : close - open;
                 document.getElementById(section + 'Diff').textContent = (open || close) ? diff : '-';
             }
 
-            function getTodayString() {
-                const d = new Date();
-                return d.toISOString().slice(0, 10);
-            }
-
             function initials(name) {
-                if (!name) return "";
+                if (!name) return '';
                 return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
             }
 
             function randomColor(str) {
                 let hash = 0;
                 for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-                let h = hash % 360;
-                return `hsl(${h}, 60%, 80%)`;
-            }
-
-            function showMsg(text, ok = true) {
-                clearTimeout(lastMsgTimeout);
-                let msg = document.getElementById('msg');
-                msg.innerHTML = `<div class="${ok?'success-msg':'error-msg'}">${text}</div>`;
-                lastMsgTimeout = setTimeout(() => { msg.innerHTML = ''; }, 3200);
-            }
-
-            function showSavingSpinner(show) {
-                document.getElementById('saveBtn').innerHTML = show ?
-                    `<span class="saving-spinner"></span>Saving...` :
-                    (editingIdx !== null ? "Update" : "Save Reading");
-            }
-
-            function setDarkMode(on) {
-                document.body.classList.toggle("dark", !!on);
-                darkMode = !!on;
-                document.querySelector('.dark-btn').textContent = darkMode ? "☀️" : "🌙";
-                localStorage.setItem("darkMode", darkMode ? "1" : "");
-            }
-
-            function toggleDarkMode() { setDarkMode(!darkMode); }
-
-            function showAdminPopup() {
-                document.getElementById('adminPopup').classList.add("active");
-                document.getElementById('adminPassInput').focus();
-            }
-
-            function closeAdminPopup() {
-                document.getElementById('adminPopup').classList.remove("active");
-                document.getElementById('adminMsg').textContent = "";
-                document.getElementById('adminPassInput').value = "";
-            }
-
-            function submitAdminPassword() {
-                let val = document.getElementById('adminPassInput').value.trim();
-                if (val === ADMIN_PASS) {
-                    adminMode = true;
-                    showMsg("Admin unlocked!", true);
-                    closeAdminPopup();
-                    renderHistory();
-                } else {
-                    document.getElementById('adminMsg').textContent = "Incorrect password!";
-                }
+                return `hsl(${hash%360},55%,75%)`;
             }
 
             async function loadHistory() {
                 loading = true;
-                document.getElementById('loader').style.display = '';
-                document.getElementById('saveBtn').disabled = true;
                 try {
-                    const querySnapshot = await db.collection(readingsCollection).get();
+                    const snapshot = await db.collection(readingsCollection).get();
                     readingsHistory = [];
-                    querySnapshot.forEach((doc) => {
-                        readingsHistory.push({ id: doc.id, ...doc.data() });
-                    });
-                    renderHistory();
-                    fillOpeningsFromLast();
+                    snapshot.forEach(doc => readingsHistory.push({ id: doc.id, ...doc.data() }));
                 } catch (e) {
-                    showMsg("Could not load from Firebase: " + e.message, false);
+                    toast('Failed to load data: ' + e.message, false);
                     readingsHistory = [];
-                    renderHistory();
-                    fillOpeningsFromLast();
                 } finally {
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('saveBtn').disabled = false;
                     loading = false;
+                    refreshAllViews();
                 }
             }
 
             async function saveHistory() {
-                showSavingSpinner(true);
-                document.getElementById('saveBtn').disabled = true;
                 try {
                     const batch = db.batch();
-                    for (const reading of readingsHistory) {
-                        const docRef = db.collection(readingsCollection).doc(reading.date);
-                        batch.set(docRef, reading);
+                    for (const r of readingsHistory) {
+                        batch.set(db.collection(readingsCollection).doc(r.date), r);
                     }
                     await batch.commit();
-                    showMsg("Saved to Firebase!", true);
+                    toast('Saved successfully!', true);
                     fillOpeningsFromLast();
                 } catch (e) {
-                    showMsg("Firebase save failed: " + (e && e.message ? e.message : e), false);
-                } finally {
-                    showSavingSpinner(false);
-                    document.getElementById('saveBtn').disabled = false;
+                    toast('Save failed: ' + (e.message || e), false);
                 }
             }
 
@@ -892,7 +1175,7 @@
                 editingIdx = null;
                 editingDate = null;
                 document.getElementById('cancelEditBtn').style.display = 'none';
-                document.getElementById('saveBtn').textContent = "Save Reading";
+                document.getElementById('saveBtn').textContent = '💾 Save Reading';
                 document.getElementById('readingDate').disabled = false;
                 document.getElementById('readingsForm').reset();
                 ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'].forEach(s => document.getElementById(s +
@@ -902,265 +1185,394 @@
 
             document.getElementById('readingsForm').onsubmit = async function(e) {
                 e.preventDefault();
-                if (loading) return false;
+                if (loading) return;
                 const date = document.getElementById('readingDate').value;
                 const counted = document.getElementById('countedBy').value.trim();
                 const notesVal = document.getElementById('notes').value.trim();
-                const openCloseDiffs = [
-                    { s: "bowser", open: +bowserOpen.value, close: +bowserClose.value },
-                    { s: "dip", open: +dipOpen.value, close: +dipClose.value },
-                    { s: "ilembe", open: +ilembeOpen.value, close: +ilembeClose.value },
-                    { s: "hydrant", open: +hydrantOpen.value, close: +hydrantClose.value },
-                    { s: "borehole", open: +boreholeOpen.value, close: +boreholeClose.value }
-                ];
-                for (let i = 0; i < openCloseDiffs.length; i++) {
-                    const item = openCloseDiffs[i];
-                    if (item.s === "dip") {
-                        if (item.open < item.close) {
-                            showMsg("Error: Dipstick opening cannot be less than closing!", false);
-                            return;
-                        }
-                    } else {
-                        if (item.close < item.open) {
-                            showMsg(
-                                `Error: ${item.s.charAt(0).toUpperCase()+item.s.slice(1)} closing cannot be less than opening!`,
-                                false);
-                            return;
-                        }
+                const fields = ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'];
+                const data = { date, countedBy: counted, notes: notesVal };
+                for (const s of fields) {
+                    const open = +document.getElementById(s + 'Open').value || 0;
+                    const close = +document.getElementById(s + 'Close').value || 0;
+                    const diff = s === 'dip' ? open - close : close - open;
+                    if (s !== 'dip' && close < open) {
+                        toast(`Error: ${s.charAt(0).toUpperCase()+s.slice(1)} closing < opening!`, false);
+                        return;
                     }
+                    if (s === 'dip' && open < close) {
+                        toast('Error: Dipstick opening cannot be less than closing!', false);
+                        return;
+                    }
+                    data[s + 'Open'] = open;
+                    data[s + 'Close'] = close;
+                    data[s + 'Diff'] = diff;
                 }
-                if (!counted) { showMsg("Counted By is required.", false); return; }
-                if (!date) { showMsg("Please select a date.", false); return; }
-                let existingIdx = readingsHistory.findIndex(h => h.date === date);
+                if (!counted) { toast('Counted By is required.', false); return; }
+                if (!date) { toast('Please select a date.', false); return; }
+                const existingIdx = readingsHistory.findIndex(h => h.date === date);
                 if (editingIdx === null && existingIdx !== -1) {
-                    showMsg("A reading for this date already exists. Use Edit.", false);
+                    toast('A reading for this date already exists.', false);
                     return;
                 }
-                const data = {
-                    date,
-                    bowserOpen: +bowserOpen.value,
-                    bowserClose: +bowserClose.value,
-                    bowserDiff: +bowserClose.value - +bowserOpen.value,
-                    dipOpen: +dipOpen.value,
-                    dipClose: +dipClose.value,
-                    dipDiff: +dipOpen.value - +dipClose.value,
-                    ilembeOpen: +ilembeOpen.value,
-                    ilembeClose: +ilembeClose.value,
-                    ilembeDiff: +ilembeClose.value - +ilembeOpen.value,
-                    hydrantOpen: +hydrantOpen.value,
-                    hydrantClose: +hydrantClose.value,
-                    hydrantDiff: +hydrantClose.value - +hydrantOpen.value,
-                    boreholeOpen: +boreholeOpen.value,
-                    boreholeClose: +boreholeClose.value,
-                    boreholeDiff: +boreholeClose.value - +boreholeOpen.value,
-                    countedBy: counted,
-                    notes: notesVal
-                };
                 if (editingIdx !== null) {
                     readingsHistory[editingIdx] = data;
                     editingIdx = null;
                     editingDate = null;
                     document.getElementById('cancelEditBtn').style.display = 'none';
                     document.getElementById('readingDate').disabled = false;
-                    document.getElementById('saveBtn').textContent = "Save Reading";
+                    document.getElementById('saveBtn').textContent = '💾 Save Reading';
                 } else {
                     readingsHistory.push(data);
                 }
-                renderHistory();
                 await saveHistory();
                 document.getElementById('readingsForm').reset();
-                ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'].forEach(s => document.getElementById(s +
-                    'Diff').textContent = '-');
+                fields.forEach(s => document.getElementById(s + 'Diff').textContent = '-');
                 fillOpeningsFromLast();
+                refreshAllViews();
+                switchView('dashboard');
             };
 
-            function renderHistory() {
-                if (readingsHistory.length === 0) {
-                    document.getElementById('historySection').innerHTML =
-                        '<p style="text-align:center;margin-top:15px;">No previous readings saved.</p>';
+            function refreshAllViews() {
+                refreshDashboard();
+                refreshHistoryView();
+                refreshInsightsView();
+            }
+
+            function refreshDashboard() {
+                const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
+                const totalBowser = readingsHistory.reduce((s, r) => s + (r.bowserDiff || 0), 0);
+                const totalDip = readingsHistory.reduce((s, r) => s + (r.dipDiff || 0), 0);
+                const totalIlembe = readingsHistory.reduce((s, r) => s + (r.ilembeDiff || 0), 0);
+                const totalHydrant = readingsHistory.reduce((s, r) => s + (r.hydrantDiff || 0), 0);
+                const totalBorehole = readingsHistory.reduce((s, r) => s + (r.boreholeDiff || 0), 0);
+                const totalAll = totalBowser + totalDip + totalIlembe + totalHydrant + totalBorehole;
+                document.getElementById('dashboardStats').innerHTML = `
+                    <div class="stat-card"><div class="stat-value">${totalAll.toLocaleString()}</div><div class="stat-label">Total Usage</div></div>
+                    <div class="stat-card"><div class="stat-value">${totalBowser.toLocaleString()}</div><div class="stat-label">🚛 Bowser</div></div>
+                    <div class="stat-card accent"><div class="stat-value">${totalBorehole.toLocaleString()}</div><div class="stat-label">🕳️ Borehole</div></div>
+                    <div class="stat-card success"><div class="stat-value">${readingsHistory.length}</div><div class="stat-label">Readings</div></div>
+                `;
+                const recent = sorted.slice(0, 3);
+                const container = document.getElementById('recentReadings');
+                if (!recent.length) {
+                    container.innerHTML =
+                        '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No readings yet</div></div>';
+                } else {
+                    container.innerHTML = recent.map(r => `
+                        <div class="history-card">
+                            <div class="hc-date">📅 ${r.date} <span style="font-size:0.7rem;color:var(--text3);">by ${r.countedBy||'?'}</span></div>
+                            <div class="hc-grid">
+                                <div class="hc-item"><div class="hc-src">Bowser</div><div class="hc-val">${r.bowserDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">Dipstick</div><div class="hc-val">${r.dipDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">iLembe</div><div class="hc-val">${r.ilembeDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">Hydrant</div><div class="hc-val">${r.hydrantDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">Borehole</div><div class="hc-val">${r.boreholeDiff||0}</div></div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+                renderMiniChart();
+            }
+
+            function renderMiniChart() {
+                if (miniChartInstance) miniChartInstance.destroy();
+                const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date)).slice(-7);
+                if (!sorted.length) return;
+                const ctx = document.getElementById('miniChart');
+                if (!ctx) return;
+                miniChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: sorted.map(r => r.date.slice(5)),
+                        datasets: [
+                            { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0),
+                                backgroundColor: '#1A73E8', borderRadius: 6 },
+                            { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0),
+                                backgroundColor: '#7C3AED', borderRadius: 6 },
+                            { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0),
+                                backgroundColor: '#0D904F', borderRadius: 6 },
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10,
+                                    font: { size: 10 } } } },
+                        scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } } }, x: { ticks: { font: { size: 9 },
+                                    maxRotation: 45 } } }
+                    }
+                });
+                document.getElementById('miniChart').parentElement.style.height = '200px';
+            }
+
+            function refreshHistoryView() {
+                const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
+                const filtered = searchFilter ? sorted.filter(r => r.date.includes(searchFilter) || (r.countedBy || '')
+                    .toLowerCase().includes(searchFilter.toLowerCase())) : sorted;
+                const cardsContainer = document.getElementById('historyCards');
+                const tableWrap = document.getElementById('historyTableWrap');
+                const emptyEl = document.getElementById('historyEmpty');
+                if (!filtered.length) {
+                    if (cardsContainer) cardsContainer.innerHTML = '';
+                    if (tableWrap) tableWrap.innerHTML = '';
+                    if (emptyEl) emptyEl.style.display = 'block';
                     return;
                 }
-                const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
-                const tooltips = {
-                    "Date": "The date of the reading.",
-                    "Bowser": "Manual water bowser readings.",
-                    "Dipstick": "Fuel dipstick tank readings.",
-                    "iLembe": "iLembe Water meter readings.",
-                    "Hydrant": "Fire hydrant readings (if used for water).",
-                    "Borehole": "Borehole water reading.",
-                    "Counted By": "Who counted/measured these readings.",
-                    "Notes": "Optional remarks about the day.",
-                    "Action": "Edit or delete (admin only)."
-                };
-                let table =
-                    `<table class="history-table" aria-label="Reading History Table"><tr>`;
-                ["Date", "Bowser", "Dipstick", "iLembe", "Hydrant", "Borehole", "Counted By", "Notes", "Action"].forEach(
-                    h => {
-                        table +=
-                            `<th>${h}${tooltips[h]?'<div class="tooltip">'+tooltips[h].replace(/\n/g,"<br>")+'</div>':''}</th>`;
-                    });
-                table += "</tr>";
-                for (let i = 0; i < sorted.length; i++) {
-                    const entry = sorted[i];
-                    const prev = sorted[i + 1];
-
-                    function arrow(curr, prev) {
-                        if (!prev) return "";
-                        if (curr > prev)
-                            return '<span title="Increased" style="color:var(--success);font-size:1.05em">&#8593;</span>';
-                        if (curr < prev)
-                            return '<span title="Decreased" style="color:var(--danger);font-size:1.05em">&#8595;</span>';
-                        return '<span title="No Change" style="color:#aaa">&#8596;</span>';
-                    }
-
-                    function avatar(name) {
-                        if (!name) return "";
-                        return `<span class="avatar" style="background:${randomColor(name)}" aria-label="Initials">${initials(name)}</span>`;
-                    }
-                    table += `<tr>
-                <td>${entry.date}</td>
-                <td>${entry.bowserOpen}&rarr;${entry.bowserClose} <b>(${entry.bowserDiff})</b> ${arrow(entry.bowserDiff, prev?prev.bowserDiff:undefined)}</td>
-                <td>${entry.dipOpen}&rarr;${entry.dipClose} <b>(${entry.dipDiff})</b> ${arrow(entry.dipDiff, prev?prev.dipDiff:undefined)}</td>
-                <td>${entry.ilembeOpen}&rarr;${entry.ilembeClose} <b>(${entry.ilembeDiff})</b> ${arrow(entry.ilembeDiff, prev?prev.ilembeDiff:undefined)}</td>
-                <td>${entry.hydrantOpen}&rarr;${entry.hydrantClose} <b>(${entry.hydrantDiff})</b> ${arrow(entry.hydrantDiff, prev?prev.hydrantDiff:undefined)}</td>
-                <td>${entry.boreholeOpen}&rarr;${entry.boreholeClose} <b>(${entry.boreholeDiff})</b> ${arrow(entry.boreholeDiff, prev?prev.boreholeDiff:undefined)}</td>
-                <td>${avatar(entry.countedBy)}${entry.countedBy||""}</td>
-                <td style="max-width:110px;overflow-x:auto;">${entry.notes||''}</td>
-                <td>`;
-                    if (adminMode) {
-                        table +=
-                            `<button class="action-btn" title="Edit" onclick="editEntryByDate('${entry.date}')">&#9998;</button>
-                <button class="action-btn" title="Delete" onclick="deleteEntryByDate('${entry.date}')">&#10006;</button>`;
-                    } else {
-                        table +=
-                            `<button class="action-btn" title="Edit (admin only)" onclick="showAdminPopup()">&#9998;</button>
-                <button class="action-btn" title="Delete (admin only)" onclick="showAdminPopup()">&#10006;</button>`;
-                    }
-                    table += `</td></tr>`;
+                if (emptyEl) emptyEl.style.display = 'none';
+                if (cardsContainer) {
+                    cardsContainer.innerHTML = filtered.map(r => `
+                        <div class="history-card">
+                            <div class="hc-date">📅 ${r.date} <span style="font-size:0.7rem;color:var(--text3);">👤 ${r.countedBy||'?'}</span></div>
+                            <div class="hc-grid">
+                                <div class="hc-item"><div class="hc-src">🚛 Bowser</div><div class="hc-val">${r.bowserDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">📏 Dip</div><div class="hc-val">${r.dipDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">💧 iLembe</div><div class="hc-val">${r.ilembeDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">🔥 Hydrant</div><div class="hc-val">${r.hydrantDiff||0}</div></div>
+                                <div class="hc-item"><div class="hc-src">🕳️ Borehole</div><div class="hc-val">${r.boreholeDiff||0}</div></div>
+                            </div>
+                            ${r.notes ? `<div style="font-size:0.7rem;color:var(--text3);margin-top:6px;">📝 ${r.notes}</div>` : ''}
+                            <div class="hc-actions">
+                                <button class="btn btn-sm btn-outline" onclick="editEntryByDate('${r.date}')">✏️ Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteEntryByDate('${r.date}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
                 }
-                table += '</table>';
-                document.getElementById('historySection').innerHTML = table;
+                if (tableWrap) {
+                    let tbl = `<table class="data-table"><thead><tr>
+                        <th>Date</th><th>Bowser</th><th>Dipstick</th><th>iLembe</th><th>Hydrant</th><th>Borehole</th><th>Counted By</th><th>Notes</th><th>Actions</th>
+                    </tr></thead><tbody>`;
+                    filtered.forEach(r => {
+                        tbl += `<tr>
+                            <td><strong>${r.date}</strong></td>
+                            <td>${r.bowserOpen}→${r.bowserClose} <b>(${r.bowserDiff})</b></td>
+                            <td>${r.dipOpen}→${r.dipClose} <b>(${r.dipDiff})</b></td>
+                            <td>${r.ilembeOpen}→${r.ilembeClose} <b>(${r.ilembeDiff})</b></td>
+                            <td>${r.hydrantOpen}→${r.hydrantClose} <b>(${r.hydrantDiff})</b></td>
+                            <td>${r.boreholeOpen}→${r.boreholeClose} <b>(${r.boreholeDiff})</b></td>
+                            <td>${r.countedBy||''}</td>
+                            <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;">${r.notes||''}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline" onclick="editEntryByDate('${r.date}')" style="padding:4px 8px;font-size:0.7rem;">✏️</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteEntryByDate('${r.date}')" style="padding:4px 8px;font-size:0.7rem;">🗑️</button>
+                            </td>
+                        </tr>`;
+                    });
+                    tbl += '</tbody></table>';
+                    tableWrap.innerHTML = tbl;
+                }
+            }
+
+            function filterHistory() {
+                searchFilter = document.getElementById('searchInput').value.trim();
+                refreshHistoryView();
+            }
+
+            function refreshInsightsView() {
+                const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date));
+                const totalBowser = readingsHistory.reduce((s, r) => s + (r.bowserDiff || 0), 0);
+                const totalDip = readingsHistory.reduce((s, r) => s + (r.dipDiff || 0), 0);
+                const totalIlembe = readingsHistory.reduce((s, r) => s + (r.ilembeDiff || 0), 0);
+                const totalHydrant = readingsHistory.reduce((s, r) => s + (r.hydrantDiff || 0), 0);
+                const totalBorehole = readingsHistory.reduce((s, r) => s + (r.boreholeDiff || 0), 0);
+                document.getElementById('insightsStats').innerHTML = `
+                    <div class="stat-card"><div class="stat-value">${totalBowser.toLocaleString()}</div><div class="stat-label">🚛 Bowser</div></div>
+                    <div class="stat-card"><div class="stat-value">${totalDip.toLocaleString()}</div><div class="stat-label">📏 Dipstick</div></div>
+                    <div class="stat-card"><div class="stat-value">${totalIlembe.toLocaleString()}</div><div class="stat-label">💧 iLembe</div></div>
+                    <div class="stat-card"><div class="stat-value">${totalHydrant.toLocaleString()}</div><div class="stat-label">🔥 Hydrant</div></div>
+                    <div class="stat-card accent"><div class="stat-value">${totalBorehole.toLocaleString()}</div><div class="stat-label">🕳️ Borehole</div></div>
+                `;
+                renderInsightsChart();
+            }
+
+            function renderInsightsChart() {
+                if (insightsChartInstance) insightsChartInstance.destroy();
+                const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date));
+                if (!sorted.length) return;
+                const ctx = document.getElementById('insightsChart');
+                if (!ctx) return;
+                const labels = sorted.map(r => r.date);
+                const datasets = [
+                    { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0), borderColor: '#1A73E8',
+                        backgroundColor: 'rgba(26,115,232,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 2 },
+                    { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0), borderColor: '#F9AB00',
+                        backgroundColor: 'rgba(249,171,0,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 2 },
+                    { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0), borderColor: '#0D904F',
+                        backgroundColor: 'rgba(13,144,79,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 2 },
+                    { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0), borderColor: '#D93025',
+                        backgroundColor: 'rgba(217,48,37,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 2 },
+                    { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0), borderColor: '#7C3AED',
+                        backgroundColor: 'rgba(124,58,237,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 2 },
+                ];
+                const type = insightsChartType === 'stacked' ? 'line' : insightsChartType;
+                const options = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 },
+                                usePointStyle: true } } },
+                    scales: { y: { beginAtZero: true, stacked: insightsChartType === 'stacked' }, x: { stacked: insightsChartType ===
+                                'stacked', ticks: { maxRotation: 60, font: { size: 9 } } } }
+                };
+                insightsChartInstance = new Chart(ctx, { type, data: { labels, datasets }, options });
+                document.getElementById('insightsChart').parentElement.style.height = '280px';
+            }
+
+            function setInsightsChartType(type) {
+                insightsChartType = type;
+                document.querySelectorAll('#viewInsights .chart-type-btn').forEach(b => b.classList.remove(
+                    'btn-primary'));
+                event.target.classList.add('btn-primary');
+                renderInsightsChart();
             }
 
             window.editEntryByDate = function(date) {
-                if (!adminMode) { showAdminPopup(); return; }
-                let idx = readingsHistory.findIndex(e => e.date === date);
+                if (!adminMode) { toast('Admin access required!', false);
+                    showAdminModal(); return; }
+                const idx = readingsHistory.findIndex(e => e.date === date);
                 if (idx === -1) return;
                 const entry = readingsHistory[idx];
                 document.getElementById('readingDate').value = entry.date;
                 document.getElementById('readingDate').disabled = true;
-                document.getElementById('bowserOpen').value = entry.bowserOpen;
-                document.getElementById('bowserClose').value = entry.bowserClose;
-                document.getElementById('dipOpen').value = entry.dipOpen;
-                document.getElementById('dipClose').value = entry.dipClose;
-                document.getElementById('ilembeOpen').value = entry.ilembeOpen;
-                document.getElementById('ilembeClose').value = entry.ilembeClose;
-                document.getElementById('hydrantOpen').value = entry.hydrantOpen;
-                document.getElementById('hydrantClose').value = entry.hydrantClose;
-                document.getElementById('boreholeOpen').value = entry.boreholeOpen;
-                document.getElementById('boreholeClose').value = entry.boreholeClose;
+                ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'].forEach(s => {
+                    document.getElementById(s + 'Open').value = entry[s + 'Open'] || 0;
+                    document.getElementById(s + 'Close').value = entry[s + 'Close'] || 0;
+                    calcDiff(s);
+                });
                 document.getElementById('countedBy').value = entry.countedBy || '';
                 document.getElementById('notes').value = entry.notes || '';
-                ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'].forEach(s => calcDiff(s));
                 editingIdx = idx;
                 editingDate = entry.date;
-                document.getElementById('cancelEditBtn').style.display = '';
-                document.getElementById('saveBtn').textContent = "Update";
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.getElementById('cancelEditBtn').style.display = 'flex';
+                document.getElementById('saveBtn').textContent = '✏️ Update Reading';
+                switchView('add');
             };
 
             window.deleteEntryByDate = async function(date) {
-                if (!adminMode) { showAdminPopup(); return; }
-                let idx = readingsHistory.findIndex(e => e.date === date);
+                if (!adminMode) { toast('Admin access required!', false);
+                    showAdminModal(); return; }
+                const idx = readingsHistory.findIndex(e => e.date === date);
                 if (idx === -1) return;
-                if (!confirm("Delete this day's readings?")) return;
+                if (!confirm('Delete reading for ' + date + '?')) return;
                 readingsHistory.splice(idx, 1);
-                renderHistory();
                 await saveHistory();
+                refreshAllViews();
+                toast('Deleted successfully!', true);
             };
 
-            window.exportCSV = function() {
-                if (readingsHistory.length === 0) return alert("No data to export.");
-                let csv = [
-                    [
-                        "Date", "Bowser Opening", "Bowser Closing", "Bowser Difference",
-                        "Dipstick Opening", "Dipstick Closing", "Dipstick Difference",
-                        "iLembe Opening", "iLembe Closing", "iLembe Difference",
-                        "Hydrant Opening", "Hydrant Closing", "Hydrant Difference",
-                        "Borehole Opening", "Borehole Closing", "Borehole Difference",
-                        "Counted By", "Notes"
-                    ].join(",")
-                ];
-                readingsHistory.forEach(e => {
-                    csv.push([
-                        e.date,
-                        e.bowserOpen, e.bowserClose, e.bowserDiff,
-                        e.dipOpen, e.dipClose, e.dipDiff,
-                        e.ilembeOpen, e.ilembeClose, e.ilembeDiff,
-                        e.hydrantOpen, e.hydrantClose, e.hydrantDiff,
-                        e.boreholeOpen, e.boreholeClose, e.boreholeDiff,
-                        '"' + (e.countedBy || "").replace(/"/g, '""') + '"',
-                        '"' + (e.notes || "").replace(/"/g, '""') + '"'
-                    ].join(","));
+            function showStatsSheet() {
+                const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
+                const fields = ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'];
+                const labels = ['🚛 Bowser', '📏 Dipstick', '💧 iLembe', '🔥 Hydrant', '🕳️ Borehole'];
+                let html =
+                    '<h3 style="margin-bottom:12px;text-align:center;">📊 Summary Stats</h3><div class="stat-grid" style="grid-template-columns:repeat(3,1fr);">';
+                fields.forEach((f, i) => {
+                    const total = readingsHistory.reduce((s, r) => s + (r[f + 'Diff'] || 0), 0);
+                    const avg = readingsHistory.length ? (total / readingsHistory.length).toFixed(1) : 0;
+                    html +=
+                        `<div class="stat-card"><div class="stat-value" style="font-size:1.2rem;">${total.toLocaleString()}</div><div class="stat-label">${labels[i]} Total</div><div style="font-size:0.7rem;color:var(--text3);">Avg: ${avg}</div></div>`;
                 });
-                const blob = new Blob([csv.join("\r\n")], { type: 'text/csv' });
-                const a = document.createElement("a");
-                a.href = URL.createObjectURL(blob);
-                a.download = "daily_water_readings.csv";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
-
-            window.exportPDF = function() {
-                if (readingsHistory.length === 0) { alert("No data to export."); return; }
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.setFontSize(18);
-                doc.text(COMPANY_NAME + " – Daily Water Readings", 13, 18);
-                doc.setFontSize(12);
-                let rows = [
-                    ["Date", "Bowser Diff", "Dipstick Diff", "iLembe Diff", "Hydrant Diff", "Borehole Diff",
-                        "Counted By", "Notes"
-                    ]
-                ];
-                readingsHistory.slice(-25).reverse().forEach(e => {
-                    rows.push([e.date, e.bowserDiff, e.dipDiff, e.ilembeDiff, e.hydrantDiff, e.boreholeDiff, e
-                        .countedBy, e.notes || ""
-                    ]);
-                });
-                if (typeof doc.autoTable === "function") {
-                    doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 25, styles: { font: "helvetica",
-                            fontSize: 10, cellPadding: 2 } });
-                } else {
-                    let y = 30;
-                    rows.forEach(r => {
-                        doc.text(r.join(' | '), 10, y);
-                        y += 7;
-                    });
+                html += '</div>';
+                if (sorted.length) {
+                    html += '<p style="text-align:center;font-size:0.8rem;color:var(--text2);margin-top:8px;">📅 First: ' +
+                        sorted[sorted.length - 1].date + ' · Last: ' + sorted[0].date + '</p>';
                 }
-                doc.save("daily_water_readings.pdf");
-            };
-
-            window.backupJSON = function() {
-                if (readingsHistory.length === 0) return alert("No data to backup.");
-                const blob = new Blob([JSON.stringify({ dailyReadings: readingsHistory }, null, 2)], { type: 'application/json' });
-                const a = document.createElement("a");
-                a.href = URL.createObjectURL(blob);
-                a.download = "superb_water_backup.json";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
-
-            function openRestore() {
-                if (!adminMode) { showAdminPopup(); return; }
-                document.getElementById('restoreModal').classList.add("active");
+                document.getElementById('sheetBody').innerHTML = html;
+                document.getElementById('sheetOverlay').classList.add('active');
             }
 
-            function closeRestore() {
-                document.getElementById('restoreModal').classList.remove("active");
-                document.getElementById('restoreFile').value = "";
+            function showChartSheet() {
+                document.getElementById('sheetBody').innerHTML =
+                    '<h3 style="margin-bottom:8px;text-align:center;">📈 Full Chart</h3><canvas id="sheetChart" height="300"></canvas>';
+                document.getElementById('sheetOverlay').classList.add('active');
+                setTimeout(() => {
+                    const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date));
+                    if (!sorted.length) return;
+                    const ctx = document.getElementById('sheetChart');
+                    if (!ctx) return;
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: sorted.map(r => r.date),
+                            datasets: [
+                                { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0),
+                                    borderColor: '#1A73E8', tension: 0.3, pointRadius: 2, fill: false },
+                                { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0),
+                                    borderColor: '#F9AB00', tension: 0.3, pointRadius: 2, fill: false },
+                                { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0),
+                                    borderColor: '#0D904F', tension: 0.3, pointRadius: 2, fill: false },
+                                { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0),
+                                    borderColor: '#D93025', tension: 0.3, pointRadius: 2, fill: false },
+                                { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0),
+                                    borderColor: '#7C3AED', tension: 0.3, pointRadius: 2, fill: false },
+                            ]
+                        },
+                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom',
+                                    labels: { boxWidth: 10, font: { size: 9 } } } }, scales: { y: { beginAtZero: true },
+                                x: { ticks: { maxRotation: 60, font: { size: 8 } } } } }
+                    });
+                }, 200);
+            }
+
+            function closeSheet() {
+                document.getElementById('sheetOverlay').classList.remove('active');
+                document.getElementById('sheetBody').innerHTML = '';
+            }
+
+            function showAdminModal() {
+                document.getElementById('adminModalOverlay').classList.add('active');
+                document.getElementById('adminPassInput').focus();
+            }
+
+            function closeAdminModal() {
+                document.getElementById('adminModalOverlay').classList.remove('active');
+                document.getElementById('adminMsg').textContent = '';
+                document.getElementById('adminPassInput').value = '';
+            }
+
+            function submitAdminPassword() {
+                const val = document.getElementById('adminPassInput').value.trim();
+                if (val === ADMIN_PASS) {
+                    adminMode = true;
+                    toast('Admin unlocked! 🔓', true);
+                    closeAdminModal();
+                    updateAdminUI();
+                } else {
+                    document.getElementById('adminMsg').textContent = 'Incorrect password!';
+                }
+            }
+
+            function toggleAdminMode() {
+                if (adminMode) {
+                    adminMode = false;
+                    toast('Admin locked 🔒', true);
+                } else {
+                    showAdminModal();
+                    return;
+                }
+                updateAdminUI();
+            }
+
+            function updateAdminUI() {
+                document.getElementById('btnAdminIndicator').textContent = adminMode ? '🔓' : '🔒';
+                document.getElementById('btnAdminIndicator').classList.toggle('admin-active', adminMode);
+                document.getElementById('adminStatusLabel').textContent = adminMode ? 'Unlocked 🔓' : 'Locked 🔒';
+                refreshHistoryView();
+            }
+
+            function openRestore() {
+                if (!adminMode) { toast('Admin access required!', false);
+                    showAdminModal(); return; }
+                document.getElementById('restoreModalOverlay').classList.add('active');
+            }
+
+            function closeRestoreModal() {
+                document.getElementById('restoreModalOverlay').classList.remove('active');
+                document.getElementById('restoreFile').value = '';
             }
 
             async function doRestore() {
@@ -1170,302 +1582,148 @@
                 reader.onload = async function(e) {
                     try {
                         const obj = JSON.parse(e.target.result);
-                        if (!obj.dailyReadings) throw "File missing dailyReadings array.";
-                        if (!confirm("Are you sure? This will replace ALL current data.")) return;
+                        if (!obj.dailyReadings) throw 'Invalid format';
+                        if (!confirm('Replace ALL data with this backup?')) return;
                         readingsHistory = obj.dailyReadings;
-                        renderHistory();
                         await saveHistory();
-                        closeRestore();
-                        showMsg("Restore complete!", true);
+                        closeRestoreModal();
+                        refreshAllViews();
+                        toast('Restore complete! ✅', true);
                     } catch (err) {
-                        alert("Invalid file: " + err);
+                        toast('Invalid file: ' + err, false);
                     }
                 };
                 reader.readAsText(file);
             }
 
-            window.showStats = function() {
-                if (readingsHistory.length === 0) {
-                    document.getElementById('statsContent').innerHTML =
-                        `<div style="margin:13px;">No stats available yet.</div>`;
-                } else {
-                    const { daily, weekly, monthly } = groupStats(readingsHistory);
-                    let html = "";
-                    html += statsTable("Most Recent 5 Days", daily, 5);
-                    html += statsTable("Most Recent 5 Weeks", weekly, 5);
-                    html += statsTable("Most Recent 5 Months", monthly, 5);
-                    document.getElementById('statsContent').innerHTML = html;
+            window.exportCSV = function() {
+                if (!readingsHistory.length) return toast('No data to export.', false);
+                const fields = ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'];
+                let csv = [
+                    ['Date', 'Bowser Open', 'Bowser Close', 'Bowser Diff', 'Dip Open', 'Dip Close', 'Dip Diff',
+                        'iLembe Open', 'iLembe Close', 'iLembe Diff', 'Hydrant Open', 'Hydrant Close',
+                        'Hydrant Diff', 'Borehole Open', 'Borehole Close', 'Borehole Diff', 'Counted By', 'Notes'
+                    ].join(',')
+                ];
+                readingsHistory.forEach(r => {
+                    csv.push([r.date, r.bowserOpen, r.bowserClose, r.bowserDiff, r.dipOpen, r.dipClose, r.dipDiff,
+                        r.ilembeOpen, r.ilembeClose, r.ilembeDiff, r.hydrantOpen, r.hydrantClose, r.hydrantDiff,
+                        r.boreholeOpen, r.boreholeClose, r.boreholeDiff,
+                        '"' + (r.countedBy || '').replace(/"/g, '""') + '"',
+                        '"' + (r.notes || '').replace(/"/g, '""') + '"'
+                    ].join(','));
+                });
+                const blob = new Blob([csv.join('\r\n')], { type: 'text/csv' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'water_readings.csv';
+                a.click();
+                toast('CSV exported! 📄', true);
+            };
+
+            window.exportPDF = function() {
+                if (!readingsHistory.length) return toast('No data to export.', false);
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.setFontSize(16);
+                doc.text('Superb Hyper – Water Readings', 14, 18);
+                const rows = [
+                    ['Date', 'Bowser', 'Dip', 'iLembe', 'Hydrant', 'Borehole', 'Counted By', 'Notes']
+                ];
+                readingsHistory.slice(-30).reverse().forEach(r => {
+                    rows.push([r.date, r.bowserDiff, r.dipDiff, r.ilembeDiff, r.hydrantDiff, r.boreholeDiff, r
+                        .countedBy || '', r.notes || ''
+                    ]);
+                });
+                if (typeof doc.autoTable === 'function') {
+                    doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 24, styles: { fontSize: 8,
+                            cellPadding: 2 } });
                 }
-                document.getElementById('statModal').classList.add("active");
+                doc.save('water_readings.pdf');
+                toast('PDF exported! 📕', true);
             };
 
-            window.closeStats = function() {
-                document.getElementById('statModal').classList.remove("active");
+            window.backupJSON = function() {
+                if (!readingsHistory.length) return toast('No data to backup.', false);
+                const blob = new Blob([JSON.stringify({ dailyReadings: readingsHistory }, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'superb_water_backup.json';
+                a.click();
+                toast('Backup downloaded! 💾', true);
             };
 
-            window.showChart = function() {
-                document.getElementById('chartModal').classList.add('active');
-                setTimeout(updateChart, 50);
-            };
+            // Event listeners
+            document.getElementById('btnDarkMode').addEventListener('click', toggleDarkModeUI);
+            document.getElementById('sheetOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeSheet();
+            });
+            document.getElementById('adminModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeAdminModal();
+            });
+            document.getElementById('restoreModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeRestoreModal();
+            });
+            document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') submitAdminPassword();
+            });
 
-            window.closeChart = function() {
-                document.getElementById('chartModal').classList.remove('active');
-                if (chartInstance) chartInstance.destroy();
-            };
-
-            window.setChartType = function(type) {
-                chartType = type;
-                document.getElementById('btnLine').classList.toggle('selected', type === 'line');
-                document.getElementById('btnBar').classList.toggle('selected', type === 'bar');
-                document.getElementById('btnStacked').classList.toggle('selected', type === 'stacked');
-                document.getElementById('btnPie').classList.toggle('selected', type === 'pie');
-                updateChart();
-            };
-
-            window.updateChart = function() {
-                if (!readingsHistory.length) return;
-                const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date));
-                const labels = sorted.map(e => e.date);
-                const bowser = sorted.map(e => e.bowserDiff);
-                const dip = sorted.map(e => e.dipDiff);
-                const ilembe = sorted.map(e => e.ilembeDiff);
-                const hydrant = sorted.map(e => e.hydrantDiff);
-                const borehole = sorted.map(e => e.boreholeDiff);
-                const total = sorted.map((e, i) => bowser[i] + dip[i] + ilembe[i] + hydrant[i] + borehole[i]);
-                const showBowser = document.getElementById('showBowser').checked;
-                const showDip = document.getElementById('showDip').checked;
-                const showIlembe = document.getElementById('showIlembe').checked;
-                const showHydrant = document.getElementById('showHydrant').checked;
-                const showBorehole = document.getElementById('showBorehole').checked;
-                const showTotal = document.getElementById('showTotal').checked;
-                if (chartInstance) chartInstance.destroy();
-                const ctx = document.getElementById('chartCanvas').getContext('2d');
-                let datasets = [];
-                if (chartType === "pie") {
-                    let lastIdx = labels.length - 1;
-                    let dataPie = [];
-                    if (showBowser) dataPie.push(bowser[lastIdx]);
-                    if (showDip) dataPie.push(dip[lastIdx]);
-                    if (showIlembe) dataPie.push(ilembe[lastIdx]);
-                    if (showHydrant) dataPie.push(hydrant[lastIdx]);
-                    if (showBorehole) dataPie.push(borehole[lastIdx]);
-                    let bg = [];
-                    if (showBowser) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--bowser'));
-                    if (showDip) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--dip'));
-                    if (showIlembe) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--ilembe'));
-                    if (showHydrant) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--hydrant'));
-                    if (showBorehole) bg.push(getComputedStyle(document.documentElement).getPropertyValue('--borehole'));
-                    datasets = [{
-                        label: "Latest Day's Usage",
-                        data: dataPie,
-                        backgroundColor: bg
-                    }];
-                    chartInstance = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: ["Bowser", "Dipstick", "iLembe", "Hydrant", "Borehole"].filter((v, i) => [
-                                showBowser, showDip, showIlembe, showHydrant, showBorehole
-                            ][i]),
-                            datasets
-                        },
-                        options: { plugins: { legend: { position: 'top' } }, responsive: true }
-                    });
-                    return;
+            // Pull to refresh
+            let touchStartY = 0;
+            document.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            document.addEventListener('touchmove', function(e) {
+                const currentY = e.touches[0].clientY;
+                const diff = currentY - touchStartY;
+                const ptrIndicator = document.getElementById('ptrIndicator');
+                if (diff > 60 && window.scrollY < 10 && currentView === 'history' && ptrIndicator) {
+                    ptrIndicator.classList.add('show');
                 }
-                if (showBowser) datasets.push({
-                    label: 'Bowser',
-                    data: bowser,
-                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bowser'),
-                    backgroundColor: 'rgba(40,112,234,0.14)',
-                    pointRadius: 3,
-                    fill: chartType === 'line' || chartType === 'stacked'
-                });
-                if (showDip) datasets.push({
-                    label: 'Dipstick',
-                    data: dip,
-                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--dip'),
-                    backgroundColor: 'rgba(255,165,2,0.16)',
-                    pointRadius: 3,
-                    fill: chartType === 'line' || chartType === 'stacked'
-                });
-                if (showIlembe) datasets.push({
-                    label: 'iLembe',
-                    data: ilembe,
-                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--ilembe'),
-                    backgroundColor: 'rgba(35,193,129,0.18)',
-                    pointRadius: 3,
-                    fill: chartType === 'line' || chartType === 'stacked'
-                });
-                if (showHydrant) datasets.push({
-                    label: 'Hydrant',
-                    data: hydrant,
-                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--hydrant'),
-                    backgroundColor: 'rgba(230,39,57,0.19)',
-                    pointRadius: 3,
-                    fill: chartType === 'line' || chartType === 'stacked'
-                });
-                if (showBorehole) datasets.push({
-                    label: 'Borehole',
-                    data: borehole,
-                    borderColor: getComputedStyle(document.documentElement).getPropertyValue('--borehole'),
-                    backgroundColor: 'rgba(108,92,231,0.2)',
-                    pointRadius: 3,
-                    fill: chartType === 'line' || chartType === 'stacked'
-                });
-                if (showTotal) datasets.push({
-                    label: 'Total',
-                    data: total,
-                    borderColor: '#111',
-                    backgroundColor: '#aaa',
-                    borderDash: [6, 4],
-                    borderWidth: 2,
-                    pointRadius: 3
-                });
-                let opts = {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: true, position: 'top', labels: { font: { weight: 'bold' } } },
-                        title: { display: false }
-                    },
-                    elements: { line: { tension: 0.32, fill: chartType === 'stacked' } },
-                    scales: {
-                        x: { ticks: { font: { size: 13 }, color: '#888' } },
-                        y: {
-                            title: { display: true, text: 'Difference', color: '#333', font: { size: 13,
-                                    weight: 'bold' } },
-                            ticks: { font: { size: 13 }, color: '#888' },
-                            grid: { color: '#eaf2fa' }
-                        }
-                    }
-                };
-                if (chartType === 'stacked') {
-                    opts.scales.x.stacked = true;
-                    opts.scales.y.stacked = true;
+            }, { passive: true });
+            document.addEventListener('touchend', async function(e) {
+                const ptrIndicator = document.getElementById('ptrIndicator');
+                if (ptrIndicator && ptrIndicator.classList.contains('show')) {
+                    ptrIndicator.classList.remove('show');
+                    ptrIndicator.textContent = '🔄 Refreshing...';
+                    ptrIndicator.classList.add('show');
+                    await loadHistory();
+                    ptrIndicator.textContent = '↓ Pull to refresh';
+                    ptrIndicator.classList.remove('show');
+                    refreshAllViews();
                 }
-                chartInstance = new Chart(ctx, {
-                    type: (chartType === 'line' || chartType === 'stacked') ? 'line' : 'bar',
-                    data: { labels, datasets },
-                    options: opts
-                });
-            };
+            });
 
-            function groupStats(data) {
-                const daily = {},
-                    weekly = {},
-                    monthly = {};
-                data.forEach(e => {
-                    if (!e.date) return;
-                    daily[e.date] = daily[e.date] || [];
-                    daily[e.date].push(e);
-                    const weekKey = e.date.slice(0, 4) + '-W' + getWeekNum(e.date);
-                    weekly[weekKey] = weekly[weekKey] || [];
-                    weekly[weekKey].push(e);
-                    const monKey = getMonthStr(e.date);
-                    monthly[monKey] = monthly[monKey] || [];
-                    monthly[monKey].push(e);
-                });
-                return { daily, weekly, monthly };
-            }
-
-            function statsTable(label, groups, count = 5) {
-                let keys = Object.keys(groups).sort().reverse();
-                if (count) keys = keys.slice(0, count);
-                let html = `<div class="stat-section"><div class="stat-label">${label}</div>`;
-                keys.forEach(k => {
-                    html +=
-                        `<div style="font-weight:700; margin-top:7px;">${k}</div><table class="stat-table">${statRows(groups[k])}</table>`;
-                });
-                html += "</div>";
-                return html;
-            }
-
-            function statRows(entries) {
-                function sum(field) { return entries.reduce((a, b) => a + (Number(b[field]) || 0), 0); }
-
-                function avg(field) { return entries.length ? sum(field) / entries.length : 0; }
-                return `
-            <tr><th></th><th>Bowser</th><th>Dipstick</th><th>iLembe</th><th>Hydrant</th><th>Borehole</th></tr>
-            <tr>
-              <td>Total</td>
-              <td>${sum("bowserDiff")}</td>
-              <td>${sum("dipDiff")}</td>
-              <td>${sum("ilembeDiff")}</td>
-              <td>${sum("hydrantDiff")}</td>
-              <td>${sum("boreholeDiff")}</td>
-            </tr>
-            <tr>
-              <td>Average</td>
-              <td>${avg("bowserDiff").toFixed(2)}</td>
-              <td>${avg("dipDiff").toFixed(2)}</td>
-              <td>${avg("ilembeDiff").toFixed(2)}</td>
-              <td>${avg("hydrantDiff").toFixed(2)}</td>
-              <td>${avg("boreholeDiff").toFixed(2)}</td>
-            </tr>`;
-            }
-
-            function getWeekNum(dateStr) {
-                const d = new Date(dateStr);
-                d.setHours(0, 0, 0, 0);
-                d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-                const yearStart = new Date(d.getFullYear(), 0, 1);
-                return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-            }
-
-            function getMonthStr(dateStr) { return dateStr.slice(0, 7); }
-
-            // Floating value display
-            let floatingValueTimeout = null;
-
-            function showFloatingValue(inputElement) {
-                clearTimeout(floatingValueTimeout);
-                const floatingValue = document.getElementById('floatingValue');
-                const value = inputElement.value;
-                if (value !== '' && !isNaN(value) && value !== null) {
-                    floatingValue.textContent = value;
-                    floatingValue.style.display = 'block';
-                    const rect = inputElement.getBoundingClientRect();
-                    floatingValue.style.left = (rect.left + window.scrollX + rect.width / 2 - floatingValue.offsetWidth /
-                        2) + 'px';
-                    floatingValue.style.top = (rect.top + window.scrollY - 40) + 'px';
-                } else {
-                    hideFloatingValue();
-                }
-            }
-
-            function hideFloatingValue() {
-                clearTimeout(floatingValueTimeout);
-                floatingValueTimeout = setTimeout(() => {
-                    document.getElementById('floatingValue').style.display = 'none';
-                }, 150);
-            }
-
+            // Initialize
             document.addEventListener('DOMContentLoaded', () => {
+                setDarkMode(localStorage.getItem('darkMode') === '1');
                 document.getElementById('readingDate').value = getTodayString();
-                setDarkMode(localStorage.getItem("darkMode") === "1");
-                loadHistory();
-                document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
-                    if (e.key === "Enter") submitAdminPassword();
-                });
-                const numberInputs = document.querySelectorAll('.row input[type="number"]');
-                numberInputs.forEach(input => {
-                    input.addEventListener('focus', (e) => showFloatingValue(e.target));
-                    input.addEventListener('input', (e) => {
-                        if (document.getElementById('floatingValue').style.display === 'block')
-                            showFloatingValue(e.target);
-                    });
-                    input.addEventListener('blur', hideFloatingValue);
+                loadHistory().then(() => {
+                    refreshAllViews();
                 });
             });
 
+            // Expose to global scope
+            window.switchView = switchView;
+            window.editEntryByDate = window.editEntryByDate;
+            window.deleteEntryByDate = window.deleteEntryByDate;
+            window.exportCSV = window.exportCSV;
+            window.exportPDF = window.exportPDF;
+            window.backupJSON = window.backupJSON;
             window.openRestore = openRestore;
-            window.closeRestore = closeRestore;
             window.doRestore = doRestore;
-            window.showAdminPopup = showAdminPopup;
-            window.closeAdminPopup = closeAdminPopup;
+            window.closeRestoreModal = closeRestoreModal;
+            window.showAdminModal = showAdminModal;
+            window.closeAdminModal = closeAdminModal;
             window.submitAdminPassword = submitAdminPassword;
-            window.toggleDarkMode = toggleDarkMode;
-            window.cancelEdit = cancelEdit;
+            window.toggleAdminMode = toggleAdminMode;
+            window.showStatsSheet = showStatsSheet;
+            window.showChartSheet = showChartSheet;
+            window.closeSheet = closeSheet;
+            window.setInsightsChartType = setInsightsChartType;
             window.calcDiff = calcDiff;
+            window.cancelEdit = cancelEdit;
+            window.filterHistory = filterHistory;
         })();
     </script>
 </body>
