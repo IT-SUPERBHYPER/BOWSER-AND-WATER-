@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Superb Hyper – Water Readings</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#1A73E8">
+    <meta name="theme-color" content="#1E293B">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
@@ -18,52 +18,78 @@
     </script>
     <style>
         :root {
-            --primary: #1A73E8;
-            --primary-dark: #1557B0;
-            --primary-light: #E8F0FE;
+            --primary: #2563EB;
+            --primary-hover: #1D4ED8;
+            --primary-light: #EFF6FF;
+            --primary-bg: #DBEAFE;
             --surface: #FFFFFF;
-            --surface2: #F8F9FA;
-            --surface3: #F1F3F4;
-            --bg: #F0F2F5;
-            --text: #1F1F1F;
-            --text2: #5F6368;
-            --text3: #80868B;
-            --border: #E0E0E0;
-            --success: #0D904F;
-            --danger: #D93025;
-            --warning: #F9AB00;
+            --surface-alt: #F8FAFC;
+            --surface-hover: #F1F5F9;
+            --bg: #F1F5F9;
+            --text: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+            --success: #10B981;
+            --success-bg: #ECFDF5;
+            --warning: #F59E0B;
+            --warning-bg: #FFFBEB;
+            --danger: #EF4444;
+            --danger-bg: #FEF2F2;
+            --info: #6366F1;
+            --sidebar-bg: #1E293B;
+            --sidebar-text: #CBD5E1;
+            --sidebar-hover: #334155;
+            --sidebar-active: #2563EB;
+            --sidebar-width: 240px;
+            --sidebar-collapsed: 64px;
+            --topbar-height: 56px;
+            --radius-sm: 6px;
+            --radius: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 18px;
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
-            --radius-sm: 8px;
-            --radius: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
-            --radius-full: 28px;
-            --nav-height: 64px;
-            --header-height: 56px;
-            --fab-size: 56px;
-            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --bowser: #1A73E8;
-            --dip: #F9AB00;
-            --ilembe: #0D904F;
-            --hydrant: #D93025;
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.14), 0 8px 16px rgba(0, 0, 0, 0.06);
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
+            --bowser: #2563EB;
+            --dip: #F59E0B;
+            --ilembe: #10B981;
+            --hydrant: #EF4444;
             --borehole: #7C3AED;
         }
+
         .dark {
-            --surface: #1E1E1E;
-            --surface2: #252525;
-            --surface3: #2D2D2D;
-            --bg: #121212;
-            --text: #E8EAED;
-            --text2: #9AA0A6;
-            --text3: #6B7280;
-            --border: #3C4043;
+            --surface: #1E293B;
+            --surface-alt: #1E293B;
+            --surface-hover: #334155;
+            --bg: #0F172A;
+            --text: #F1F5F9;
+            --text-secondary: #CBD5E1;
+            --text-muted: #64748B;
+            --border: #334155;
+            --border-light: #1E293B;
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.5);
             --primary-light: #1E3A5F;
+            --primary-bg: #1E3A5F;
+            --success-bg: #064E3B;
+            --warning-bg: #78350F;
+            --danger-bg: #7F1D1D;
+            --sidebar-bg: #0F172A;
+            --sidebar-text: #94A3B8;
+            --sidebar-hover: #1E293B;
         }
+
         *,
         *::before,
         *::after {
@@ -72,7 +98,7 @@
             padding: 0;
         }
         html {
-            font-size: 16px;
+            font-size: 15px;
             -webkit-tap-highlight-color: transparent;
             scroll-behavior: smooth;
         }
@@ -80,94 +106,842 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
+            height: 100vh;
+            overflow: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: background var(--transition), color var(--transition);
-            padding-bottom: calc(var(--nav-height) + 20px);
-            position: relative;
         }
-        /* Header */
-        .app-header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--surface);
-            padding: 0 16px;
-            height: var(--header-height);
+
+        /* App Layout */
+        .app-layout {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: var(--topbar-height) 1fr;
+            height: 100vh;
+            transition: grid-template-columns var(--transition-slow);
+        }
+        .app-layout.sidebar-collapsed {
+            grid-template-columns: var(--sidebar-collapsed) 1fr;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            grid-row: 1 / -1;
+            grid-column: 1;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            z-index: 200;
+            overflow: hidden;
+            transition: width var(--transition-slow);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            user-select: none;
+        }
+        .sidebar-header {
+            height: var(--topbar-height);
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: background var(--transition), border var(--transition);
+            padding: 0 16px;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
         }
-        .app-header .logo {
+        .sidebar-logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 900;
+            font-size: 1rem;
+            flex-shrink: 0;
+            letter-spacing: -0.5px;
+        }
+        .sidebar-logo-text {
             font-weight: 800;
-            font-size: 1.15rem;
-            letter-spacing: -0.3px;
-            color: var(--primary);
+            font-size: 1rem;
+            color: #F1F5F9;
+            white-space: nowrap;
+            letter-spacing: -0.2px;
+            transition: opacity var(--transition);
+        }
+        .sidebar-collapsed .sidebar-logo-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--sidebar-text);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            min-height: 42px;
+            letter-spacing: 0.1px;
+        }
+        .sidebar-nav-item:hover {
+            background: var(--sidebar-hover);
+            color: #F1F5F9;
+        }
+        .sidebar-nav-item.active {
+            background: var(--sidebar-active);
+            color: #FFFFFF;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        .sidebar-nav-item .nav-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            width: 24px;
+            text-align: center;
+            transition: transform var(--transition-fast);
+        }
+        .sidebar-nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
+        .sidebar-nav-item .nav-label {
+            transition: opacity var(--transition);
+        }
+        .sidebar-collapsed .sidebar-nav-item .nav-label {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        .sidebar-collapsed .sidebar-nav-item {
+            justify-content: center;
+            padding: 10px;
+        }
+        .sidebar-footer {
+            padding: 10px 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .sidebar-collapse-btn {
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--sidebar-text);
+            font-weight: 500;
+            font-size: 0.82rem;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            min-height: 38px;
         }
-        .app-header .logo .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: inline-block;
+        .sidebar-collapse-btn:hover {
+            background: var(--sidebar-hover);
+            color: #F1F5F9;
         }
-        .header-actions {
-            display: flex;
-            gap: 6px;
+        .sidebar-collapse-btn .collapse-icon {
+            font-size: 1rem;
+            flex-shrink: 0;
+            transition: transform var(--transition);
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-collapsed .sidebar-collapse-btn .collapse-icon {
+            transform: rotate(180deg);
+        }
+        .sidebar-collapsed .sidebar-footer .collapse-label {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+        .sidebar-collapsed .sidebar-footer {
             align-items: center;
         }
-        .icon-btn {
-            width: 40px;
-            height: 40px;
+        .sidebar-collapsed .sidebar-collapse-btn {
+            justify-content: center;
+            padding: 10px;
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            grid-row: 1 / -1;
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: var(--topbar-height);
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 16px;
+            flex-shrink: 0;
+            z-index: 100;
+            transition: background var(--transition), border var(--transition);
+            box-shadow: var(--shadow-xs);
+        }
+        .topbar-search {
+            flex: 1;
+            max-width: 420px;
+            position: relative;
+        }
+        .topbar-search input {
+            width: 100%;
+            padding: 9px 14px 9px 38px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-full);
+            font-size: 0.88rem;
+            font-family: inherit;
+            background: var(--surface-alt);
+            color: var(--text);
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+        .topbar-search input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+            background: var(--surface);
+        }
+        .topbar-search .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+        .topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .topbar-btn {
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: none;
             background: transparent;
             cursor: pointer;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text2);
-            transition: all var(--transition);
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
             position: relative;
         }
-        .icon-btn:active {
-            background: var(--surface3);
-            transform: scale(0.94);
+        .topbar-btn:hover {
+            background: var(--surface-hover);
+            color: var(--text);
         }
-        .icon-btn.admin-active {
+        .topbar-btn:active {
+            transform: scale(0.93);
+        }
+        .topbar-btn.admin-active {
+            color: var(--warning);
+            background: var(--warning-bg);
+        }
+        .topbar-btn .badge-dot {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--danger);
+            border: 2px solid var(--surface);
+        }
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .topbar-user:hover {
+            background: var(--surface-hover);
+        }
+        .topbar-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px 24px 24px 24px;
+            scroll-behavior: smooth;
+            background: var(--bg);
+            transition: background var(--transition);
+        }
+        .content-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        .content-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .content-area::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        .content-area::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Views */
+        .view {
+            display: none;
+            animation: fadeSlideIn 0.3s ease;
+        }
+        .view.active {
+            display: block;
+        }
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 20px;
+        }
+        .page-title {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        .page-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* Stat Cards Row */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-xs);
+            transition: all var(--transition);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: var(--primary-bg);
+        }
+        .stat-card .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .stat-card .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text);
+            line-height: 1.1;
+        }
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-top: 3px;
+        }
+        .stat-card.accent .stat-value {
+            color: var(--borehole);
+        }
+        .stat-card.success .stat-value {
+            color: var(--success);
+        }
+        .stat-card.warning .stat-value {
             color: var(--warning);
         }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .dark .stat-card::after {
+            opacity: 0.15;
+        }
+
+        /* Panel / Card */
+        .panel {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-xs);
+            transition: all var(--transition);
+            overflow: hidden;
+        }
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .panel-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text);
+            letter-spacing: -0.1px;
+        }
+        .panel-body {
+            padding: 16px 20px;
+        }
+        .panel-body.no-padding {
+            padding: 0;
+        }
+
+        /* Two Column Grid */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .grid-2col-wide {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 1200px) {
+            .grid-2col,
+            .grid-2col-wide {
+                grid-template-columns: 1fr;
+            }
+            .stat-row {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+        @media (max-width: 900px) {
+            .stat-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .reading-grid-5col {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        /* Reading Form Grid */
+        .reading-grid-5col {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .reading-source-card {
+            background: var(--surface-alt);
+            border-radius: var(--radius);
+            padding: 14px;
+            border: 1.5px solid var(--border);
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+        .reading-source-card:hover {
+            border-color: var(--primary-bg);
+        }
+        .reading-source-card .rs-header {
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .reading-source-card input {
+            width: 100%;
+            padding: 10px 8px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            text-align: center;
+            font-weight: 600;
+            background: var(--surface);
+            color: var(--text);
+            transition: all var(--transition-fast);
+            font-family: var(--font-mono);
+            margin-bottom: 6px;
+        }
+        .reading-source-card input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+        .reading-source-card .rs-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            margin-bottom: 2px;
+        }
+        .reading-source-card .rs-diff {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--success);
+            background: var(--success-bg);
+            border-radius: 20px;
+            padding: 4px 10px;
+            display: inline-block;
+            margin-top: 4px;
+            letter-spacing: 0.2px;
+        }
+        .chip-bowser {
+            color: var(--bowser);
+            border-bottom: 2px solid var(--bowser);
+        }
+        .chip-dip {
+            color: var(--dip);
+            border-bottom: 2px solid var(--dip);
+        }
+        .chip-ilembe {
+            color: var(--ilembe);
+            border-bottom: 2px solid var(--ilembe);
+        }
+        .chip-hydrant {
+            color: var(--hydrant);
+            border-bottom: 2px solid var(--hydrant);
+        }
+        .chip-borehole {
+            color: var(--borehole);
+            border-bottom: 2px solid var(--borehole);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.88rem;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            letter-spacing: 0.1px;
+            min-height: 40px;
+            white-space: nowrap;
+            font-family: inherit;
+            text-decoration: none;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+        }
+        .btn-secondary {
+            background: var(--surface-alt);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            border-color: var(--text-muted);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+        }
+        .btn-ghost:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.78rem;
+            min-height: 32px;
+            border-radius: var(--radius-sm);
+            gap: 5px;
+        }
+        .btn-lg {
+            padding: 13px 28px;
+            font-size: 1rem;
+            min-height: 48px;
+            border-radius: var(--radius);
+        }
+        .btn-block {
+            width: 100%;
+            display: flex;
+        }
+        .btn-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        /* Form */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--surface);
+            color: var(--text);
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Data Table */
+        .table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            min-width: 950px;
+        }
+        .data-table th,
+        .data-table td {
+            padding: 11px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table th {
+            background: var(--surface-alt);
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+        .data-table tbody tr {
+            transition: background var(--transition-fast);
+        }
+        .data-table tbody tr:hover {
+            background: var(--surface-hover);
+        }
+        .data-table .cell-date {
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+        .data-table .cell-diff {
+            font-weight: 600;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        .data-table .actions-cell {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        /* History Cards (fallback for narrow screens) */
+        .history-cards {
+            display: none;
+        }
+        @media (max-width: 950px) {
+            .history-cards {
+                display: block;
+            }
+            .table-wrap {
+                display: none;
+            }
+        }
+        .history-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+            transition: all var(--transition-fast);
+        }
+        .history-card:hover {
+            box-shadow: var(--shadow-sm);
+        }
+        .history-card .hc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .history-card .hc-date {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        .history-card .hc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 6px;
+            font-size: 0.75rem;
+        }
+        .history-card .hc-item {
+            background: var(--surface-alt);
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+        .history-card .hc-val {
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .history-card .hc-src {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
         /* Toast */
         .toast-container {
             position: fixed;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 16px;
+            right: 16px;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             gap: 8px;
             pointer-events: none;
-            width: 90%;
-            max-width: 420px;
+            max-width: 400px;
         }
         .toast {
             padding: 12px 18px;
             border-radius: var(--radius);
             font-weight: 600;
-            font-size: 0.9rem;
-            text-align: center;
-            animation: toastIn 0.35s cubic-bezier(0.21, 1.02, 0.58, 1);
+            font-size: 0.85rem;
+            animation: toastSlideIn 0.35s cubic-bezier(0.21, 1.02, 0.58, 1);
             pointer-events: auto;
             box-shadow: var(--shadow-lg);
             letter-spacing: 0.2px;
@@ -180,554 +954,28 @@
             background: var(--danger);
             color: #fff;
         }
-        @keyframes toastIn {
+        @keyframes toastSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-20px) scale(0.9);
+                transform: translateX(40px) scale(0.9);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateX(0) scale(1);
             }
         }
-        /* Main Content */
-        .main-content {
-            padding: 16px 16px 8px 16px;
-            max-width: 800px;
-            margin: 0 auto;
-            animation: fadeSlideIn 0.3s ease;
-        }
-        @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .view {
-            display: none;
-        }
-        .view.active {
-            display: block;
-        }
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 200;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            height: var(--nav-height);
-            padding: 0 4px;
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
-            transition: background var(--transition), border var(--transition);
-        }
-        .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            color: var(--text3);
-            font-size: 0.68rem;
-            font-weight: 500;
-            padding: 6px 4px;
-            border-radius: var(--radius);
-            transition: all var(--transition);
-            position: relative;
-            min-height: 48px;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .nav-item .nav-icon {
-            font-size: 1.4rem;
-            transition: transform var(--transition);
-        }
-        .nav-item.active {
-            color: var(--primary);
-            font-weight: 700;
-        }
-        .nav-item.active .nav-icon {
-            transform: scale(1.1);
-        }
-        .nav-item.nav-add {
-            position: relative;
-            top: -18px;
-        }
-        .nav-item.nav-add .nav-icon-circle {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 16px rgba(26, 115, 232, 0.4);
-            transition: all var(--transition);
-        }
-        .nav-item.nav-add:active .nav-icon-circle {
-            transform: scale(0.9);
-            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
-        }
-        /* Cards */
-        .card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            transition: all var(--transition);
-            margin-bottom: 12px;
-        }
-        .card:active {
-            transform: scale(0.985);
-            box-shadow: var(--shadow-md);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .card-title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--text);
-        }
-        .card-subtitle {
-            font-size: 0.8rem;
-            color: var(--text2);
-            font-weight: 500;
-        }
-        /* Stat Cards */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        .stat-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 14px 12px;
-            text-align: center;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: all var(--transition);
-        }
-        .stat-card .stat-value {
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--primary);
-            line-height: 1.1;
-        }
-        .stat-card .stat-label {
-            font-size: 0.72rem;
-            color: var(--text2);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 4px;
-        }
-        .stat-card.accent .stat-value {
-            color: var(--borehole);
-        }
-        .stat-card.success .stat-value {
-            color: var(--success);
-        }
-        /* Form */
-        .form-group {
-            margin-bottom: 16px;
-        }
-        .form-label {
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--text2);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            margin-bottom: 6px;
-            display: block;
-        }
-        .form-input,
-        .form-textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius);
-            font-size: 1rem;
-            font-family: inherit;
-            background: var(--surface2);
-            color: var(--text);
-            transition: all var(--transition);
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        .form-input:focus,
-        .form-textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
-            background: var(--surface);
-        }
-        .form-textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .reading-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            background: var(--surface2);
-            border-radius: var(--radius);
-            padding: 10px 12px;
-            margin-bottom: 6px;
-            border: 1px solid transparent;
-            transition: all var(--transition);
-        }
-        .reading-row:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.06);
-        }
-        .reading-row .rr-label {
-            font-weight: 700;
-            font-size: 0.78rem;
-            color: var(--text2);
-            min-width: 40px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .reading-row input {
-            width: 80px;
-            padding: 10px 8px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            text-align: center;
-            font-weight: 600;
-            background: var(--surface);
-            color: var(--text);
-            transition: all var(--transition);
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        .reading-row input:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.08);
-        }
-        .reading-row .diff-badge {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--success);
-            min-width: 40px;
-            text-align: center;
-            background: #E6F4EA;
-            border-radius: 20px;
-            padding: 4px 8px;
-        }
-        .dark .reading-row .diff-badge {
-            background: #1E3A2F;
-        }
-        .section-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-        }
-        .chip-bowser {
-            background: #E8F0FE;
-            color: #1A73E8;
-        }
-        .chip-dip {
-            background: #FEF7E0;
-            color: #E37400;
-        }
-        .chip-ilembe {
-            background: #E6F4EA;
-            color: #0D904F;
-        }
-        .chip-hydrant {
-            background: #FCE8E6;
-            color: #D93025;
-        }
-        .chip-borehole {
-            background: #EDE7F6;
-            color: #7C3AED;
-        }
-        .dark .chip-bowser {
-            background: #1E3A5F;
-        }
-        .dark .chip-dip {
-            background: #3D2E00;
-        }
-        .dark .chip-ilembe {
-            background: #1E3A2F;
-        }
-        .dark .chip-hydrant {
-            background: #3D1A1A;
-        }
-        .dark .chip-borehole {
-            background: #2A1A4A;
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 13px 24px;
-            border-radius: var(--radius-full);
-            font-weight: 700;
-            font-size: 0.95rem;
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition);
-            letter-spacing: 0.2px;
-            min-height: 48px;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .btn:active {
-            transform: scale(0.96);
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(26, 115, 232, 0.35);
-        }
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-        .btn-block {
-            width: 100%;
-            display: flex;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--border);
-            color: var(--text);
-        }
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 0.8rem;
-            min-height: 36px;
-            border-radius: 20px;
-        }
-        .btn-danger {
-            background: var(--danger);
-            color: #fff;
-        }
-        .btn-ghost {
-            background: transparent;
-            color: var(--primary);
-        }
-        /* History Cards */
-        .history-card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 14px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            margin-bottom: 10px;
-            transition: all var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .history-card .hc-date {
-            font-weight: 800;
-            font-size: 1rem;
-            color: var(--primary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .history-card .hc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 6px;
-            font-size: 0.78rem;
-        }
-        .history-card .hc-item {
-            background: var(--surface2);
-            border-radius: 8px;
-            padding: 8px 10px;
-            text-align: center;
-        }
-        .history-card .hc-item .hc-val {
-            font-weight: 700;
-            font-size: 0.95rem;
-        }
-        .history-card .hc-item .hc-src {
-            font-size: 0.65rem;
-            color: var(--text2);
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-        .history-card .hc-actions {
-            display: flex;
-            gap: 6px;
-            margin-top: 10px;
-            justify-content: flex-end;
-        }
-        .history-card .hc-actions .btn {
-            min-height: 32px;
-            padding: 6px 14px;
-            font-size: 0.75rem;
-        }
-        /* History Table (Desktop) */
-        @media (min-width: 768px) {
-            .history-cards {
-                display: none;
-            }
-            .history-table-wrap {
-                display: block;
-            }
-            .stat-grid {
-                grid-template-columns: repeat(5, 1fr);
-            }
-        }
-        @media (max-width: 767px) {
-            .history-cards {
-                display: block;
-            }
-            .history-table-wrap {
-                display: none;
-            }
-            .stat-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .reading-row input {
-                width: 60px;
-                font-size: 0.9rem;
-                padding: 8px 4px;
-            }
-        }
-        .history-table-wrap {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-            min-width: 900px;
-        }
-        .data-table th,
-        .data-table td {
-            padding: 10px 8px;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
-        }
-        .data-table th {
-            background: var(--surface2);
-            font-weight: 700;
-            color: var(--text2);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: sticky;
-            top: 0;
-        }
-        .data-table tr:hover {
-            background: var(--surface3);
-        }
-        /* Bottom Sheet */
-        .sheet-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 300;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: flex-end;
-            justify-content: center;
-            animation: fadeInOverlay 0.25s ease;
-        }
-        .sheet-overlay.active {
-            display: flex;
-        }
-        @keyframes fadeInOverlay {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .sheet {
-            background: var(--surface);
-            border-radius: 20px 20px 0 0;
-            width: 100%;
-            max-width: 600px;
-            max-height: 85vh;
-            max-height: 85dvh;
-            overflow-y: auto;
-            padding: 8px 16px 24px 16px;
-            box-shadow: var(--shadow-lg);
-            animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-            position: relative;
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
-        .sheet-handle {
-            width: 36px;
-            height: 5px;
-            background: var(--border);
-            border-radius: 10px;
-            margin: 8px auto 16px auto;
-        }
-        .sheet-close {
-            position: absolute;
-            right: 16px;
-            top: 12px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: var(--surface3);
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: var(--text2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-        }
-        /* Modal */
+
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            z-index: 400;
-            background: rgba(0, 0, 0, 0.6);
+            z-index: 500;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
         }
         .modal-overlay.active {
             display: flex;
@@ -735,13 +983,13 @@
         .modal {
             background: var(--surface);
             border-radius: var(--radius-xl);
-            padding: 24px 20px;
+            padding: 28px 24px;
             width: 100%;
-            max-width: 440px;
-            box-shadow: var(--shadow-lg);
-            animation: popIn 0.3s cubic-bezier(0.21, 1.02, 0.58, 1);
+            max-width: 460px;
+            box-shadow: var(--shadow-xl);
+            animation: modalPopIn 0.3s cubic-bezier(0.21, 1.02, 0.58, 1);
         }
-        @keyframes popIn {
+        @keyframes modalPopIn {
             from {
                 opacity: 0;
                 transform: scale(0.9) translateY(20px);
@@ -753,56 +1001,88 @@
         }
         .modal-title {
             font-weight: 800;
-            font-size: 1.2rem;
-            margin-bottom: 16px;
+            font-size: 1.15rem;
+            margin-bottom: 18px;
             text-align: center;
+            letter-spacing: -0.2px;
         }
-        /* Search */
-        .search-bar {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
+
+        /* Sheet Overlay */
+        .sheet-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 400;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(3px);
+            display: none;
             align-items: center;
+            justify-content: center;
+            padding: 24px;
         }
-        .search-bar input {
-            flex: 1;
-            padding: 10px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-full);
-            font-size: 0.9rem;
-            background: var(--surface2);
+        .sheet-overlay.active {
+            display: flex;
+        }
+        .sheet {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            width: 100%;
+            max-width: 750px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: var(--shadow-xl);
+            animation: modalPopIn 0.3s cubic-bezier(0.21, 1.02, 0.58, 1);
+            position: relative;
+        }
+        .sheet-close {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--surface-hover);
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: all var(--transition-fast);
+        }
+        .sheet-close:hover {
+            background: var(--border);
             color: var(--text);
-            transition: all var(--transition);
         }
-        .search-bar input:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.08);
-        }
+
         /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--text2);
+            padding: 48px 24px;
+            color: var(--text-muted);
         }
         .empty-state .empty-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin-bottom: 12px;
-            opacity: 0.6;
+            opacity: 0.5;
         }
         .empty-state .empty-title {
             font-weight: 700;
             font-size: 1.1rem;
             margin-bottom: 6px;
+            color: var(--text-secondary);
         }
         .empty-state .empty-sub {
             font-size: 0.85rem;
-            color: var(--text3);
+            color: var(--text-muted);
         }
+
         /* Spinner */
         .spinner {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border: 3px solid var(--border);
             border-top-color: var(--primary);
             border-radius: 50%;
@@ -814,207 +1094,352 @@
                 transform: rotate(360deg);
             }
         }
-        /* Pull to refresh indicator */
-        .ptr-indicator {
-            text-align: center;
-            padding: 8px;
-            color: var(--text3);
-            font-size: 0.8rem;
-            display: none;
+
+        /* Tooltip */
+        [data-tooltip] {
+            position: relative;
         }
-        .ptr-indicator.show {
-            display: block;
-            animation: fadeSlideIn 0.2s ease;
+        [data-tooltip]:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1E293B;
+            color: #F1F5F9;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 500;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1000;
+            letter-spacing: 0.2px;
+            box-shadow: var(--shadow-md);
         }
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 4px;
+
+        /* Chart containers */
+        .chart-container {
+            position: relative;
+            width: 100%;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
+        .chart-container canvas {
+            width: 100% !important;
         }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-        /* Media Queries */
-        @media (min-width: 768px) {
-            .main-content {
-                padding: 20px 24px 8px 24px;
+
+        /* Responsive tweaks */
+        @media (max-width: 1100px) {
+            .reading-grid-5col {
+                grid-template-columns: repeat(3, 1fr);
             }
-            .sheet {
-                border-radius: 20px;
-                margin: auto;
-                max-height: 80vh;
+        }
+        @media (max-width: 768px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: var(--topbar-height) 1fr auto;
             }
-            .sheet-overlay {
-                align-items: center;
+            .sidebar {
+                grid-row: 3;
+                grid-column: 1;
+                flex-direction: row;
+                height: 56px;
+                width: 100% !important;
+                border-right: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
+            }
+            .sidebar-header,
+            .sidebar-footer,
+            .sidebar-nav-item .nav-label {
+                display: none;
+            }
+            .sidebar-nav {
+                flex-direction: row;
+                padding: 4px 8px;
+                gap: 0;
+                justify-content: space-around;
+                overflow: visible;
+            }
+            .sidebar-nav-item {
+                padding: 8px;
+                justify-content: center;
+                min-height: auto;
+                border-radius: var(--radius-sm);
+            }
+            .main-wrapper {
+                grid-column: 1;
+                grid-row: 1 / 3;
+            }
+            .topbar {
+                padding: 0 12px;
+            }
+            .content-area {
+                padding: 14px 12px 14px 12px;
+            }
+            .stat-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .reading-grid-5col {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .grid-2col,
+            .grid-2col-wide {
+                grid-template-columns: 1fr;
+            }
+            .topbar-search {
+                max-width: 200px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="app-header">
-        <div class="logo"><span class="dot"></span>Superb Hyper</div>
-        <div class="header-actions">
-            <button class="icon-btn" id="btnDarkMode" title="Dark mode" aria-label="Toggle dark mode">🌙</button>
-            <button class="icon-btn" id="btnAdminIndicator" title="Admin" aria-label="Admin status" onclick="toggleAdminMode()">🔒</button>
+    <div class="app-layout" id="appLayout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">SH</div>
+                <span class="sidebar-logo-text">Superb Hyper</span>
+            </div>
+            <nav class="sidebar-nav" id="sidebarNav">
+                <button class="sidebar-nav-item active" data-view="dashboard" onclick="switchView('dashboard')" data-tooltip="Dashboard">
+                    <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+                </button>
+                <button class="sidebar-nav-item" data-view="history" onclick="switchView('history')" data-tooltip="History">
+                    <span class="nav-icon">📋</span><span class="nav-label">History</span>
+                </button>
+                <button class="sidebar-nav-item" data-view="add" onclick="switchView('add')" data-tooltip="Add Reading">
+                    <span class="nav-icon">➕</span><span class="nav-label">Add Reading</span>
+                </button>
+                <button class="sidebar-nav-item" data-view="insights" onclick="switchView('insights')" data-tooltip="Insights">
+                    <span class="nav-icon">📈</span><span class="nav-label">Insights</span>
+                </button>
+                <button class="sidebar-nav-item" data-view="settings" onclick="switchView('settings')" data-tooltip="Settings">
+                    <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="sidebar-collapse-btn" onclick="toggleSidebar()" data-tooltip="Collapse menu">
+                    <span class="collapse-icon">◀</span><span class="collapse-label">Collapse</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-search" id="topbarSearchWrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="topbarSearchInput" placeholder="Search readings by date or name..." oninput="filterHistory()">
+                </div>
+                <div class="topbar-actions">
+                    <button class="topbar-btn" id="btnDarkMode" onclick="toggleDarkModeUI()" data-tooltip="Toggle dark mode" title="Dark mode">🌙</button>
+                    <button class="topbar-btn" id="btnAdminIndicator" onclick="toggleAdminMode()" data-tooltip="Admin access" title="Admin">🔒</button>
+                    <div class="topbar-user" title="Current user">
+                        <div class="topbar-avatar" id="topbarAvatar">SH</div>
+                        <span style="font-size:0.82rem;font-weight:600;color:var(--text);">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <main class="content-area" id="contentArea">
+                <!-- Dashboard View -->
+                <div class="view active" id="viewDashboard">
+                    <div class="page-header">
+                        <div class="page-title">Dashboard</div>
+                        <div class="page-subtitle">Overview of water usage across all sources</div>
+                    </div>
+                    <div class="stat-row" id="dashboardStats"></div>
+                    <div class="grid-2col-wide">
+                        <div class="panel">
+                            <div class="panel-header"><span class="panel-title">📊 Usage Trend (Last 7 Days)</span></div>
+                            <div class="panel-body">
+                                <div class="chart-container" style="height:240px;"><canvas id="miniChart"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-header">
+                                <span class="panel-title">📋 Recent Readings</span>
+                                <button class="btn btn-sm btn-ghost" onclick="switchView('history')">View All →</button>
+                            </div>
+                            <div class="panel-body" id="recentReadings" style="max-height:280px;overflow-y:auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History View -->
+                <div class="view" id="viewHistory">
+                    <div class="page-header">
+                        <div class="page-title">Reading History</div>
+                        <div class="page-subtitle">All recorded water readings</div>
+                    </div>
+                    <div class="panel" style="margin-bottom:16px;">
+                        <div class="panel-header">
+                            <span class="panel-title">📋 All Readings</span>
+                            <button class="btn btn-sm btn-primary" onclick="switchView('add')">+ New Reading</button>
+                        </div>
+                        <div class="panel-body no-padding">
+                            <div class="table-wrap" id="historyTableWrap"></div>
+                            <div class="history-cards" id="historyCards"></div>
+                            <div class="empty-state" id="historyEmpty" style="display:none;">
+                                <div class="empty-icon">📭</div>
+                                <div class="empty-title">No readings found</div>
+                                <div class="empty-sub">Add your first reading to get started</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Reading View -->
+                <div class="view" id="viewAdd">
+                    <div class="page-header">
+                        <div class="page-title">Add Reading</div>
+                        <div class="page-subtitle">Record daily water meter readings</div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-body">
+                            <form id="readingsForm" autocomplete="off">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="readingDate">📅 Date</label>
+                                        <input type="date" id="readingDate" class="form-input" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="countedBy">👤 Counted By</label>
+                                        <input type="text" id="countedBy" class="form-input" maxlength="50" required placeholder="Name of person who counted">
+                                    </div>
+                                </div>
+                                <div class="reading-grid-5col">
+                                    <div class="reading-source-card">
+                                        <div class="rs-header chip-bowser">🚛 Bowser</div>
+                                        <div class="rs-label">Opening</div>
+                                        <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" placeholder="0">
+                                        <div class="rs-label">Closing</div>
+                                        <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" placeholder="0">
+                                        <span class="rs-diff" id="bowserDiff">-</span>
+                                    </div>
+                                    <div class="reading-source-card">
+                                        <div class="rs-header chip-dip">📏 Dipstick</div>
+                                        <div class="rs-label">Opening</div>
+                                        <input type="number" id="dipOpen" required oninput="calcDiff('dip')" placeholder="0">
+                                        <div class="rs-label">Closing</div>
+                                        <input type="number" id="dipClose" required oninput="calcDiff('dip')" placeholder="0">
+                                        <span class="rs-diff" id="dipDiff">-</span>
+                                    </div>
+                                    <div class="reading-source-card">
+                                        <div class="rs-header chip-ilembe">💧 iLembe</div>
+                                        <div class="rs-label">Opening</div>
+                                        <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" placeholder="0">
+                                        <div class="rs-label">Closing</div>
+                                        <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" placeholder="0">
+                                        <span class="rs-diff" id="ilembeDiff">-</span>
+                                    </div>
+                                    <div class="reading-source-card">
+                                        <div class="rs-header chip-hydrant">🔥 Hydrant</div>
+                                        <div class="rs-label">Opening</div>
+                                        <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" placeholder="0">
+                                        <div class="rs-label">Closing</div>
+                                        <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" placeholder="0">
+                                        <span class="rs-diff" id="hydrantDiff">-</span>
+                                    </div>
+                                    <div class="reading-source-card">
+                                        <div class="rs-header chip-borehole">🕳️ Borehole</div>
+                                        <div class="rs-label">Opening</div>
+                                        <input type="number" id="boreholeOpen" required oninput="calcDiff('borehole')" placeholder="0">
+                                        <div class="rs-label">Closing</div>
+                                        <input type="number" id="boreholeClose" required oninput="calcDiff('borehole')" placeholder="0">
+                                        <span class="rs-diff" id="boreholeDiff">-</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="notes">📝 Notes</label>
+                                    <textarea id="notes" class="form-textarea" placeholder="Optional notes..."></textarea>
+                                </div>
+                                <div class="btn-group" style="margin-top:8px;">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="saveBtn">💾 Save Reading</button>
+                                    <button type="button" id="cancelEditBtn" class="btn btn-secondary btn-lg" style="display:none;" onclick="cancelEdit()">Cancel Edit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insights View -->
+                <div class="view" id="viewInsights">
+                    <div class="page-header">
+                        <div class="page-title">Insights & Analytics</div>
+                        <div class="page-subtitle">Visualize water consumption patterns</div>
+                    </div>
+                    <div class="stat-row" id="insightsStats"></div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <span class="panel-title">📈 Usage Chart</span>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-primary chart-type-btn" onclick="setInsightsChartType('line')">Line</button>
+                                <button class="btn btn-sm btn-secondary chart-type-btn" onclick="setInsightsChartType('bar')">Bar</button>
+                                <button class="btn btn-sm btn-secondary chart-type-btn" onclick="setInsightsChartType('stacked')">Stacked</button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="chart-container" style="height:320px;"><canvas id="insightsChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div class="view" id="viewSettings">
+                    <div class="page-header">
+                        <div class="page-title">Settings</div>
+                        <div class="page-subtitle">Manage data, export, and application preferences</div>
+                    </div>
+                    <div class="grid-2col">
+                        <div class="panel">
+                            <div class="panel-header"><span class="panel-title">📤 Export Data</span></div>
+                            <div class="panel-body">
+                                <div class="btn-group">
+                                    <button class="btn btn-secondary" onclick="exportCSV()">📄 Export CSV</button>
+                                    <button class="btn btn-secondary" onclick="exportPDF()">📕 Export PDF</button>
+                                    <button class="btn btn-secondary" onclick="backupJSON()">💾 Backup JSON</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-header"><span class="panel-title">📥 Restore</span></div>
+                            <div class="panel-body">
+                                <button class="btn btn-secondary" onclick="openRestore()">📂 Restore from Backup</button>
+                                <p style="color:var(--text-muted);font-size:0.75rem;margin-top:8px;">Restore previously exported JSON backup files</p>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-header"><span class="panel-title">🔐 Admin Access</span></div>
+                            <div class="panel-body">
+                                <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:10px;">Status: <strong id="adminStatusLabel">Locked 🔒</strong></p>
+                                <button class="btn btn-secondary" onclick="showAdminModal()">🔑 Unlock Admin</button>
+                            </div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-header"><span class="panel-title">ℹ️ About</span></div>
+                            <div class="panel-body">
+                                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">Superb Hyper – Daily Water Readings<br>Version 2.0 Desktop • Cloud Sync via Firebase<br>Monitor Bowser, Dipstick, iLembe, Hydrant & Borehole</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-    </header>
+    </div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <!-- Dashboard View -->
-        <div class="view active" id="viewDashboard">
-            <div class="stat-grid" id="dashboardStats"></div>
-            <div class="card" style="margin-bottom:14px;">
-                <div class="card-header"><span class="card-title">📊 Recent Trend (7 Days)</span></div>
-                <canvas id="miniChart" height="180"></canvas>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <span style="font-weight:700;font-size:0.95rem;">📋 Recent Readings</span>
-                <button class="btn btn-sm btn-outline" onclick="switchView('history')">See All</button>
-            </div>
-            <div id="recentReadings"></div>
-        </div>
-
-        <!-- History View -->
-        <div class="view" id="viewHistory">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="🔍 Search by date or name..." oninput="filterHistory()">
-                <button class="btn btn-sm btn-outline" onclick="switchView('add')" style="white-space:nowrap;">+ New</button>
-            </div>
-            <div class="ptr-indicator" id="ptrIndicator">↓ Pull to refresh</div>
-            <div class="history-cards" id="historyCards"></div>
-            <div class="history-table-wrap" id="historyTableWrap"></div>
-            <div class="empty-state" id="historyEmpty" style="display:none;">
-                <div class="empty-icon">📭</div>
-                <div class="empty-title">No readings yet</div>
-                <div class="empty-sub">Tap + to add your first reading</div>
-            </div>
-        </div>
-
-        <!-- Add Reading View -->
-        <div class="view" id="viewAdd">
-            <form id="readingsForm" autocomplete="off">
-                <div class="form-group">
-                    <label class="form-label" for="readingDate">📅 Date</label>
-                    <input type="date" id="readingDate" class="form-input" required>
-                </div>
-                <div class="section-chip chip-bowser">🚛 Bowser</div>
-                <div class="reading-row">
-                    <span class="rr-label">Open</span><input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" placeholder="0">
-                    <span class="rr-label">Close</span><input type="number" id="bowserClose" required oninput="calcDiff('bowser')" placeholder="0">
-                    <span class="diff-badge" id="bowserDiff">-</span>
-                </div>
-                <div class="section-chip chip-dip">📏 Dipstick</div>
-                <div class="reading-row">
-                    <span class="rr-label">Open</span><input type="number" id="dipOpen" required oninput="calcDiff('dip')" placeholder="0">
-                    <span class="rr-label">Close</span><input type="number" id="dipClose" required oninput="calcDiff('dip')" placeholder="0">
-                    <span class="diff-badge" id="dipDiff">-</span>
-                </div>
-                <div class="section-chip chip-ilembe">💧 iLembe</div>
-                <div class="reading-row">
-                    <span class="rr-label">Open</span><input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" placeholder="0">
-                    <span class="rr-label">Close</span><input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" placeholder="0">
-                    <span class="diff-badge" id="ilembeDiff">-</span>
-                </div>
-                <div class="section-chip chip-hydrant">🔥 Hydrant</div>
-                <div class="reading-row">
-                    <span class="rr-label">Open</span><input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" placeholder="0">
-                    <span class="rr-label">Close</span><input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" placeholder="0">
-                    <span class="diff-badge" id="hydrantDiff">-</span>
-                </div>
-                <div class="section-chip chip-borehole">🕳️ Borehole</div>
-                <div class="reading-row">
-                    <span class="rr-label">Open</span><input type="number" id="boreholeOpen" required oninput="calcDiff('borehole')" placeholder="0">
-                    <span class="rr-label">Close</span><input type="number" id="boreholeClose" required oninput="calcDiff('borehole')" placeholder="0">
-                    <span class="diff-badge" id="boreholeDiff">-</span>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="countedBy">👤 Counted By</label>
-                    <input type="text" id="countedBy" class="form-input" maxlength="50" required placeholder="Name of person who counted">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="notes">📝 Notes</label>
-                    <textarea id="notes" class="form-textarea" placeholder="Optional notes..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block" id="saveBtn">💾 Save Reading</button>
-                <button type="button" id="cancelEditBtn" class="btn btn-outline btn-block" style="display:none;margin-top:8px;" onclick="cancelEdit()">Cancel Edit</button>
-            </form>
-        </div>
-
-        <!-- Insights View -->
-        <div class="view" id="viewInsights">
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
-                <button class="btn btn-sm btn-primary" onclick="showStatsSheet()">📊 Stats</button>
-                <button class="btn btn-sm btn-outline" onclick="showChartSheet()">📈 Full Chart</button>
-            </div>
-            <div class="stat-grid" id="insightsStats"></div>
-            <div class="card">
-                <div class="card-header"><span class="card-title">📈 Usage Chart</span></div>
-                <canvas id="insightsChart" height="250"></canvas>
-                <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;justify-content:center;">
-                    <button class="btn btn-sm btn-outline chart-type-btn" onclick="setInsightsChartType('line')">Line</button>
-                    <button class="btn btn-sm btn-outline chart-type-btn" onclick="setInsightsChartType('bar')">Bar</button>
-                    <button class="btn btn-sm btn-outline chart-type-btn" onclick="setInsightsChartType('stacked')">Stacked</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Settings View -->
-        <div class="view" id="viewSettings">
-            <div class="card" style="margin-bottom:10px;">
-                <div class="card-title" style="margin-bottom:10px;">📤 Export Data</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                    <button class="btn btn-sm btn-outline" onclick="exportCSV()">📄 CSV</button>
-                    <button class="btn btn-sm btn-outline" onclick="exportPDF()">📕 PDF</button>
-                    <button class="btn btn-sm btn-outline" onclick="backupJSON()">💾 Backup JSON</button>
-                </div>
-            </div>
-            <div class="card" style="margin-bottom:10px;">
-                <div class="card-title" style="margin-bottom:10px;">📥 Restore</div>
-                <button class="btn btn-sm btn-outline" onclick="openRestore()">📂 Restore from Backup</button>
-            </div>
-            <div class="card" style="margin-bottom:10px;">
-                <div class="card-title" style="margin-bottom:10px;">🔐 Admin</div>
-                <p style="font-size:0.8rem;color:var(--text2);margin-bottom:8px;">Admin status: <strong id="adminStatusLabel">Locked</strong></p>
-                <button class="btn btn-sm btn-outline" onclick="showAdminModal()">🔑 Unlock Admin</button>
-            </div>
-            <div class="card">
-                <div class="card-title" style="margin-bottom:10px;">ℹ️ About</div>
-                <p style="font-size:0.8rem;color:var(--text2);">Superb Hyper – Daily Water Readings<br>Version 2.0 • Cloud Sync via Firebase</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <button class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
-            <span class="nav-icon">🏠</span>Home
-        </button>
-        <button class="nav-item" data-view="history" onclick="switchView('history')">
-            <span class="nav-icon">📋</span>History
-        </button>
-        <button class="nav-item nav-add" data-view="add" onclick="switchView('add')">
-            <span class="nav-icon-circle">+</span><span style="font-size:0.6rem;">Add</span>
-        </button>
-        <button class="nav-item" data-view="insights" onclick="switchView('insights')">
-            <span class="nav-icon">📈</span>Insights
-        </button>
-        <button class="nav-item" data-view="settings" onclick="switchView('settings')">
-            <span class="nav-icon">⚙️</span>Settings
-        </button>
-    </nav>
-
-    <!-- Bottom Sheet Overlay -->
+    <!-- Sheet Overlay -->
     <div class="sheet-overlay" id="sheetOverlay">
         <div class="sheet" id="sheetContent">
-            <div class="sheet-handle"></div>
             <button class="sheet-close" onclick="closeSheet()">✕</button>
             <div id="sheetBody"></div>
         </div>
@@ -1024,10 +1449,10 @@
     <div class="modal-overlay" id="adminModalOverlay">
         <div class="modal">
             <div class="modal-title">🔐 Admin Password</div>
-            <input type="password" id="adminPassInput" class="form-input" placeholder="Enter password" style="margin-bottom:12px;">
+            <input type="password" id="adminPassInput" class="form-input" placeholder="Enter password" style="margin-bottom:14px;">
             <button class="btn btn-primary btn-block" onclick="submitAdminPassword()">Unlock</button>
-            <div id="adminMsg" style="margin-top:8px;color:var(--danger);font-weight:600;text-align:center;"></div>
-            <button class="btn btn-ghost btn-block" style="margin-top:8px;" onclick="closeAdminModal()">Cancel</button>
+            <div id="adminMsg" style="margin-top:8px;color:var(--danger);font-weight:600;text-align:center;font-size:0.85rem;"></div>
+            <button class="btn btn-ghost btn-block" style="margin-top:6px;" onclick="closeAdminModal()">Cancel</button>
         </div>
     </div>
 
@@ -1035,9 +1460,9 @@
     <div class="modal-overlay" id="restoreModalOverlay">
         <div class="modal">
             <div class="modal-title">📂 Restore Backup</div>
-            <input type="file" id="restoreFile" accept="application/json" class="form-input" style="margin-bottom:12px;">
+            <input type="file" id="restoreFile" accept="application/json" class="form-input" style="margin-bottom:14px;">
             <button class="btn btn-primary btn-block" onclick="doRestore()">Restore</button>
-            <p style="color:var(--danger);font-weight:600;font-size:0.8rem;text-align:center;margin-top:8px;">⚠️ This replaces all data!</p>
+            <p style="color:var(--danger);font-weight:600;font-size:0.8rem;text-align:center;margin-top:10px;">⚠️ This replaces all existing data!</p>
             <button class="btn btn-ghost btn-block" style="margin-top:4px;" onclick="closeRestoreModal()">Cancel</button>
         </div>
     </div>
@@ -1057,6 +1482,7 @@
             let toastTimer = null;
             let currentView = 'dashboard';
             let searchFilter = '';
+            let sidebarCollapsed = false;
 
             const firebaseConfig = {
                 apiKey: "AIzaSyB9wieA97XLeZqlSheLXMIQY7wchnJ5sYo",
@@ -1075,28 +1501,49 @@
                 clearTimeout(toastTimer);
                 const container = document.getElementById('toastContainer');
                 container.innerHTML = `<div class="toast ${ok?'success':'error'}">${msg}</div>`;
-                toastTimer = setTimeout(() => { container.innerHTML = ''; }, 3000);
+                toastTimer = setTimeout(() => { container.innerHTML = ''; }, 3500);
             }
 
             function setDarkMode(on) {
                 darkMode = !!on;
                 document.body.classList.toggle('dark', darkMode);
                 document.getElementById('btnDarkMode').textContent = darkMode ? '☀️' : '🌙';
+                document.getElementById('btnDarkMode').setAttribute('data-tooltip', darkMode ? 'Light mode' :
+                    'Dark mode');
                 localStorage.setItem('darkMode', darkMode ? '1' : '');
             }
 
             function toggleDarkModeUI() { setDarkMode(!darkMode); }
 
+            function toggleSidebar() {
+                sidebarCollapsed = !sidebarCollapsed;
+                document.getElementById('appLayout').classList.toggle('sidebar-collapsed', sidebarCollapsed);
+                localStorage.setItem('sidebarCollapsed', sidebarCollapsed ? '1' : '');
+                // Update tooltips on nav items
+                document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+                    if (sidebarCollapsed) {
+                        item.setAttribute('data-tooltip', item.getAttribute('data-tooltip') || item
+                            .querySelector('.nav-label')?.textContent?.trim() || '');
+                    } else {
+                        item.removeAttribute('data-tooltip');
+                    }
+                });
+            }
+
             function switchView(viewName) {
                 currentView = viewName;
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                document.querySelectorAll('.sidebar-nav-item').forEach(n => n.classList.remove('active'));
                 const viewEl = document.getElementById('view' + viewName.charAt(0).toUpperCase() + viewName.slice(1));
                 if (viewEl) viewEl.classList.add('active');
-                const navEl = document.querySelector(`.nav-item[data-view="${viewName}"]`);
+                const navEl = document.querySelector(`.sidebar-nav-item[data-view="${viewName}"]`);
                 if (navEl) navEl.classList.add('active');
-                document.getElementById('mainContent').scrollTop = 0;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.getElementById('contentArea').scrollTop = 0;
+                // Show/hide search bar based on view
+                const searchWrap = document.getElementById('topbarSearchWrap');
+                if (searchWrap) {
+                    searchWrap.style.display = (viewName === 'history') ? 'flex' : 'flex';
+                }
                 if (viewName === 'dashboard') refreshDashboard();
                 if (viewName === 'history') refreshHistoryView();
                 if (viewName === 'insights') refreshInsightsView();
@@ -1112,18 +1559,8 @@
                 const open = Number(document.getElementById(section + 'Open').value) || 0;
                 const close = Number(document.getElementById(section + 'Close').value) || 0;
                 let diff = section === 'dip' ? open - close : close - open;
-                document.getElementById(section + 'Diff').textContent = (open || close) ? diff : '-';
-            }
-
-            function initials(name) {
-                if (!name) return '';
-                return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
-            }
-
-            function randomColor(str) {
-                let hash = 0;
-                for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-                return `hsl(${hash%360},55%,75%)`;
+                const badge = document.getElementById(section + 'Diff');
+                if (badge) badge.textContent = (open || close) ? diff : '-';
             }
 
             async function loadHistory() {
@@ -1247,26 +1684,25 @@
                 const totalBorehole = readingsHistory.reduce((s, r) => s + (r.boreholeDiff || 0), 0);
                 const totalAll = totalBowser + totalDip + totalIlembe + totalHydrant + totalBorehole;
                 document.getElementById('dashboardStats').innerHTML = `
-                    <div class="stat-card"><div class="stat-value">${totalAll.toLocaleString()}</div><div class="stat-label">Total Usage</div></div>
-                    <div class="stat-card"><div class="stat-value">${totalBowser.toLocaleString()}</div><div class="stat-label">🚛 Bowser</div></div>
-                    <div class="stat-card accent"><div class="stat-value">${totalBorehole.toLocaleString()}</div><div class="stat-label">🕳️ Borehole</div></div>
-                    <div class="stat-card success"><div class="stat-value">${readingsHistory.length}</div><div class="stat-label">Readings</div></div>
+                    <div class="stat-card"><span class="stat-icon">💧</span><div class="stat-value">${totalAll.toLocaleString()}</div><div class="stat-label">Total Usage</div></div>
+                    <div class="stat-card"><span class="stat-icon">🚛</span><div class="stat-value">${totalBowser.toLocaleString()}</div><div class="stat-label">Bowser</div></div>
+                    <div class="stat-card accent"><span class="stat-icon">🕳️</span><div class="stat-value">${totalBorehole.toLocaleString()}</div><div class="stat-label">Borehole</div></div>
+                    <div class="stat-card success"><span class="stat-icon">📋</span><div class="stat-value">${readingsHistory.length}</div><div class="stat-label">Readings</div></div>
+                    <div class="stat-card warning"><span class="stat-icon">📏</span><div class="stat-value">${totalDip.toLocaleString()}</div><div class="stat-label">Dipstick</div></div>
                 `;
-                const recent = sorted.slice(0, 3);
+                const recent = sorted.slice(0, 5);
                 const container = document.getElementById('recentReadings');
                 if (!recent.length) {
                     container.innerHTML =
                         '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No readings yet</div></div>';
                 } else {
                     container.innerHTML = recent.map(r => `
-                        <div class="history-card">
-                            <div class="hc-date">📅 ${r.date} <span style="font-size:0.7rem;color:var(--text3);">by ${r.countedBy||'?'}</span></div>
-                            <div class="hc-grid">
-                                <div class="hc-item"><div class="hc-src">Bowser</div><div class="hc-val">${r.bowserDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">Dipstick</div><div class="hc-val">${r.dipDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">iLembe</div><div class="hc-val">${r.ilembeDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">Hydrant</div><div class="hc-val">${r.hydrantDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">Borehole</div><div class="hc-val">${r.boreholeDiff||0}</div></div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-light);gap:8px;">
+                            <div style="font-weight:700;font-size:0.85rem;color:var(--primary);white-space:nowrap;">${r.date}</div>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+                                <span style="font-size:0.7rem;background:var(--primary-bg);color:var(--bowser);padding:3px 8px;border-radius:12px;font-weight:600;">🚛${r.bowserDiff||0}</span>
+                                <span style="font-size:0.7rem;background:var(--success-bg);color:var(--ilembe);padding:3px 8px;border-radius:12px;font-weight:600;">💧${r.ilembeDiff||0}</span>
+                                <span style="font-size:0.7rem;background:#EDE7F6;color:var(--borehole);padding:3px 8px;border-radius:12px;font-weight:600;">🕳️${r.boreholeDiff||0}</span>
                             </div>
                         </div>
                     `).join('');
@@ -1286,29 +1722,30 @@
                         labels: sorted.map(r => r.date.slice(5)),
                         datasets: [
                             { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0),
-                                backgroundColor: '#1A73E8', borderRadius: 6 },
+                                backgroundColor: '#2563EB', borderRadius: 6, borderSkipped: false },
                             { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0),
-                                backgroundColor: '#7C3AED', borderRadius: 6 },
+                                backgroundColor: '#7C3AED', borderRadius: 6, borderSkipped: false },
                             { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0),
-                                backgroundColor: '#0D904F', borderRadius: 6 },
+                                backgroundColor: '#10B981', borderRadius: 6, borderSkipped: false },
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10,
-                                    font: { size: 10 } } } },
-                        scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } } }, x: { ticks: { font: { size: 9 },
-                                    maxRotation: 45 } } }
+                                    font: { size: 10 }, usePointStyle: true, padding: 16 } } },
+                        scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } },
+                                grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { ticks: { font: { size: 9 },
+                                    maxRotation: 45 }, grid: { display: false } } }
                     }
                 });
-                document.getElementById('miniChart').parentElement.style.height = '200px';
             }
 
             function refreshHistoryView() {
                 const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
-                const filtered = searchFilter ? sorted.filter(r => r.date.includes(searchFilter) || (r.countedBy || '')
-                    .toLowerCase().includes(searchFilter.toLowerCase())) : sorted;
+                const searchVal = document.getElementById('topbarSearchInput')?.value?.trim() || '';
+                const filtered = searchVal ? sorted.filter(r => r.date.includes(searchVal) || (r.countedBy || '')
+                    .toLowerCase().includes(searchVal.toLowerCase())) : sorted;
                 const cardsContainer = document.getElementById('historyCards');
                 const tableWrap = document.getElementById('historyTableWrap');
                 const emptyEl = document.getElementById('historyEmpty');
@@ -1322,7 +1759,7 @@
                 if (cardsContainer) {
                     cardsContainer.innerHTML = filtered.map(r => `
                         <div class="history-card">
-                            <div class="hc-date">📅 ${r.date} <span style="font-size:0.7rem;color:var(--text3);">👤 ${r.countedBy||'?'}</span></div>
+                            <div class="hc-header"><span class="hc-date">📅 ${r.date}</span><span style="font-size:0.7rem;color:var(--text-muted);">👤 ${r.countedBy||'?'}</span></div>
                             <div class="hc-grid">
                                 <div class="hc-item"><div class="hc-src">🚛 Bowser</div><div class="hc-val">${r.bowserDiff||0}</div></div>
                                 <div class="hc-item"><div class="hc-src">📏 Dip</div><div class="hc-val">${r.dipDiff||0}</div></div>
@@ -1330,9 +1767,9 @@
                                 <div class="hc-item"><div class="hc-src">🔥 Hydrant</div><div class="hc-val">${r.hydrantDiff||0}</div></div>
                                 <div class="hc-item"><div class="hc-src">🕳️ Borehole</div><div class="hc-val">${r.boreholeDiff||0}</div></div>
                             </div>
-                            ${r.notes ? `<div style="font-size:0.7rem;color:var(--text3);margin-top:6px;">📝 ${r.notes}</div>` : ''}
-                            <div class="hc-actions">
-                                <button class="btn btn-sm btn-outline" onclick="editEntryByDate('${r.date}')">✏️ Edit</button>
+                            ${r.notes ? `<div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px;">📝 ${r.notes}</div>` : ''}
+                            <div class="btn-group" style="margin-top:8px;justify-content:flex-end;">
+                                <button class="btn btn-sm btn-secondary" onclick="editEntryByDate('${r.date}')">✏️ Edit</button>
                                 <button class="btn btn-sm btn-danger" onclick="deleteEntryByDate('${r.date}')">🗑️ Delete</button>
                             </div>
                         </div>
@@ -1344,16 +1781,16 @@
                     </tr></thead><tbody>`;
                     filtered.forEach(r => {
                         tbl += `<tr>
-                            <td><strong>${r.date}</strong></td>
-                            <td>${r.bowserOpen}→${r.bowserClose} <b>(${r.bowserDiff})</b></td>
-                            <td>${r.dipOpen}→${r.dipClose} <b>(${r.dipDiff})</b></td>
-                            <td>${r.ilembeOpen}→${r.ilembeClose} <b>(${r.ilembeDiff})</b></td>
-                            <td>${r.hydrantOpen}→${r.hydrantClose} <b>(${r.hydrantDiff})</b></td>
-                            <td>${r.boreholeOpen}→${r.boreholeClose} <b>(${r.boreholeDiff})</b></td>
+                            <td class="cell-date">${r.date}</td>
+                            <td class="cell-diff">${r.bowserOpen}→${r.bowserClose} <b>(${r.bowserDiff})</b></td>
+                            <td class="cell-diff">${r.dipOpen}→${r.dipClose} <b>(${r.dipDiff})</b></td>
+                            <td class="cell-diff">${r.ilembeOpen}→${r.ilembeClose} <b>(${r.ilembeDiff})</b></td>
+                            <td class="cell-diff">${r.hydrantOpen}→${r.hydrantClose} <b>(${r.hydrantDiff})</b></td>
+                            <td class="cell-diff">${r.boreholeOpen}→${r.boreholeClose} <b>(${r.boreholeDiff})</b></td>
                             <td>${r.countedBy||''}</td>
-                            <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;">${r.notes||''}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline" onclick="editEntryByDate('${r.date}')" style="padding:4px 8px;font-size:0.7rem;">✏️</button>
+                            <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.notes||''}</td>
+                            <td class="actions-cell">
+                                <button class="btn btn-sm btn-secondary" onclick="editEntryByDate('${r.date}')" style="padding:4px 8px;font-size:0.7rem;">✏️</button>
                                 <button class="btn btn-sm btn-danger" onclick="deleteEntryByDate('${r.date}')" style="padding:4px 8px;font-size:0.7rem;">🗑️</button>
                             </td>
                         </tr>`;
@@ -1364,23 +1801,22 @@
             }
 
             function filterHistory() {
-                searchFilter = document.getElementById('searchInput').value.trim();
+                searchFilter = document.getElementById('topbarSearchInput')?.value?.trim() || '';
                 refreshHistoryView();
             }
 
             function refreshInsightsView() {
-                const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date));
                 const totalBowser = readingsHistory.reduce((s, r) => s + (r.bowserDiff || 0), 0);
                 const totalDip = readingsHistory.reduce((s, r) => s + (r.dipDiff || 0), 0);
                 const totalIlembe = readingsHistory.reduce((s, r) => s + (r.ilembeDiff || 0), 0);
                 const totalHydrant = readingsHistory.reduce((s, r) => s + (r.hydrantDiff || 0), 0);
                 const totalBorehole = readingsHistory.reduce((s, r) => s + (r.boreholeDiff || 0), 0);
                 document.getElementById('insightsStats').innerHTML = `
-                    <div class="stat-card"><div class="stat-value">${totalBowser.toLocaleString()}</div><div class="stat-label">🚛 Bowser</div></div>
-                    <div class="stat-card"><div class="stat-value">${totalDip.toLocaleString()}</div><div class="stat-label">📏 Dipstick</div></div>
-                    <div class="stat-card"><div class="stat-value">${totalIlembe.toLocaleString()}</div><div class="stat-label">💧 iLembe</div></div>
-                    <div class="stat-card"><div class="stat-value">${totalHydrant.toLocaleString()}</div><div class="stat-label">🔥 Hydrant</div></div>
-                    <div class="stat-card accent"><div class="stat-value">${totalBorehole.toLocaleString()}</div><div class="stat-label">🕳️ Borehole</div></div>
+                    <div class="stat-card"><span class="stat-icon">🚛</span><div class="stat-value">${totalBowser.toLocaleString()}</div><div class="stat-label">Bowser</div></div>
+                    <div class="stat-card"><span class="stat-icon">📏</span><div class="stat-value">${totalDip.toLocaleString()}</div><div class="stat-label">Dipstick</div></div>
+                    <div class="stat-card"><span class="stat-icon">💧</span><div class="stat-value">${totalIlembe.toLocaleString()}</div><div class="stat-label">iLembe</div></div>
+                    <div class="stat-card"><span class="stat-icon">🔥</span><div class="stat-value">${totalHydrant.toLocaleString()}</div><div class="stat-label">Hydrant</div></div>
+                    <div class="stat-card accent"><span class="stat-icon">🕳️</span><div class="stat-value">${totalBorehole.toLocaleString()}</div><div class="stat-label">Borehole</div></div>
                 `;
                 renderInsightsChart();
             }
@@ -1393,40 +1829,47 @@
                 if (!ctx) return;
                 const labels = sorted.map(r => r.date);
                 const datasets = [
-                    { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0), borderColor: '#1A73E8',
-                        backgroundColor: 'rgba(26,115,232,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 2 },
-                    { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0), borderColor: '#F9AB00',
-                        backgroundColor: 'rgba(249,171,0,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 2 },
-                    { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0), borderColor: '#0D904F',
-                        backgroundColor: 'rgba(13,144,79,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 2 },
-                    { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0), borderColor: '#D93025',
-                        backgroundColor: 'rgba(217,48,37,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 2 },
+                    { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0), borderColor: '#2563EB',
+                        backgroundColor: 'rgba(37,99,235,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 3, pointHoverRadius: 6 },
+                    { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0), borderColor: '#F59E0B',
+                        backgroundColor: 'rgba(245,158,11,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 3, pointHoverRadius: 6 },
+                    { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0), borderColor: '#10B981',
+                        backgroundColor: 'rgba(16,185,129,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 3, pointHoverRadius: 6 },
+                    { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0), borderColor: '#EF4444',
+                        backgroundColor: 'rgba(239,68,68,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
+                        pointRadius: 3, pointHoverRadius: 6 },
                     { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0), borderColor: '#7C3AED',
                         backgroundColor: 'rgba(124,58,237,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 2 },
+                        pointRadius: 3, pointHoverRadius: 6 },
                 ];
                 const type = insightsChartType === 'stacked' ? 'line' : insightsChartType;
                 const options = {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
                     plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 },
-                                usePointStyle: true } } },
-                    scales: { y: { beginAtZero: true, stacked: insightsChartType === 'stacked' }, x: { stacked: insightsChartType ===
-                                'stacked', ticks: { maxRotation: 60, font: { size: 9 } } } }
+                                usePointStyle: true, padding: 18 } } },
+                    scales: { y: { beginAtZero: true, stacked: insightsChartType === 'stacked',
+                            grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { stacked: insightsChartType ===
+                                'stacked', ticks: { maxRotation: 60, font: { size: 9 } },
+                            grid: { display: false } } }
                 };
                 insightsChartInstance = new Chart(ctx, { type, data: { labels, datasets }, options });
-                document.getElementById('insightsChart').parentElement.style.height = '280px';
             }
 
             function setInsightsChartType(type) {
                 insightsChartType = type;
-                document.querySelectorAll('#viewInsights .chart-type-btn').forEach(b => b.classList.remove(
-                    'btn-primary'));
-                event.target.classList.add('btn-primary');
+                document.querySelectorAll('#viewInsights .chart-type-btn').forEach(b => {
+                    b.classList.remove('btn-primary');
+                    b.classList.add('btn-secondary');
+                });
+                if (event && event.target) {
+                    event.target.classList.remove('btn-secondary');
+                    event.target.classList.add('btn-primary');
+                }
                 renderInsightsChart();
             }
 
@@ -1447,7 +1890,7 @@
                 document.getElementById('notes').value = entry.notes || '';
                 editingIdx = idx;
                 editingDate = entry.date;
-                document.getElementById('cancelEditBtn').style.display = 'flex';
+                document.getElementById('cancelEditBtn').style.display = 'inline-flex';
                 document.getElementById('saveBtn').textContent = '✏️ Update Reading';
                 switchView('add');
             };
@@ -1457,7 +1900,7 @@
                     showAdminModal(); return; }
                 const idx = readingsHistory.findIndex(e => e.date === date);
                 if (idx === -1) return;
-                if (!confirm('Delete reading for ' + date + '?')) return;
+                if (!confirm('Delete reading for ' + date + '? This cannot be undone.')) return;
                 readingsHistory.splice(idx, 1);
                 await saveHistory();
                 refreshAllViews();
@@ -1465,21 +1908,23 @@
             };
 
             function showStatsSheet() {
-                const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
                 const fields = ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'];
                 const labels = ['🚛 Bowser', '📏 Dipstick', '💧 iLembe', '🔥 Hydrant', '🕳️ Borehole'];
                 let html =
-                    '<h3 style="margin-bottom:12px;text-align:center;">📊 Summary Stats</h3><div class="stat-grid" style="grid-template-columns:repeat(3,1fr);">';
+                    '<h3 style="margin-bottom:16px;text-align:center;font-weight:800;">📊 Summary Statistics</h3><div class="stat-row" style="grid-template-columns:repeat(5,1fr);">';
                 fields.forEach((f, i) => {
                     const total = readingsHistory.reduce((s, r) => s + (r[f + 'Diff'] || 0), 0);
                     const avg = readingsHistory.length ? (total / readingsHistory.length).toFixed(1) : 0;
                     html +=
-                        `<div class="stat-card"><div class="stat-value" style="font-size:1.2rem;">${total.toLocaleString()}</div><div class="stat-label">${labels[i]} Total</div><div style="font-size:0.7rem;color:var(--text3);">Avg: ${avg}</div></div>`;
+                        `<div class="stat-card"><div class="stat-value" style="font-size:1.3rem;">${total.toLocaleString()}</div><div class="stat-label">${labels[i]}</div><div style="font-size:0.7rem;color:var(--text-muted);">Avg: ${avg}</div></div>`;
                 });
                 html += '</div>';
+                const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
                 if (sorted.length) {
-                    html += '<p style="text-align:center;font-size:0.8rem;color:var(--text2);margin-top:8px;">📅 First: ' +
-                        sorted[sorted.length - 1].date + ' · Last: ' + sorted[0].date + '</p>';
+                    html +=
+                        '<p style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:12px;">📅 First Reading: ' +
+                        sorted[sorted.length - 1].date + ' · Last: ' + sorted[0].date +
+                        ' · Total: ' + readingsHistory.length + ' readings</p>';
                 }
                 document.getElementById('sheetBody').innerHTML = html;
                 document.getElementById('sheetOverlay').classList.add('active');
@@ -1487,7 +1932,7 @@
 
             function showChartSheet() {
                 document.getElementById('sheetBody').innerHTML =
-                    '<h3 style="margin-bottom:8px;text-align:center;">📈 Full Chart</h3><canvas id="sheetChart" height="300"></canvas>';
+                    '<h3 style="margin-bottom:12px;text-align:center;font-weight:800;">📈 Full Usage Chart</h3><div class="chart-container" style="height:380px;"><canvas id="sheetChart"></canvas></div>';
                 document.getElementById('sheetOverlay').classList.add('active');
                 setTimeout(() => {
                     const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date));
@@ -1500,20 +1945,28 @@
                             labels: sorted.map(r => r.date),
                             datasets: [
                                 { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0),
-                                    borderColor: '#1A73E8', tension: 0.3, pointRadius: 2, fill: false },
+                                    borderColor: '#2563EB', tension: 0.3, pointRadius: 3, fill: false,
+                                    borderWidth: 2 },
                                 { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0),
-                                    borderColor: '#F9AB00', tension: 0.3, pointRadius: 2, fill: false },
+                                    borderColor: '#F59E0B', tension: 0.3, pointRadius: 3, fill: false,
+                                    borderWidth: 2 },
                                 { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0),
-                                    borderColor: '#0D904F', tension: 0.3, pointRadius: 2, fill: false },
+                                    borderColor: '#10B981', tension: 0.3, pointRadius: 3, fill: false,
+                                    borderWidth: 2 },
                                 { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0),
-                                    borderColor: '#D93025', tension: 0.3, pointRadius: 2, fill: false },
+                                    borderColor: '#EF4444', tension: 0.3, pointRadius: 3, fill: false,
+                                    borderWidth: 2 },
                                 { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0),
-                                    borderColor: '#7C3AED', tension: 0.3, pointRadius: 2, fill: false },
+                                    borderColor: '#7C3AED', tension: 0.3, pointRadius: 3, fill: false,
+                                    borderWidth: 2 },
                             ]
                         },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom',
-                                    labels: { boxWidth: 10, font: { size: 9 } } } }, scales: { y: { beginAtZero: true },
-                                x: { ticks: { maxRotation: 60, font: { size: 8 } } } } }
+                        options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index',
+                                intersect: false }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10,
+                                        font: { size: 10 }, usePointStyle: true } } },
+                            scales: { y: { beginAtZero: true,
+                                    grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { ticks: { maxRotation: 60,
+                                        font: { size: 8 } }, grid: { display: false } } } }
                     });
                 }, 200);
             }
@@ -1558,9 +2011,13 @@
             }
 
             function updateAdminUI() {
-                document.getElementById('btnAdminIndicator').textContent = adminMode ? '🔓' : '🔒';
-                document.getElementById('btnAdminIndicator').classList.toggle('admin-active', adminMode);
+                const btn = document.getElementById('btnAdminIndicator');
+                btn.textContent = adminMode ? '🔓' : '🔒';
+                btn.classList.toggle('admin-active', adminMode);
+                btn.setAttribute('data-tooltip', adminMode ? 'Admin: Unlocked' : 'Admin: Locked');
                 document.getElementById('adminStatusLabel').textContent = adminMode ? 'Unlocked 🔓' : 'Locked 🔒';
+                const avatar = document.getElementById('topbarAvatar');
+                if (avatar) avatar.textContent = adminMode ? 'AD' : 'SH';
                 refreshHistoryView();
             }
 
@@ -1583,7 +2040,7 @@
                     try {
                         const obj = JSON.parse(e.target.result);
                         if (!obj.dailyReadings) throw 'Invalid format';
-                        if (!confirm('Replace ALL data with this backup?')) return;
+                        if (!confirm('Replace ALL data with this backup? This cannot be undone.')) return;
                         readingsHistory = obj.dailyReadings;
                         await saveHistory();
                         closeRestoreModal();
@@ -1598,7 +2055,6 @@
 
             window.exportCSV = function() {
                 if (!readingsHistory.length) return toast('No data to export.', false);
-                const fields = ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'];
                 let csv = [
                     ['Date', 'Bowser Open', 'Bowser Close', 'Bowser Diff', 'Dip Open', 'Dip Close', 'Dip Diff',
                         'iLembe Open', 'iLembe Close', 'iLembe Diff', 'Hydrant Open', 'Hydrant Close',
@@ -1626,11 +2082,11 @@
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
                 doc.setFontSize(16);
-                doc.text('Superb Hyper – Water Readings', 14, 18);
+                doc.text('Superb Hyper - Water Readings', 14, 18);
                 const rows = [
                     ['Date', 'Bowser', 'Dip', 'iLembe', 'Hydrant', 'Borehole', 'Counted By', 'Notes']
                 ];
-                readingsHistory.slice(-30).reverse().forEach(r => {
+                readingsHistory.slice(-40).reverse().forEach(r => {
                     rows.push([r.date, r.bowserDiff, r.dipDiff, r.ilembeDiff, r.hydrantDiff, r.boreholeDiff, r
                         .countedBy || '', r.notes || ''
                     ]);
@@ -1667,40 +2123,22 @@
             document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') submitAdminPassword();
             });
-
-            // Pull to refresh
-            let touchStartY = 0;
-            document.addEventListener('touchstart', function(e) {
-                touchStartY = e.touches[0].clientY;
-            }, { passive: true });
-            document.addEventListener('touchmove', function(e) {
-                const currentY = e.touches[0].clientY;
-                const diff = currentY - touchStartY;
-                const ptrIndicator = document.getElementById('ptrIndicator');
-                if (diff > 60 && window.scrollY < 10 && currentView === 'history' && ptrIndicator) {
-                    ptrIndicator.classList.add('show');
-                }
-            }, { passive: true });
-            document.addEventListener('touchend', async function(e) {
-                const ptrIndicator = document.getElementById('ptrIndicator');
-                if (ptrIndicator && ptrIndicator.classList.contains('show')) {
-                    ptrIndicator.classList.remove('show');
-                    ptrIndicator.textContent = '🔄 Refreshing...';
-                    ptrIndicator.classList.add('show');
-                    await loadHistory();
-                    ptrIndicator.textContent = '↓ Pull to refresh';
-                    ptrIndicator.classList.remove('show');
-                    refreshAllViews();
-                }
+            document.getElementById('topbarSearchInput').addEventListener('input', function() {
+                if (currentView === 'history') filterHistory();
             });
 
             // Initialize
             document.addEventListener('DOMContentLoaded', () => {
                 setDarkMode(localStorage.getItem('darkMode') === '1');
+                if (localStorage.getItem('sidebarCollapsed') === '1') {
+                    sidebarCollapsed = true;
+                    document.getElementById('appLayout').classList.add('sidebar-collapsed');
+                }
                 document.getElementById('readingDate').value = getTodayString();
                 loadHistory().then(() => {
                     refreshAllViews();
                 });
+                updateAdminUI();
             });
 
             // Expose to global scope
@@ -1724,6 +2162,7 @@
             window.calcDiff = calcDiff;
             window.cancelEdit = cancelEdit;
             window.filterHistory = filterHistory;
+            window.toggleSidebar = toggleSidebar;
         })();
     </script>
 </body>
