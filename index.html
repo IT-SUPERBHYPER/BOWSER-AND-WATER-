@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Superb Hyper – Water Readings</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
     <meta name="theme-color" content="#1E293B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="HandheldFriendly" content="true">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
@@ -45,24 +50,32 @@
             --sidebar-width: 240px;
             --sidebar-collapsed: 64px;
             --topbar-height: 56px;
+            --bottomnav-height: 60px;
             --radius-sm: 6px;
             --radius: 10px;
             --radius-lg: 14px;
             --radius-xl: 18px;
+            --radius-full: 9999px;
             --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
             --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.10), 0 4px 8px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.14), 0 8px 16px rgba(0, 0, 0, 0.06);
+            --shadow-fab: 0 8px 24px rgba(37, 99, 235, 0.35), 0 2px 8px rgba(0, 0, 0, 0.12);
             --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             --font-mono: 'SF Mono', 'Cascadia Code', 'Consolas', 'Monaco', monospace;
             --bowser: #2563EB;
             --dip: #F59E0B;
             --ilembe: #10B981;
             --hydrant: #EF4444;
             --borehole: #7C3AED;
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
         }
 
         .dark {
@@ -80,6 +93,7 @@
             --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
             --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
             --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.5);
+            --shadow-fab: 0 8px 24px rgba(37, 99, 235, 0.5), 0 2px 8px rgba(0, 0, 0, 0.25);
             --primary-light: #1E3A5F;
             --primary-bg: #1E3A5F;
             --success-bg: #064E3B;
@@ -101,16 +115,27 @@
             font-size: 15px;
             -webkit-tap-highlight-color: transparent;
             scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: background var(--transition), color var(--transition);
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+            user-select: none;
+            -webkit-user-select: none;
+            padding-top: var(--safe-area-top);
+            padding-bottom: var(--safe-area-bottom);
+            padding-left: var(--safe-area-left);
+            padding-right: var(--safe-area-right);
         }
 
         /* App Layout */
@@ -119,7 +144,9 @@
             grid-template-columns: var(--sidebar-width) 1fr;
             grid-template-rows: var(--topbar-height) 1fr;
             height: 100vh;
+            height: 100dvh;
             transition: grid-template-columns var(--transition-slow);
+            position: relative;
         }
         .app-layout.sidebar-collapsed {
             grid-template-columns: var(--sidebar-collapsed) 1fr;
@@ -137,6 +164,7 @@
             transition: width var(--transition-slow);
             border-right: 1px solid rgba(255, 255, 255, 0.06);
             user-select: none;
+            -webkit-user-select: none;
         }
         .sidebar-header {
             height: var(--topbar-height);
@@ -182,6 +210,7 @@
             gap: 2px;
             overflow-y: auto;
             overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
         }
         .sidebar-nav-item {
             display: flex;
@@ -202,6 +231,7 @@
             position: relative;
             min-height: 42px;
             letter-spacing: 0.1px;
+            -webkit-tap-highlight-color: transparent;
         }
         .sidebar-nav-item:hover {
             background: var(--sidebar-hover);
@@ -260,6 +290,7 @@
             width: 100%;
             text-align: left;
             min-height: 38px;
+            -webkit-tap-highlight-color: transparent;
         }
         .sidebar-collapse-btn:hover {
             background: var(--sidebar-hover);
@@ -364,6 +395,7 @@
             color: var(--text-secondary);
             transition: all var(--transition-fast);
             position: relative;
+            -webkit-tap-highlight-color: transparent;
         }
         .topbar-btn:hover {
             background: var(--surface-hover);
@@ -425,6 +457,8 @@
             scroll-behavior: smooth;
             background: var(--bg);
             transition: background var(--transition);
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-y: contain;
         }
         .content-area::-webkit-scrollbar {
             width: 6px;
@@ -438,6 +472,65 @@
         }
         .content-area::-webkit-scrollbar-thumb:hover {
             background: var(--text-muted);
+        }
+
+        /* FAB - Floating Action Button */
+        .fab {
+            display: none;
+            position: fixed;
+            bottom: calc(24px + var(--safe-area-bottom) + var(--bottomnav-height));
+            right: calc(20px + var(--safe-area-right));
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1.6rem;
+            z-index: 300;
+            box-shadow: var(--shadow-fab);
+            transition: all var(--transition-spring);
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            animation: fabPulse 2s ease-in-out infinite;
+        }
+        @keyframes fabPulse {
+            0%,
+            100% {
+                box-shadow: var(--shadow-fab);
+            }
+            50% {
+                box-shadow: 0 12px 32px rgba(37, 99, 235, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2);
+            }
+        }
+        .fab:active {
+            transform: scale(0.88);
+            animation: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+        .fab .fab-ripple {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Pull-to-refresh indicator */
+        .pull-indicator {
+            display: none;
+            text-align: center;
+            padding: 12px;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .pull-indicator.visible {
+            opacity: 1;
         }
 
         /* Views */
@@ -500,6 +593,10 @@
             transform: translateY(-2px);
             border-color: var(--primary-bg);
         }
+        .stat-card:active {
+            transform: scale(0.97);
+            transition: transform 0.1s ease;
+        }
         .stat-card .stat-icon {
             font-size: 1.5rem;
             margin-bottom: 6px;
@@ -561,6 +658,7 @@
             justify-content: space-between;
             align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
         .panel-title {
             font-weight: 700;
@@ -586,23 +684,6 @@
             grid-template-columns: 1.4fr 1fr;
             gap: 16px;
         }
-        @media (max-width: 1200px) {
-            .grid-2col,
-            .grid-2col-wide {
-                grid-template-columns: 1fr;
-            }
-            .stat-row {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-        }
-        @media (max-width: 900px) {
-            .stat-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .reading-grid-5col {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
-        }
 
         /* Reading Form Grid */
         .reading-grid-5col {
@@ -621,6 +702,10 @@
         }
         .reading-source-card:hover {
             border-color: var(--primary-bg);
+        }
+        .reading-source-card:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.06);
         }
         .reading-source-card .rs-header {
             font-weight: 700;
@@ -646,10 +731,12 @@
             transition: all var(--transition-fast);
             font-family: var(--font-mono);
             margin-bottom: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
         }
         .reading-source-card input:focus {
             border-color: var(--primary);
-            outline: none;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
         }
         .reading-source-card .rs-label {
@@ -670,6 +757,11 @@
             display: inline-block;
             margin-top: 4px;
             letter-spacing: 0.2px;
+            transition: all var(--transition-fast);
+        }
+        .reading-source-card .rs-diff.negative {
+            color: var(--danger);
+            background: var(--danger-bg);
         }
         .chip-bowser {
             color: var(--bowser);
@@ -710,6 +802,8 @@
             white-space: nowrap;
             font-family: inherit;
             text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         .btn:active {
             transform: scale(0.96);
@@ -778,11 +872,6 @@
             gap: 14px;
             margin-bottom: 16px;
         }
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
         .form-group {
             margin-bottom: 16px;
         }
@@ -807,6 +896,8 @@
             color: var(--text);
             transition: all var(--transition-fast);
             outline: none;
+            -webkit-appearance: none;
+            appearance: none;
         }
         .form-input:focus,
         .form-textarea:focus {
@@ -868,17 +959,9 @@
             justify-content: center;
         }
 
-        /* History Cards (fallback for narrow screens) */
+        /* History Cards */
         .history-cards {
             display: none;
-        }
-        @media (max-width: 950px) {
-            .history-cards {
-                display: block;
-            }
-            .table-wrap {
-                display: none;
-            }
         }
         .history-card {
             background: var(--surface);
@@ -887,15 +970,23 @@
             border: 1px solid var(--border);
             margin-bottom: 10px;
             transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
         }
         .history-card:hover {
             box-shadow: var(--shadow-sm);
+        }
+        .history-card:active {
+            transform: scale(0.985);
+            transition: transform 0.1s ease;
         }
         .history-card .hc-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 4px;
         }
         .history-card .hc-date {
             font-weight: 700;
@@ -927,14 +1018,14 @@
         /* Toast */
         .toast-container {
             position: fixed;
-            top: 16px;
-            right: 16px;
+            top: calc(16px + var(--safe-area-top));
+            right: calc(16px + var(--safe-area-right));
             z-index: 9999;
             display: flex;
             flex-direction: column;
             gap: 8px;
             pointer-events: none;
-            max-width: 400px;
+            max-width: min(400px, 90vw);
         }
         .toast {
             padding: 12px 18px;
@@ -972,10 +1063,13 @@
             z-index: 500;
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
             padding: 24px;
+            padding-top: calc(24px + var(--safe-area-top));
+            padding-bottom: calc(24px + var(--safe-area-bottom));
         }
         .modal-overlay.active {
             display: flex;
@@ -988,6 +1082,9 @@
             max-width: 460px;
             box-shadow: var(--shadow-xl);
             animation: modalPopIn 0.3s cubic-bezier(0.21, 1.02, 0.58, 1);
+            max-height: 85vh;
+            max-height: 85dvh;
+            overflow-y: auto;
         }
         @keyframes modalPopIn {
             from {
@@ -1014,10 +1111,13 @@
             z-index: 400;
             background: rgba(15, 23, 42, 0.5);
             backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
             display: none;
             align-items: center;
             justify-content: center;
             padding: 24px;
+            padding-top: calc(24px + var(--safe-area-top));
+            padding-bottom: calc(24px + var(--safe-area-bottom));
         }
         .sheet-overlay.active {
             display: flex;
@@ -1028,6 +1128,7 @@
             width: 100%;
             max-width: 750px;
             max-height: 80vh;
+            max-height: 80dvh;
             overflow-y: auto;
             padding: 24px;
             box-shadow: var(--shadow-xl);
@@ -1051,6 +1152,7 @@
             justify-content: center;
             z-index: 5;
             transition: all var(--transition-fast);
+            -webkit-tap-highlight-color: transparent;
         }
         .sheet-close:hover {
             background: var(--border);
@@ -1127,12 +1229,46 @@
             width: 100% !important;
         }
 
-        /* Responsive tweaks */
+        /* Desktop breakpoints */
+        @media (max-width: 1200px) {
+            .grid-2col,
+            .grid-2col-wide {
+                grid-template-columns: 1fr;
+            }
+            .stat-row {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
         @media (max-width: 1100px) {
             .reading-grid-5col {
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+        @media (max-width: 950px) {
+            .history-cards {
+                display: block;
+            }
+            .table-wrap {
+                display: none;
+            }
+            .reading-grid-5col {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stat-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+        }
+        @media (max-width: 900px) {
+            .stat-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .reading-grid-5col {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        /* Tablet breakpoint */
         @media (max-width: 768px) {
             .app-layout {
                 grid-template-columns: 1fr;
@@ -1142,10 +1278,12 @@
                 grid-row: 3;
                 grid-column: 1;
                 flex-direction: row;
-                height: 56px;
+                height: var(--bottomnav-height);
                 width: 100% !important;
                 border-right: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.06);
+                padding-bottom: var(--safe-area-bottom);
+                min-height: var(--bottomnav-height);
             }
             .sidebar-header,
             .sidebar-footer,
@@ -1158,12 +1296,42 @@
                 gap: 0;
                 justify-content: space-around;
                 overflow: visible;
+                width: 100%;
             }
             .sidebar-nav-item {
                 padding: 8px;
                 justify-content: center;
                 min-height: auto;
                 border-radius: var(--radius-sm);
+                flex: 1;
+                max-width: 72px;
+                font-size: 0.7rem;
+                flex-direction: column;
+                gap: 3px;
+            }
+            .sidebar-nav-item .nav-icon {
+                font-size: 1.3rem;
+            }
+            .sidebar-nav-item.active {
+                background: transparent;
+                box-shadow: none;
+            }
+            .sidebar-nav-item.active .nav-icon {
+                color: #fff;
+                transform: scale(1.2);
+            }
+            .sidebar-nav-item .nav-label {
+                display: block !important;
+                opacity: 1 !important;
+                width: auto !important;
+                font-size: 0.6rem;
+                font-weight: 500;
+                color: var(--sidebar-text);
+                white-space: nowrap;
+            }
+            .sidebar-nav-item.active .nav-label {
+                color: #fff;
+                font-weight: 700;
             }
             .main-wrapper {
                 grid-column: 1;
@@ -1171,9 +1339,10 @@
             }
             .topbar {
                 padding: 0 12px;
+                gap: 8px;
             }
             .content-area {
-                padding: 14px 12px 14px 12px;
+                padding: 14px 12px 80px 12px;
             }
             .stat-row {
                 grid-template-columns: repeat(2, 1fr);
@@ -1191,7 +1360,529 @@
                 grid-template-columns: 1fr;
             }
             .topbar-search {
-                max-width: 200px;
+                max-width: 180px;
+            }
+            .topbar-user span {
+                display: none;
+            }
+            .page-title {
+                font-size: 1.25rem;
+            }
+            .fab {
+                display: flex;
+            }
+            .btn-lg {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                min-height: 44px;
+            }
+        }
+
+        /* ─────────────────────────────────────── */
+        /*  SAMSUNG S24 ULTRA MOBILE OPTIMIZATION  */
+        /*  Target: 360-430px CSS viewport width   */
+        /*  High-DPI AMOLED • 120Hz • 19.5:9       */
+        /* ─────────────────────────────────────── */
+        @media (max-width: 430px) {
+            :root {
+                --radius-sm: 5px;
+                --radius: 8px;
+                --radius-lg: 12px;
+                --radius-xl: 16px;
+            }
+            html {
+                font-size: 14px;
+            }
+            body {
+                -webkit-font-smoothing: subpixel-antialiased;
+            }
+
+            /* Topbar compact */
+            .topbar {
+                height: 50px;
+                padding: 0 10px;
+                gap: 6px;
+            }
+            .topbar-search {
+                max-width: 140px;
+            }
+            .topbar-search input {
+                padding: 7px 10px 7px 30px;
+                font-size: 0.78rem;
+                border-radius: 20px;
+            }
+            .topbar-search .search-icon {
+                left: 10px;
+                font-size: 0.75rem;
+            }
+            .topbar-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+            .topbar-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.7rem;
+            }
+            .topbar-user {
+                padding: 2px 4px;
+                gap: 4px;
+                font-size: 0.7rem;
+            }
+
+            /* Content area */
+            .content-area {
+                padding: 10px 8px 90px 8px;
+            }
+
+            /* Page header */
+            .page-header {
+                margin-bottom: 12px;
+            }
+            .page-title {
+                font-size: 1.15rem;
+                letter-spacing: -0.2px;
+            }
+            .page-subtitle {
+                font-size: 0.7rem;
+            }
+
+            /* Stat cards - 2 per row */
+            .stat-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 7px;
+                margin-bottom: 12px;
+            }
+            .stat-card {
+                padding: 12px 14px;
+                border-radius: var(--radius-lg);
+            }
+            .stat-card .stat-icon {
+                font-size: 1.2rem;
+                margin-bottom: 3px;
+            }
+            .stat-card .stat-value {
+                font-size: 1.35rem;
+                letter-spacing: -0.3px;
+            }
+            .stat-card .stat-label {
+                font-size: 0.6rem;
+                letter-spacing: 0.4px;
+            }
+            .stat-card::after {
+                width: 40px;
+                height: 40px;
+                top: -14px;
+                right: -14px;
+            }
+
+            /* Panels */
+            .panel-header {
+                padding: 12px 14px;
+                gap: 8px;
+            }
+            .panel-title {
+                font-size: 0.82rem;
+            }
+            .panel-body {
+                padding: 12px 14px;
+            }
+            .panel-body.no-padding {
+                padding: 0;
+            }
+
+            /* Grids - single column */
+            .grid-2col,
+            .grid-2col-wide {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            /* Reading form - single column cards */
+            .reading-grid-5col {
+                grid-template-columns: 1fr !important;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+            .reading-source-card {
+                display: grid;
+                grid-template-columns: auto 1fr 1fr auto;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 12px;
+                text-align: left;
+                border-radius: var(--radius-lg);
+            }
+            .reading-source-card .rs-header {
+                margin-bottom: 0;
+                font-size: 0.75rem;
+                min-width: 50px;
+                justify-content: flex-start;
+            }
+            .reading-source-card .rs-label {
+                display: none;
+            }
+            .reading-source-card input {
+                width: 100%;
+                padding: 9px 6px;
+                font-size: 0.85rem;
+                margin-bottom: 0;
+                border-radius: 6px;
+                min-height: 40px;
+            }
+            .reading-source-card .rs-diff {
+                font-size: 0.78rem;
+                padding: 4px 8px;
+                margin-top: 0;
+                min-width: 36px;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            /* Form */
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+            .form-group {
+                margin-bottom: 10px;
+            }
+            .form-label {
+                font-size: 0.7rem;
+                letter-spacing: 0.3px;
+            }
+            .form-input,
+            .form-textarea {
+                padding: 9px 12px;
+                font-size: 0.85rem;
+                border-radius: var(--radius);
+                min-height: 42px;
+            }
+            .form-textarea {
+                min-height: 70px;
+            }
+
+            /* Buttons */
+            .btn {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+                min-height: 38px;
+                border-radius: var(--radius);
+                gap: 5px;
+            }
+            .btn-lg {
+                padding: 11px 18px;
+                font-size: 0.88rem;
+                min-height: 44px;
+                border-radius: var(--radius);
+            }
+            .btn-sm {
+                padding: 5px 10px;
+                font-size: 0.7rem;
+                min-height: 30px;
+            }
+            .btn-block {
+                width: 100%;
+            }
+            .btn-group {
+                gap: 4px;
+            }
+
+            /* History cards */
+            .history-card {
+                padding: 10px 12px;
+                margin-bottom: 8px;
+                border-radius: var(--radius-lg);
+            }
+            .history-card .hc-header {
+                margin-bottom: 6px;
+            }
+            .history-card .hc-date {
+                font-size: 0.8rem;
+            }
+            .history-card .hc-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 4px;
+                font-size: 0.68rem;
+            }
+            .history-card .hc-item {
+                padding: 6px 4px;
+                border-radius: 5px;
+            }
+            .history-card .hc-val {
+                font-size: 0.75rem;
+            }
+            .history-card .hc-src {
+                font-size: 0.55rem;
+            }
+
+            /* FAB */
+            .fab {
+                bottom: calc(16px + var(--safe-area-bottom) + var(--bottomnav-height));
+                right: calc(12px + var(--safe-area-right));
+                width: 50px;
+                height: 50px;
+                font-size: 1.4rem;
+                border-radius: 50%;
+            }
+
+            /* Bottom nav */
+            .sidebar {
+                height: var(--bottomnav-height);
+                min-height: var(--bottomnav-height);
+                border-radius: 0;
+            }
+            .sidebar-nav {
+                padding: 2px 4px;
+                gap: 0;
+            }
+            .sidebar-nav-item {
+                padding: 4px 2px;
+                gap: 2px;
+                max-width: 60px;
+                border-radius: 8px;
+                min-height: auto;
+            }
+            .sidebar-nav-item .nav-icon {
+                font-size: 1.2rem;
+            }
+            .sidebar-nav-item .nav-label {
+                font-size: 0.55rem;
+            }
+
+            /* Modals & Sheets */
+            .modal-overlay {
+                padding: 16px;
+                align-items: flex-end;
+            }
+            .modal {
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                max-width: 100%;
+                padding: 20px 16px;
+                max-height: 80dvh;
+                animation: sheetUpIn 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            }
+            @keyframes sheetUpIn {
+                from {
+                    transform: translateY(100%);
+                }
+                to {
+                    transform: translateY(0);
+                }
+            }
+            .sheet-overlay {
+                padding: 0;
+                align-items: flex-end;
+            }
+            .sheet {
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                max-width: 100%;
+                max-height: 85dvh;
+                padding: 18px 14px;
+                animation: sheetUpIn 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+            }
+            .sheet-close {
+                right: 10px;
+                top: 10px;
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            .modal-title {
+                font-size: 1rem;
+                margin-bottom: 14px;
+            }
+
+            /* Charts */
+            .chart-container {
+                height: 200px !important;
+            }
+            #insightsChart+.chart-container {
+                height: 260px !important;
+            }
+
+            /* Toast */
+            .toast-container {
+                top: calc(8px + var(--safe-area-top));
+                right: calc(8px + var(--safe-area-right));
+                left: calc(8px + var(--safe-area-left));
+                max-width: none;
+            }
+            .toast {
+                font-size: 0.78rem;
+                padding: 10px 14px;
+                border-radius: var(--radius);
+            }
+
+            /* Data table scroll hint */
+            .table-wrap {
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x proximity;
+            }
+
+            /* Insight stats row */
+            #insightsStats.stat-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 5px;
+            }
+            #insightsStats .stat-card {
+                padding: 10px 8px;
+            }
+            #insightsStats .stat-value {
+                font-size: 1.1rem;
+            }
+            #insightsStats .stat-label {
+                font-size: 0.55rem;
+            }
+            #insightsStats .stat-icon {
+                font-size: 1rem;
+            }
+
+            /* Dashboard stats - 2x2 grid */
+            #dashboardStats.stat-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            #dashboardStats .stat-card:nth-child(5) {
+                grid-column: 1 / -1;
+            }
+
+            /* Settings grid */
+            #viewSettings .grid-2col {
+                gap: 8px;
+            }
+            #viewSettings .panel-body {
+                padding: 10px 12px;
+            }
+
+            /* Admin modal */
+            #adminModalOverlay .modal,
+            #restoreModalOverlay .modal {
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+                padding: 18px 14px;
+            }
+
+            /* Recent readings in dashboard */
+            #recentReadings>div {
+                padding: 8px 0 !important;
+            }
+            #recentReadings>div>div:first-child {
+                font-size: 0.75rem !important;
+            }
+            #recentReadings span {
+                font-size: 0.62rem !important;
+                padding: 2px 6px !important;
+            }
+
+            /* Touch ripple effect for cards */
+            .stat-card,
+            .history-card,
+            .reading-source-card {
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+        }
+
+        /* Ultra-narrow screens (foldables, small devices) */
+        @media (max-width: 360px) {
+            .stat-row {
+                gap: 5px;
+            }
+            .stat-card {
+                padding: 10px 10px;
+            }
+            .stat-card .stat-value {
+                font-size: 1.15rem;
+            }
+            .reading-source-card {
+                gap: 5px;
+                padding: 8px 10px;
+            }
+            .reading-source-card input {
+                padding: 7px 4px;
+                font-size: 0.78rem;
+                min-height: 36px;
+            }
+            .topbar-search {
+                max-width: 110px;
+            }
+            .sidebar-nav-item {
+                max-width: 50px;
+            }
+            .sidebar-nav-item .nav-icon {
+                font-size: 1.1rem;
+            }
+            .sidebar-nav-item .nav-label {
+                font-size: 0.5rem;
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-width: 850px) and (orientation: landscape) {
+            .app-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: 44px 1fr auto;
+            }
+            .topbar {
+                height: 44px;
+                padding: 0 10px;
+            }
+            .content-area {
+                padding: 8px 12px 70px 12px;
+            }
+            .stat-row {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+            }
+            .reading-grid-5col {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 6px;
+            }
+            .sidebar {
+                height: 50px;
+                min-height: 50px;
+            }
+            .fab {
+                bottom: calc(8px + var(--bottomnav-height));
+                right: 12px;
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* High-DPI AMOLED dark mode enhancement */
+        @media screen and (-webkit-device-pixel-ratio: 2.5) and (max-width: 430px),
+        screen and (min-resolution: 2.5dppx) and (max-width: 430px) {
+            .dark {
+                --bg: #000000;
+                --surface: #0a0f1a;
+                --surface-alt: #0d1320;
+                --border: #1a2235;
+            }
+            .dark .stat-card,
+            .dark .panel,
+            .dark .history-card,
+            .dark .reading-source-card {
+                border-width: 1px;
+            }
+            .dark .sidebar {
+                background: #060a12;
+            }
+        }
+
+        /* 120Hz smooth animations (S24 Ultra has 120Hz) */
+        @media (prefers-reduced-motion: no-preference) and (max-width: 430px) {
+            .view.active {
+                animation: fadeSlideIn 0.25s ease-out;
+            }
+            .stat-card:active {
+                transition: transform 0.08s ease-out;
+            }
+            .history-card:active {
+                transition: transform 0.06s ease-out;
             }
         }
     </style>
@@ -1212,7 +1903,7 @@
                     <span class="nav-icon">📋</span><span class="nav-label">History</span>
                 </button>
                 <button class="sidebar-nav-item" data-view="add" onclick="switchView('add')" data-tooltip="Add Reading">
-                    <span class="nav-icon">➕</span><span class="nav-label">Add Reading</span>
+                    <span class="nav-icon">➕</span><span class="nav-label">Add</span>
                 </button>
                 <button class="sidebar-nav-item" data-view="insights" onclick="switchView('insights')" data-tooltip="Insights">
                     <span class="nav-icon">📈</span><span class="nav-label">Insights</span>
@@ -1234,20 +1925,23 @@
             <header class="topbar">
                 <div class="topbar-search" id="topbarSearchWrap">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="topbarSearchInput" placeholder="Search readings by date or name..." oninput="filterHistory()">
+                    <input type="text" id="topbarSearchInput" placeholder="Search readings..." inputmode="search" enterkeyhint="search" oninput="filterHistory()">
                 </div>
                 <div class="topbar-actions">
-                    <button class="topbar-btn" id="btnDarkMode" onclick="toggleDarkModeUI()" data-tooltip="Toggle dark mode" title="Dark mode">🌙</button>
-                    <button class="topbar-btn" id="btnAdminIndicator" onclick="toggleAdminMode()" data-tooltip="Admin access" title="Admin">🔒</button>
+                    <button class="topbar-btn" id="btnDarkMode" onclick="toggleDarkModeUI()" data-tooltip="Toggle dark mode" title="Dark mode" aria-label="Toggle dark mode">🌙</button>
+                    <button class="topbar-btn" id="btnAdminIndicator" onclick="toggleAdminMode()" data-tooltip="Admin access" title="Admin" aria-label="Admin access">🔒</button>
                     <div class="topbar-user" title="Current user">
                         <div class="topbar-avatar" id="topbarAvatar">SH</div>
-                        <span style="font-size:0.82rem;font-weight:600;color:var(--text);">Admin</span>
+                        <span>Admin</span>
                     </div>
                 </div>
             </header>
 
             <!-- Content Area -->
             <main class="content-area" id="contentArea">
+                <!-- Pull indicator -->
+                <div class="pull-indicator" id="pullIndicator">↓ Pull to refresh</div>
+
                 <!-- Dashboard View -->
                 <div class="view active" id="viewDashboard">
                     <div class="page-header">
@@ -1311,48 +2005,48 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="countedBy">👤 Counted By</label>
-                                        <input type="text" id="countedBy" class="form-input" maxlength="50" required placeholder="Name of person who counted">
+                                        <input type="text" id="countedBy" class="form-input" maxlength="50" required placeholder="Name of person who counted" autocomplete="name">
                                     </div>
                                 </div>
                                 <div class="reading-grid-5col">
                                     <div class="reading-source-card">
                                         <div class="rs-header chip-bowser">🚛 Bowser</div>
                                         <div class="rs-label">Opening</div>
-                                        <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" placeholder="0">
+                                        <input type="number" id="bowserOpen" required oninput="calcDiff('bowser')" placeholder="0" inputmode="numeric">
                                         <div class="rs-label">Closing</div>
-                                        <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" placeholder="0">
+                                        <input type="number" id="bowserClose" required oninput="calcDiff('bowser')" placeholder="0" inputmode="numeric">
                                         <span class="rs-diff" id="bowserDiff">-</span>
                                     </div>
                                     <div class="reading-source-card">
                                         <div class="rs-header chip-dip">📏 Dipstick</div>
                                         <div class="rs-label">Opening</div>
-                                        <input type="number" id="dipOpen" required oninput="calcDiff('dip')" placeholder="0">
+                                        <input type="number" id="dipOpen" required oninput="calcDiff('dip')" placeholder="0" inputmode="numeric">
                                         <div class="rs-label">Closing</div>
-                                        <input type="number" id="dipClose" required oninput="calcDiff('dip')" placeholder="0">
+                                        <input type="number" id="dipClose" required oninput="calcDiff('dip')" placeholder="0" inputmode="numeric">
                                         <span class="rs-diff" id="dipDiff">-</span>
                                     </div>
                                     <div class="reading-source-card">
                                         <div class="rs-header chip-ilembe">💧 iLembe</div>
                                         <div class="rs-label">Opening</div>
-                                        <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" placeholder="0">
+                                        <input type="number" id="ilembeOpen" required oninput="calcDiff('ilembe')" placeholder="0" inputmode="numeric">
                                         <div class="rs-label">Closing</div>
-                                        <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" placeholder="0">
+                                        <input type="number" id="ilembeClose" required oninput="calcDiff('ilembe')" placeholder="0" inputmode="numeric">
                                         <span class="rs-diff" id="ilembeDiff">-</span>
                                     </div>
                                     <div class="reading-source-card">
                                         <div class="rs-header chip-hydrant">🔥 Hydrant</div>
                                         <div class="rs-label">Opening</div>
-                                        <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" placeholder="0">
+                                        <input type="number" id="hydrantOpen" required oninput="calcDiff('hydrant')" placeholder="0" inputmode="numeric">
                                         <div class="rs-label">Closing</div>
-                                        <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" placeholder="0">
+                                        <input type="number" id="hydrantClose" required oninput="calcDiff('hydrant')" placeholder="0" inputmode="numeric">
                                         <span class="rs-diff" id="hydrantDiff">-</span>
                                     </div>
                                     <div class="reading-source-card">
                                         <div class="rs-header chip-borehole">🕳️ Borehole</div>
                                         <div class="rs-label">Opening</div>
-                                        <input type="number" id="boreholeOpen" required oninput="calcDiff('borehole')" placeholder="0">
+                                        <input type="number" id="boreholeOpen" required oninput="calcDiff('borehole')" placeholder="0" inputmode="numeric">
                                         <div class="rs-label">Closing</div>
-                                        <input type="number" id="boreholeClose" required oninput="calcDiff('borehole')" placeholder="0">
+                                        <input type="number" id="boreholeClose" required oninput="calcDiff('borehole')" placeholder="0" inputmode="numeric">
                                         <span class="rs-diff" id="boreholeDiff">-</span>
                                     </div>
                                 </div>
@@ -1425,7 +2119,7 @@
                         <div class="panel">
                             <div class="panel-header"><span class="panel-title">ℹ️ About</span></div>
                             <div class="panel-body">
-                                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">Superb Hyper – Daily Water Readings<br>Version 2.0 Desktop • Cloud Sync via Firebase<br>Monitor Bowser, Dipstick, iLembe, Hydrant & Borehole</p>
+                                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">Superb Hyper – Daily Water Readings<br>Version 2.1 • Cloud Sync via Firebase<br>Monitor Bowser, Dipstick, iLembe, Hydrant & Borehole</p>
                             </div>
                         </div>
                     </div>
@@ -1433,6 +2127,12 @@
             </main>
         </div>
     </div>
+
+    <!-- FAB -->
+    <button class="fab" id="fabButton" onclick="switchView('add')" data-tooltip="Add Reading" aria-label="Add new reading">
+        <span>➕</span>
+        <span class="fab-ripple"></span>
+    </button>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
@@ -1449,7 +2149,7 @@
     <div class="modal-overlay" id="adminModalOverlay">
         <div class="modal">
             <div class="modal-title">🔐 Admin Password</div>
-            <input type="password" id="adminPassInput" class="form-input" placeholder="Enter password" style="margin-bottom:14px;">
+            <input type="password" id="adminPassInput" class="form-input" placeholder="Enter password" style="margin-bottom:14px;" autocomplete="current-password">
             <button class="btn btn-primary btn-block" onclick="submitAdminPassword()">Unlock</button>
             <div id="adminMsg" style="margin-top:8px;color:var(--danger);font-weight:600;text-align:center;font-size:0.85rem;"></div>
             <button class="btn btn-ghost btn-block" style="margin-top:6px;" onclick="closeAdminModal()">Cancel</button>
@@ -1483,6 +2183,10 @@
             let currentView = 'dashboard';
             let searchFilter = '';
             let sidebarCollapsed = false;
+            let pullStartY = 0;
+            let pullDist = 0;
+            let isPulling = false;
+            let isMobileDevice = false;
 
             const firebaseConfig = {
                 apiKey: "AIzaSyB9wieA97XLeZqlSheLXMIQY7wchnJ5sYo",
@@ -1496,6 +2200,23 @@
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
             const readingsCollection = "dailyReadings";
+
+            function detectMobile() {
+                isMobileDevice = window.matchMedia('(max-width: 768px)').matches;
+                updateFabVisibility();
+            }
+
+            function updateFabVisibility() {
+                const fab = document.getElementById('fabButton');
+                if (!fab) return;
+                if (isMobileDevice && currentView !== 'add') {
+                    fab.style.display = 'flex';
+                } else if (isMobileDevice && currentView === 'add') {
+                    fab.style.display = 'none';
+                } else {
+                    fab.style.display = 'none';
+                }
+            }
 
             function toast(msg, ok = true) {
                 clearTimeout(toastTimer);
@@ -1516,10 +2237,10 @@
             function toggleDarkModeUI() { setDarkMode(!darkMode); }
 
             function toggleSidebar() {
+                if (isMobileDevice) return;
                 sidebarCollapsed = !sidebarCollapsed;
                 document.getElementById('appLayout').classList.toggle('sidebar-collapsed', sidebarCollapsed);
                 localStorage.setItem('sidebarCollapsed', sidebarCollapsed ? '1' : '');
-                // Update tooltips on nav items
                 document.querySelectorAll('.sidebar-nav-item').forEach(item => {
                     if (sidebarCollapsed) {
                         item.setAttribute('data-tooltip', item.getAttribute('data-tooltip') || item
@@ -1539,10 +2260,10 @@
                 const navEl = document.querySelector(`.sidebar-nav-item[data-view="${viewName}"]`);
                 if (navEl) navEl.classList.add('active');
                 document.getElementById('contentArea').scrollTop = 0;
-                // Show/hide search bar based on view
+                updateFabVisibility();
                 const searchWrap = document.getElementById('topbarSearchWrap');
                 if (searchWrap) {
-                    searchWrap.style.display = (viewName === 'history') ? 'flex' : 'flex';
+                    searchWrap.style.display = 'flex';
                 }
                 if (viewName === 'dashboard') refreshDashboard();
                 if (viewName === 'history') refreshHistoryView();
@@ -1550,6 +2271,10 @@
                 if (viewName === 'add') {
                     document.getElementById('readingDate').value = getTodayString();
                     if (editingIdx === null) fillOpeningsFromLast();
+                }
+                if (viewName === 'settings') {
+                    document.getElementById('adminStatusLabel').textContent = adminMode ? 'Unlocked 🔓' :
+                        'Locked 🔒';
                 }
             }
 
@@ -1560,7 +2285,10 @@
                 const close = Number(document.getElementById(section + 'Close').value) || 0;
                 let diff = section === 'dip' ? open - close : close - open;
                 const badge = document.getElementById(section + 'Diff');
-                if (badge) badge.textContent = (open || close) ? diff : '-';
+                if (badge) {
+                    badge.textContent = (open || close) ? diff : '-';
+                    badge.classList.toggle('negative', diff < 0);
+                }
             }
 
             async function loadHistory() {
@@ -1604,6 +2332,7 @@
                     ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'].forEach(s => {
                         document.getElementById(s + 'Close').value = '';
                         document.getElementById(s + 'Diff').textContent = '-';
+                        document.getElementById(s + 'Diff').classList.remove('negative');
                     });
                 }
             }
@@ -1615,9 +2344,12 @@
                 document.getElementById('saveBtn').textContent = '💾 Save Reading';
                 document.getElementById('readingDate').disabled = false;
                 document.getElementById('readingsForm').reset();
-                ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'].forEach(s => document.getElementById(s +
-                    'Diff').textContent = '-');
+                ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'].forEach(s => {
+                    document.getElementById(s + 'Diff').textContent = '-';
+                    document.getElementById(s + 'Diff').classList.remove('negative');
+                });
                 fillOpeningsFromLast();
+                updateFabVisibility();
             }
 
             document.getElementById('readingsForm').onsubmit = async function(e) {
@@ -1663,9 +2395,13 @@
                 }
                 await saveHistory();
                 document.getElementById('readingsForm').reset();
-                fields.forEach(s => document.getElementById(s + 'Diff').textContent = '-');
+                fields.forEach(s => {
+                    document.getElementById(s + 'Diff').textContent = '-';
+                    document.getElementById(s + 'Diff').classList.remove('negative');
+                });
                 fillOpeningsFromLast();
                 refreshAllViews();
+                updateFabVisibility();
                 switchView('dashboard');
             };
 
@@ -1697,9 +2433,9 @@
                         '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No readings yet</div></div>';
                 } else {
                     container.innerHTML = recent.map(r => `
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-light);gap:8px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-light);gap:8px;cursor:pointer;" onclick="editEntryByDate('${r.date}')">
                             <div style="font-weight:700;font-size:0.85rem;color:var(--primary);white-space:nowrap;">${r.date}</div>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
                                 <span style="font-size:0.7rem;background:var(--primary-bg);color:var(--bowser);padding:3px 8px;border-radius:12px;font-weight:600;">🚛${r.bowserDiff||0}</span>
                                 <span style="font-size:0.7rem;background:var(--success-bg);color:var(--ilembe);padding:3px 8px;border-radius:12px;font-weight:600;">💧${r.ilembeDiff||0}</span>
                                 <span style="font-size:0.7rem;background:#EDE7F6;color:var(--borehole);padding:3px 8px;border-radius:12px;font-weight:600;">🕳️${r.boreholeDiff||0}</span>
@@ -1716,27 +2452,33 @@
                 if (!sorted.length) return;
                 const ctx = document.getElementById('miniChart');
                 if (!ctx) return;
+                const isMobile = window.matchMedia('(max-width: 430px)').matches;
                 miniChartInstance = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: sorted.map(r => r.date.slice(5)),
                         datasets: [
                             { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0),
-                                backgroundColor: '#2563EB', borderRadius: 6, borderSkipped: false },
+                                backgroundColor: '#2563EB', borderRadius: isMobile ? 4 : 6,
+                                borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
                             { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0),
-                                backgroundColor: '#7C3AED', borderRadius: 6, borderSkipped: false },
+                                backgroundColor: '#7C3AED', borderRadius: isMobile ? 4 : 6,
+                                borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
                             { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0),
-                                backgroundColor: '#10B981', borderRadius: 6, borderSkipped: false },
+                                backgroundColor: '#10B981', borderRadius: isMobile ? 4 : 6,
+                                borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10,
-                                    font: { size: 10 }, usePointStyle: true, padding: 16 } } },
-                        scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } },
-                                grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { ticks: { font: { size: 9 },
-                                    maxRotation: 45 }, grid: { display: false } } }
+                        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: isMobile ? 8 :
+                                    10, font: { size: isMobile ? 9 : 10 }, usePointStyle: true, padding: isMobile ?
+                                    12 : 16 } } },
+                        scales: { y: { beginAtZero: true, ticks: { font: { size: isMobile ? 8 : 10 } },
+                                grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { ticks: { font: { size: isMobile ?
+                                        7 : 9 }, maxRotation: isMobile ? 60 : 45 },
+                            grid: { display: false } } }
                     }
                 });
             }
@@ -1749,6 +2491,7 @@
                 const cardsContainer = document.getElementById('historyCards');
                 const tableWrap = document.getElementById('historyTableWrap');
                 const emptyEl = document.getElementById('historyEmpty');
+                const isMobile = window.matchMedia('(max-width: 430px)').matches;
                 if (!filtered.length) {
                     if (cardsContainer) cardsContainer.innerHTML = '';
                     if (tableWrap) tableWrap.innerHTML = '';
@@ -1769,8 +2512,8 @@
                             </div>
                             ${r.notes ? `<div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px;">📝 ${r.notes}</div>` : ''}
                             <div class="btn-group" style="margin-top:8px;justify-content:flex-end;">
-                                <button class="btn btn-sm btn-secondary" onclick="editEntryByDate('${r.date}')">✏️ Edit</button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteEntryByDate('${r.date}')">🗑️ Delete</button>
+                                <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();editEntryByDate('${r.date}')" style="min-height:${isMobile?'34px':'32px'};padding:${isMobile?'7px 12px':'6px 14px'};">✏️ Edit</button>
+                                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntryByDate('${r.date}')" style="min-height:${isMobile?'34px':'32px'};padding:${isMobile?'7px 12px':'6px 14px'};">🗑️ Delete</button>
                             </div>
                         </div>
                     `).join('');
@@ -1827,34 +2570,41 @@
                 if (!sorted.length) return;
                 const ctx = document.getElementById('insightsChart');
                 if (!ctx) return;
+                const isMobile = window.matchMedia('(max-width: 430px)').matches;
                 const labels = sorted.map(r => r.date);
                 const datasets = [
                     { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0), borderColor: '#2563EB',
                         backgroundColor: 'rgba(37,99,235,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 3, pointHoverRadius: 6 },
+                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
+                        2 },
                     { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0), borderColor: '#F59E0B',
                         backgroundColor: 'rgba(245,158,11,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 3, pointHoverRadius: 6 },
+                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
+                        2 },
                     { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0), borderColor: '#10B981',
                         backgroundColor: 'rgba(16,185,129,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 3, pointHoverRadius: 6 },
+                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
+                        2 },
                     { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0), borderColor: '#EF4444',
                         backgroundColor: 'rgba(239,68,68,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 3, pointHoverRadius: 6 },
+                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
+                        2 },
                     { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0), borderColor: '#7C3AED',
                         backgroundColor: 'rgba(124,58,237,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: 3, pointHoverRadius: 6 },
+                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
+                        2 },
                 ];
                 const type = insightsChartType === 'stacked' ? 'line' : insightsChartType;
                 const options = {
                     responsive: true,
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 },
-                                usePointStyle: true, padding: 18 } } },
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: isMobile ? 8 : 12,
+                                font: { size: isMobile ? 8 : 10 }, usePointStyle: true, padding: isMobile ? 10 : 18 } } },
                     scales: { y: { beginAtZero: true, stacked: insightsChartType === 'stacked',
-                            grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { stacked: insightsChartType ===
-                                'stacked', ticks: { maxRotation: 60, font: { size: 9 } },
+                            grid: { color: darkMode ? '#334155' : '#E2E8F0' }, ticks: { font: { size: isMobile ? 8 :
+                                    10 } } }, x: { stacked: insightsChartType === 'stacked',
+                            ticks: { maxRotation: isMobile ? 75 : 60, font: { size: isMobile ? 7 : 9 } },
                             grid: { display: false } } }
                 };
                 insightsChartInstance = new Chart(ctx, { type, data: { labels, datasets }, options });
@@ -1906,70 +2656,6 @@
                 refreshAllViews();
                 toast('Deleted successfully!', true);
             };
-
-            function showStatsSheet() {
-                const fields = ['bowser', 'dip', 'ilembe', 'hydrant', 'borehole'];
-                const labels = ['🚛 Bowser', '📏 Dipstick', '💧 iLembe', '🔥 Hydrant', '🕳️ Borehole'];
-                let html =
-                    '<h3 style="margin-bottom:16px;text-align:center;font-weight:800;">📊 Summary Statistics</h3><div class="stat-row" style="grid-template-columns:repeat(5,1fr);">';
-                fields.forEach((f, i) => {
-                    const total = readingsHistory.reduce((s, r) => s + (r[f + 'Diff'] || 0), 0);
-                    const avg = readingsHistory.length ? (total / readingsHistory.length).toFixed(1) : 0;
-                    html +=
-                        `<div class="stat-card"><div class="stat-value" style="font-size:1.3rem;">${total.toLocaleString()}</div><div class="stat-label">${labels[i]}</div><div style="font-size:0.7rem;color:var(--text-muted);">Avg: ${avg}</div></div>`;
-                });
-                html += '</div>';
-                const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
-                if (sorted.length) {
-                    html +=
-                        '<p style="text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:12px;">📅 First Reading: ' +
-                        sorted[sorted.length - 1].date + ' · Last: ' + sorted[0].date +
-                        ' · Total: ' + readingsHistory.length + ' readings</p>';
-                }
-                document.getElementById('sheetBody').innerHTML = html;
-                document.getElementById('sheetOverlay').classList.add('active');
-            }
-
-            function showChartSheet() {
-                document.getElementById('sheetBody').innerHTML =
-                    '<h3 style="margin-bottom:12px;text-align:center;font-weight:800;">📈 Full Usage Chart</h3><div class="chart-container" style="height:380px;"><canvas id="sheetChart"></canvas></div>';
-                document.getElementById('sheetOverlay').classList.add('active');
-                setTimeout(() => {
-                    const sorted = [...readingsHistory].sort((a, b) => a.date.localeCompare(b.date));
-                    if (!sorted.length) return;
-                    const ctx = document.getElementById('sheetChart');
-                    if (!ctx) return;
-                    new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: sorted.map(r => r.date),
-                            datasets: [
-                                { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0),
-                                    borderColor: '#2563EB', tension: 0.3, pointRadius: 3, fill: false,
-                                    borderWidth: 2 },
-                                { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0),
-                                    borderColor: '#F59E0B', tension: 0.3, pointRadius: 3, fill: false,
-                                    borderWidth: 2 },
-                                { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0),
-                                    borderColor: '#10B981', tension: 0.3, pointRadius: 3, fill: false,
-                                    borderWidth: 2 },
-                                { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0),
-                                    borderColor: '#EF4444', tension: 0.3, pointRadius: 3, fill: false,
-                                    borderWidth: 2 },
-                                { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0),
-                                    borderColor: '#7C3AED', tension: 0.3, pointRadius: 3, fill: false,
-                                    borderWidth: 2 },
-                            ]
-                        },
-                        options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index',
-                                intersect: false }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10,
-                                        font: { size: 10 }, usePointStyle: true } } },
-                            scales: { y: { beginAtZero: true,
-                                    grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { ticks: { maxRotation: 60,
-                                        font: { size: 8 } }, grid: { display: false } } } }
-                    });
-                }, 200);
-            }
 
             function closeSheet() {
                 document.getElementById('sheetOverlay').classList.remove('active');
@@ -2109,6 +2795,46 @@
                 toast('Backup downloaded! 💾', true);
             };
 
+            // Pull-to-refresh for mobile
+            function initPullToRefresh() {
+                const contentArea = document.getElementById('contentArea');
+                const pullIndicator = document.getElementById('pullIndicator');
+                if (!contentArea || !pullIndicator) return;
+
+                contentArea.addEventListener('touchstart', function(e) {
+                    if (contentArea.scrollTop <= 0 && isMobileDevice) {
+                        pullStartY = e.touches[0].clientY;
+                        isPulling = true;
+                    }
+                }, { passive: true });
+
+                contentArea.addEventListener('touchmove', function(e) {
+                    if (!isPulling) return;
+                    pullDist = e.touches[0].clientY - pullStartY;
+                    if (pullDist > 30 && contentArea.scrollTop <= 0) {
+                        pullIndicator.classList.add('visible');
+                    }
+                }, { passive: true });
+
+                contentArea.addEventListener('touchend', function() {
+                    if (isPulling && pullDist > 60 && contentArea.scrollTop <= 0) {
+                        pullIndicator.textContent = '⟳ Refreshing...';
+                        loadHistory().then(() => {
+                            pullIndicator.textContent = '✓ Refreshed!';
+                            setTimeout(() => {
+                                pullIndicator.classList.remove('visible');
+                                pullIndicator.textContent = '↓ Pull to refresh';
+                            }, 1000);
+                        });
+                    }
+                    isPulling = false;
+                    pullDist = 0;
+                    if (pullIndicator.classList.contains('visible') && pullDist < 60) {
+                        pullIndicator.classList.remove('visible');
+                    }
+                });
+            }
+
             // Event listeners
             document.getElementById('btnDarkMode').addEventListener('click', toggleDarkModeUI);
             document.getElementById('sheetOverlay').addEventListener('click', function(e) {
@@ -2127,10 +2853,23 @@
                 if (currentView === 'history') filterHistory();
             });
 
+            // Media query listener for responsive changes
+            const mobileMediaQuery = window.matchMedia('(max-width: 768px)');
+            mobileMediaQuery.addEventListener('change', function() {
+                detectMobile();
+                refreshAllViews();
+            });
+
+            const s24MediaQuery = window.matchMedia('(max-width: 430px)');
+            s24MediaQuery.addEventListener('change', function() {
+                refreshAllViews();
+            });
+
             // Initialize
             document.addEventListener('DOMContentLoaded', () => {
+                detectMobile();
                 setDarkMode(localStorage.getItem('darkMode') === '1');
-                if (localStorage.getItem('sidebarCollapsed') === '1') {
+                if (localStorage.getItem('sidebarCollapsed') === '1' && !isMobileDevice) {
                     sidebarCollapsed = true;
                     document.getElementById('appLayout').classList.add('sidebar-collapsed');
                 }
@@ -2139,6 +2878,8 @@
                     refreshAllViews();
                 });
                 updateAdminUI();
+                updateFabVisibility();
+                initPullToRefresh();
             });
 
             // Expose to global scope
@@ -2155,8 +2896,6 @@
             window.closeAdminModal = closeAdminModal;
             window.submitAdminPassword = submitAdminPassword;
             window.toggleAdminMode = toggleAdminMode;
-            window.showStatsSheet = showStatsSheet;
-            window.showChartSheet = showChartSheet;
             window.closeSheet = closeSheet;
             window.setInsightsChartType = setInsightsChartType;
             window.calcDiff = calcDiff;
