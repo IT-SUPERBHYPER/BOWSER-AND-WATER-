@@ -7,7 +7,6 @@
     <meta name="theme-color" content="#1E293B">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="HandheldFriendly" content="true">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -474,7 +473,7 @@
             background: var(--text-muted);
         }
 
-        /* FAB - Floating Action Button */
+        /* FAB */
         .fab {
             display: none;
             position: fixed;
@@ -509,28 +508,6 @@
             transform: scale(0.88);
             animation: none;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-        }
-        .fab .fab-ripple {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
-        /* Pull-to-refresh indicator */
-        .pull-indicator {
-            display: none;
-            text-align: center;
-            padding: 12px;
-            color: var(--text-muted);
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .pull-indicator.visible {
-            opacity: 1;
         }
 
         /* Views */
@@ -959,7 +936,7 @@
             justify-content: center;
         }
 
-        /* History Cards */
+        /* History Cards (Mobile-first detailed view) */
         .history-cards {
             display: none;
         }
@@ -984,7 +961,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
             gap: 4px;
         }
@@ -993,26 +970,47 @@
             color: var(--primary);
             font-size: 0.9rem;
         }
-        .history-card .hc-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        .history-card .hc-sources {
+            display: flex;
+            flex-direction: column;
             gap: 6px;
-            font-size: 0.75rem;
+            margin-bottom: 8px;
         }
-        .history-card .hc-item {
+        .hc-source-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             background: var(--surface-alt);
             border-radius: 6px;
-            padding: 8px;
-            text-align: center;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            gap: 8px;
         }
-        .history-card .hc-val {
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-        .history-card .hc-src {
-            font-size: 0.6rem;
+        .hc-source-row .hc-src-label {
+            font-weight: 600;
+            font-size: 0.65rem;
             color: var(--text-muted);
             text-transform: uppercase;
+            min-width: 55px;
+            white-space: nowrap;
+        }
+        .hc-source-row .hc-detail {
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .hc-source-row .hc-detail .diff-highlight {
+            font-weight: 700;
+            color: var(--success);
+            margin-left: 4px;
+            font-size: 0.75rem;
+        }
+        .hc-source-row .hc-detail .diff-highlight.negative {
+            color: var(--danger);
         }
 
         /* Toast */
@@ -1381,7 +1379,6 @@
         /* ─────────────────────────────────────── */
         /*  SAMSUNG S24 ULTRA MOBILE OPTIMIZATION  */
         /*  Target: 360-430px CSS viewport width   */
-        /*  High-DPI AMOLED • 120Hz • 19.5:9       */
         /* ─────────────────────────────────────── */
         @media (max-width: 430px) {
             :root {
@@ -1397,7 +1394,6 @@
                 -webkit-font-smoothing: subpixel-antialiased;
             }
 
-            /* Topbar compact */
             .topbar {
                 height: 50px;
                 padding: 0 10px;
@@ -1431,12 +1427,10 @@
                 font-size: 0.7rem;
             }
 
-            /* Content area */
             .content-area {
                 padding: 10px 8px 90px 8px;
             }
 
-            /* Page header */
             .page-header {
                 margin-bottom: 12px;
             }
@@ -1448,7 +1442,6 @@
                 font-size: 0.7rem;
             }
 
-            /* Stat cards - 2 per row */
             .stat-row {
                 grid-template-columns: 1fr 1fr;
                 gap: 7px;
@@ -1477,7 +1470,6 @@
                 right: -14px;
             }
 
-            /* Panels */
             .panel-header {
                 padding: 12px 14px;
                 gap: 8px;
@@ -1488,18 +1480,13 @@
             .panel-body {
                 padding: 12px 14px;
             }
-            .panel-body.no-padding {
-                padding: 0;
-            }
 
-            /* Grids - single column */
             .grid-2col,
             .grid-2col-wide {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
 
-            /* Reading form - single column cards */
             .reading-grid-5col {
                 grid-template-columns: 1fr !important;
                 gap: 8px;
@@ -1540,7 +1527,6 @@
                 white-space: nowrap;
             }
 
-            /* Form */
             .form-row {
                 grid-template-columns: 1fr;
                 gap: 8px;
@@ -1564,7 +1550,6 @@
                 min-height: 70px;
             }
 
-            /* Buttons */
             .btn {
                 padding: 8px 14px;
                 font-size: 0.8rem;
@@ -1583,52 +1568,41 @@
                 font-size: 0.7rem;
                 min-height: 30px;
             }
-            .btn-block {
-                width: 100%;
-            }
-            .btn-group {
-                gap: 4px;
-            }
 
-            /* History cards */
             .history-card {
                 padding: 10px 12px;
                 margin-bottom: 8px;
                 border-radius: var(--radius-lg);
             }
             .history-card .hc-header {
-                margin-bottom: 6px;
+                margin-bottom: 8px;
             }
             .history-card .hc-date {
                 font-size: 0.8rem;
             }
-            .history-card .hc-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .hc-source-row {
+                padding: 4px 8px;
                 gap: 4px;
-                font-size: 0.68rem;
             }
-            .history-card .hc-item {
-                padding: 6px 4px;
-                border-radius: 5px;
+            .hc-source-row .hc-src-label {
+                font-size: 0.6rem;
+                min-width: 45px;
             }
-            .history-card .hc-val {
-                font-size: 0.75rem;
+            .hc-source-row .hc-detail {
+                font-size: 0.7rem;
             }
-            .history-card .hc-src {
-                font-size: 0.55rem;
+            .hc-source-row .hc-detail .diff-highlight {
+                font-size: 0.7rem;
             }
 
-            /* FAB */
             .fab {
                 bottom: calc(16px + var(--safe-area-bottom) + var(--bottomnav-height));
                 right: calc(12px + var(--safe-area-right));
                 width: 50px;
                 height: 50px;
                 font-size: 1.4rem;
-                border-radius: 50%;
             }
 
-            /* Bottom nav */
             .sidebar {
                 height: var(--bottomnav-height);
                 min-height: var(--bottomnav-height);
@@ -1652,7 +1626,6 @@
                 font-size: 0.55rem;
             }
 
-            /* Modals & Sheets */
             .modal-overlay {
                 padding: 16px;
                 align-items: flex-end;
@@ -1695,7 +1668,6 @@
                 margin-bottom: 14px;
             }
 
-            /* Charts */
             .chart-container {
                 height: 200px !important;
             }
@@ -1703,7 +1675,6 @@
                 height: 260px !important;
             }
 
-            /* Toast */
             .toast-container {
                 top: calc(8px + var(--safe-area-top));
                 right: calc(8px + var(--safe-area-right));
@@ -1716,13 +1687,6 @@
                 border-radius: var(--radius);
             }
 
-            /* Data table scroll hint */
-            .table-wrap {
-                -webkit-overflow-scrolling: touch;
-                scroll-snap-type: x proximity;
-            }
-
-            /* Insight stats row */
             #insightsStats.stat-row {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 5px;
@@ -1740,7 +1704,6 @@
                 font-size: 1rem;
             }
 
-            /* Dashboard stats - 2x2 grid */
             #dashboardStats.stat-row {
                 grid-template-columns: 1fr 1fr;
                 gap: 6px;
@@ -1749,147 +1712,17 @@
                 grid-column: 1 / -1;
             }
 
-            /* Settings grid */
             #viewSettings .grid-2col {
                 gap: 8px;
             }
             #viewSettings .panel-body {
                 padding: 10px 12px;
             }
-
-            /* Admin modal */
-            #adminModalOverlay .modal,
-            #restoreModalOverlay .modal {
-                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-                padding: 18px 14px;
-            }
-
-            /* Recent readings in dashboard */
-            #recentReadings>div {
-                padding: 8px 0 !important;
-            }
-            #recentReadings>div>div:first-child {
-                font-size: 0.75rem !important;
-            }
-            #recentReadings span {
-                font-size: 0.62rem !important;
-                padding: 2px 6px !important;
-            }
-
-            /* Touch ripple effect for cards */
-            .stat-card,
-            .history-card,
-            .reading-source-card {
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-            }
-        }
-
-        /* Ultra-narrow screens (foldables, small devices) */
-        @media (max-width: 360px) {
-            .stat-row {
-                gap: 5px;
-            }
-            .stat-card {
-                padding: 10px 10px;
-            }
-            .stat-card .stat-value {
-                font-size: 1.15rem;
-            }
-            .reading-source-card {
-                gap: 5px;
-                padding: 8px 10px;
-            }
-            .reading-source-card input {
-                padding: 7px 4px;
-                font-size: 0.78rem;
-                min-height: 36px;
-            }
-            .topbar-search {
-                max-width: 110px;
-            }
-            .sidebar-nav-item {
-                max-width: 50px;
-            }
-            .sidebar-nav-item .nav-icon {
-                font-size: 1.1rem;
-            }
-            .sidebar-nav-item .nav-label {
-                font-size: 0.5rem;
-            }
-        }
-
-        /* Landscape mobile optimization */
-        @media (max-width: 850px) and (orientation: landscape) {
-            .app-layout {
-                grid-template-columns: 1fr;
-                grid-template-rows: 44px 1fr auto;
-            }
-            .topbar {
-                height: 44px;
-                padding: 0 10px;
-            }
-            .content-area {
-                padding: 8px 12px 70px 12px;
-            }
-            .stat-row {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 6px;
-            }
-            .reading-grid-5col {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 6px;
-            }
-            .sidebar {
-                height: 50px;
-                min-height: 50px;
-            }
-            .fab {
-                bottom: calc(8px + var(--bottomnav-height));
-                right: 12px;
-                width: 44px;
-                height: 44px;
-                font-size: 1.2rem;
-            }
-        }
-
-        /* High-DPI AMOLED dark mode enhancement */
-        @media screen and (-webkit-device-pixel-ratio: 2.5) and (max-width: 430px),
-        screen and (min-resolution: 2.5dppx) and (max-width: 430px) {
-            .dark {
-                --bg: #000000;
-                --surface: #0a0f1a;
-                --surface-alt: #0d1320;
-                --border: #1a2235;
-            }
-            .dark .stat-card,
-            .dark .panel,
-            .dark .history-card,
-            .dark .reading-source-card {
-                border-width: 1px;
-            }
-            .dark .sidebar {
-                background: #060a12;
-            }
-        }
-
-        /* 120Hz smooth animations (S24 Ultra has 120Hz) */
-        @media (prefers-reduced-motion: no-preference) and (max-width: 430px) {
-            .view.active {
-                animation: fadeSlideIn 0.25s ease-out;
-            }
-            .stat-card:active {
-                transition: transform 0.08s ease-out;
-            }
-            .history-card:active {
-                transition: transform 0.06s ease-out;
-            }
         }
     </style>
 </head>
 <body>
     <div class="app-layout" id="appLayout">
-        <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo-icon">SH</div>
@@ -1919,30 +1752,25 @@
             </div>
         </aside>
 
-        <!-- Main Wrapper -->
         <div class="main-wrapper">
-            <!-- Topbar -->
             <header class="topbar">
                 <div class="topbar-search" id="topbarSearchWrap">
                     <span class="search-icon">🔍</span>
                     <input type="text" id="topbarSearchInput" placeholder="Search readings..." inputmode="search" enterkeyhint="search" oninput="filterHistory()">
                 </div>
                 <div class="topbar-actions">
-                    <button class="topbar-btn" id="btnDarkMode" onclick="toggleDarkModeUI()" data-tooltip="Toggle dark mode" title="Dark mode" aria-label="Toggle dark mode">🌙</button>
-                    <button class="topbar-btn" id="btnAdminIndicator" onclick="toggleAdminMode()" data-tooltip="Admin access" title="Admin" aria-label="Admin access">🔒</button>
-                    <div class="topbar-user" title="Current user">
+                    <button class="topbar-btn" id="btnDarkMode" onclick="toggleDarkModeUI()" data-tooltip="Toggle dark mode" aria-label="Dark mode">🌙</button>
+                    <button class="topbar-btn" id="btnAdminIndicator" onclick="toggleAdminMode()" data-tooltip="Admin access" aria-label="Admin">🔒</button>
+                    <div class="topbar-user">
                         <div class="topbar-avatar" id="topbarAvatar">SH</div>
                         <span>Admin</span>
                     </div>
                 </div>
             </header>
 
-            <!-- Content Area -->
             <main class="content-area" id="contentArea">
-                <!-- Pull indicator -->
                 <div class="pull-indicator" id="pullIndicator">↓ Pull to refresh</div>
 
-                <!-- Dashboard View -->
                 <div class="view active" id="viewDashboard">
                     <div class="page-header">
                         <div class="page-title">Dashboard</div>
@@ -1966,7 +1794,6 @@
                     </div>
                 </div>
 
-                <!-- History View -->
                 <div class="view" id="viewHistory">
                     <div class="page-header">
                         <div class="page-title">Reading History</div>
@@ -1989,7 +1816,6 @@
                     </div>
                 </div>
 
-                <!-- Add Reading View -->
                 <div class="view" id="viewAdd">
                     <div class="page-header">
                         <div class="page-title">Add Reading</div>
@@ -2005,7 +1831,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="countedBy">👤 Counted By</label>
-                                        <input type="text" id="countedBy" class="form-input" maxlength="50" required placeholder="Name of person who counted" autocomplete="name">
+                                        <input type="text" id="countedBy" class="form-input" maxlength="50" required placeholder="Name of person who counted">
                                     </div>
                                 </div>
                                 <div class="reading-grid-5col">
@@ -2063,7 +1889,6 @@
                     </div>
                 </div>
 
-                <!-- Insights View -->
                 <div class="view" id="viewInsights">
                     <div class="page-header">
                         <div class="page-title">Insights & Analytics</div>
@@ -2085,7 +1910,6 @@
                     </div>
                 </div>
 
-                <!-- Settings View -->
                 <div class="view" id="viewSettings">
                     <div class="page-header">
                         <div class="page-title">Settings</div>
@@ -2119,7 +1943,7 @@
                         <div class="panel">
                             <div class="panel-header"><span class="panel-title">ℹ️ About</span></div>
                             <div class="panel-body">
-                                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">Superb Hyper – Daily Water Readings<br>Version 2.1 • Cloud Sync via Firebase<br>Monitor Bowser, Dipstick, iLembe, Hydrant & Borehole</p>
+                                <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.5;">Superb Hyper – Daily Water Readings<br>Version 2.2 • Cloud Sync via Firebase<br>Monitor Bowser, Dipstick, iLembe, Hydrant & Borehole</p>
                             </div>
                         </div>
                     </div>
@@ -2128,16 +1952,13 @@
         </div>
     </div>
 
-    <!-- FAB -->
-    <button class="fab" id="fabButton" onclick="switchView('add')" data-tooltip="Add Reading" aria-label="Add new reading">
+    <button class="fab" id="fabButton" onclick="switchView('add')" aria-label="Add new reading">
         <span>➕</span>
         <span class="fab-ripple"></span>
     </button>
 
-    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Sheet Overlay -->
     <div class="sheet-overlay" id="sheetOverlay">
         <div class="sheet" id="sheetContent">
             <button class="sheet-close" onclick="closeSheet()">✕</button>
@@ -2145,7 +1966,6 @@
         </div>
     </div>
 
-    <!-- Admin Modal -->
     <div class="modal-overlay" id="adminModalOverlay">
         <div class="modal">
             <div class="modal-title">🔐 Admin Password</div>
@@ -2156,7 +1976,6 @@
         </div>
     </div>
 
-    <!-- Restore Modal -->
     <div class="modal-overlay" id="restoreModalOverlay">
         <div class="modal">
             <div class="modal-title">📂 Restore Backup</div>
@@ -2183,10 +2002,10 @@
             let currentView = 'dashboard';
             let searchFilter = '';
             let sidebarCollapsed = false;
+            let isMobileDevice = false;
             let pullStartY = 0;
             let pullDist = 0;
             let isPulling = false;
-            let isMobileDevice = false;
 
             const firebaseConfig = {
                 apiKey: "AIzaSyB9wieA97XLeZqlSheLXMIQY7wchnJ5sYo",
@@ -2209,13 +2028,7 @@
             function updateFabVisibility() {
                 const fab = document.getElementById('fabButton');
                 if (!fab) return;
-                if (isMobileDevice && currentView !== 'add') {
-                    fab.style.display = 'flex';
-                } else if (isMobileDevice && currentView === 'add') {
-                    fab.style.display = 'none';
-                } else {
-                    fab.style.display = 'none';
-                }
+                fab.style.display = (isMobileDevice && currentView !== 'add') ? 'flex' : 'none';
             }
 
             function toast(msg, ok = true) {
@@ -2229,8 +2042,6 @@
                 darkMode = !!on;
                 document.body.classList.toggle('dark', darkMode);
                 document.getElementById('btnDarkMode').textContent = darkMode ? '☀️' : '🌙';
-                document.getElementById('btnDarkMode').setAttribute('data-tooltip', darkMode ? 'Light mode' :
-                    'Dark mode');
                 localStorage.setItem('darkMode', darkMode ? '1' : '');
             }
 
@@ -2241,14 +2052,6 @@
                 sidebarCollapsed = !sidebarCollapsed;
                 document.getElementById('appLayout').classList.toggle('sidebar-collapsed', sidebarCollapsed);
                 localStorage.setItem('sidebarCollapsed', sidebarCollapsed ? '1' : '');
-                document.querySelectorAll('.sidebar-nav-item').forEach(item => {
-                    if (sidebarCollapsed) {
-                        item.setAttribute('data-tooltip', item.getAttribute('data-tooltip') || item
-                            .querySelector('.nav-label')?.textContent?.trim() || '');
-                    } else {
-                        item.removeAttribute('data-tooltip');
-                    }
-                });
             }
 
             function switchView(viewName) {
@@ -2261,10 +2064,6 @@
                 if (navEl) navEl.classList.add('active');
                 document.getElementById('contentArea').scrollTop = 0;
                 updateFabVisibility();
-                const searchWrap = document.getElementById('topbarSearchWrap');
-                if (searchWrap) {
-                    searchWrap.style.display = 'flex';
-                }
                 if (viewName === 'dashboard') refreshDashboard();
                 if (viewName === 'history') refreshHistoryView();
                 if (viewName === 'insights') refreshInsightsView();
@@ -2273,8 +2072,7 @@
                     if (editingIdx === null) fillOpeningsFromLast();
                 }
                 if (viewName === 'settings') {
-                    document.getElementById('adminStatusLabel').textContent = adminMode ? 'Unlocked 🔓' :
-                        'Locked 🔒';
+                    document.getElementById('adminStatusLabel').textContent = adminMode ? 'Unlocked 🔓' : 'Locked 🔒';
                 }
             }
 
@@ -2429,8 +2227,7 @@
                 const recent = sorted.slice(0, 5);
                 const container = document.getElementById('recentReadings');
                 if (!recent.length) {
-                    container.innerHTML =
-                        '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No readings yet</div></div>';
+                    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No readings yet</div></div>';
                 } else {
                     container.innerHTML = recent.map(r => `
                         <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-light);gap:8px;cursor:pointer;" onclick="editEntryByDate('${r.date}')">
@@ -2458,27 +2255,15 @@
                     data: {
                         labels: sorted.map(r => r.date.slice(5)),
                         datasets: [
-                            { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0),
-                                backgroundColor: '#2563EB', borderRadius: isMobile ? 4 : 6,
-                                borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
-                            { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0),
-                                backgroundColor: '#7C3AED', borderRadius: isMobile ? 4 : 6,
-                                borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
-                            { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0),
-                                backgroundColor: '#10B981', borderRadius: isMobile ? 4 : 6,
-                                borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
+                            { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0), backgroundColor: '#2563EB', borderRadius: isMobile ? 4 : 6, borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
+                            { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0), backgroundColor: '#7C3AED', borderRadius: isMobile ? 4 : 6, borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
+                            { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0), backgroundColor: '#10B981', borderRadius: isMobile ? 4 : 6, borderSkipped: false, maxBarThickness: isMobile ? 20 : 40 },
                         ]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: isMobile ? 8 :
-                                    10, font: { size: isMobile ? 9 : 10 }, usePointStyle: true, padding: isMobile ?
-                                    12 : 16 } } },
-                        scales: { y: { beginAtZero: true, ticks: { font: { size: isMobile ? 8 : 10 } },
-                                grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { ticks: { font: { size: isMobile ?
-                                        7 : 9 }, maxRotation: isMobile ? 60 : 45 },
-                            grid: { display: false } } }
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: isMobile ? 8 : 10, font: { size: isMobile ? 9 : 10 }, usePointStyle: true, padding: isMobile ? 12 : 16 } } },
+                        scales: { y: { beginAtZero: true, ticks: { font: { size: isMobile ? 8 : 10 } }, grid: { color: darkMode ? '#334155' : '#E2E8F0' } }, x: { ticks: { font: { size: isMobile ? 7 : 9 }, maxRotation: isMobile ? 60 : 45 }, grid: { display: false } } }
                     }
                 });
             }
@@ -2486,12 +2271,10 @@
             function refreshHistoryView() {
                 const sorted = [...readingsHistory].sort((a, b) => b.date.localeCompare(a.date));
                 const searchVal = document.getElementById('topbarSearchInput')?.value?.trim() || '';
-                const filtered = searchVal ? sorted.filter(r => r.date.includes(searchVal) || (r.countedBy || '')
-                    .toLowerCase().includes(searchVal.toLowerCase())) : sorted;
+                const filtered = searchVal ? sorted.filter(r => r.date.includes(searchVal) || (r.countedBy || '').toLowerCase().includes(searchVal.toLowerCase())) : sorted;
                 const cardsContainer = document.getElementById('historyCards');
                 const tableWrap = document.getElementById('historyTableWrap');
                 const emptyEl = document.getElementById('historyEmpty');
-                const isMobile = window.matchMedia('(max-width: 430px)').matches;
                 if (!filtered.length) {
                     if (cardsContainer) cardsContainer.innerHTML = '';
                     if (tableWrap) tableWrap.innerHTML = '';
@@ -2499,25 +2282,47 @@
                     return;
                 }
                 if (emptyEl) emptyEl.style.display = 'none';
+
+                // Enhanced history cards with opening/closing values
                 if (cardsContainer) {
-                    cardsContainer.innerHTML = filtered.map(r => `
-                        <div class="history-card">
-                            <div class="hc-header"><span class="hc-date">📅 ${r.date}</span><span style="font-size:0.7rem;color:var(--text-muted);">👤 ${r.countedBy||'?'}</span></div>
-                            <div class="hc-grid">
-                                <div class="hc-item"><div class="hc-src">🚛 Bowser</div><div class="hc-val">${r.bowserDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">📏 Dip</div><div class="hc-val">${r.dipDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">💧 iLembe</div><div class="hc-val">${r.ilembeDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">🔥 Hydrant</div><div class="hc-val">${r.hydrantDiff||0}</div></div>
-                                <div class="hc-item"><div class="hc-src">🕳️ Borehole</div><div class="hc-val">${r.boreholeDiff||0}</div></div>
+                    cardsContainer.innerHTML = filtered.map(r => {
+                        const sources = [
+                            { label: '🚛 Bowser', open: r.bowserOpen, close: r.bowserClose, diff: r.bowserDiff },
+                            { label: '📏 Dipstick', open: r.dipOpen, close: r.dipClose, diff: r.dipDiff },
+                            { label: '💧 iLembe', open: r.ilembeOpen, close: r.ilembeClose, diff: r.ilembeDiff },
+                            { label: '🔥 Hydrant', open: r.hydrantOpen, close: r.hydrantClose, diff: r.hydrantDiff },
+                            { label: '🕳️ Borehole', open: r.boreholeOpen, close: r.boreholeClose, diff: r.boreholeDiff }
+                        ];
+                        const sourceRows = sources.map(s => {
+                            const diffClass = (s.diff || 0) < 0 ? 'diff-highlight negative' : 'diff-highlight';
+                            return `
+                                <div class="hc-source-row">
+                                    <span class="hc-src-label">${s.label}</span>
+                                    <span class="hc-detail">
+                                        ${s.open||0} → ${s.close||0}
+                                        <span class="${diffClass}">(${s.diff||0})</span>
+                                    </span>
+                                </div>
+                            `;
+                        }).join('');
+                        return `
+                            <div class="history-card">
+                                <div class="hc-header">
+                                    <span class="hc-date">📅 ${r.date}</span>
+                                    <span style="font-size:0.7rem;color:var(--text-muted);">👤 ${r.countedBy||'?'}</span>
+                                </div>
+                                <div class="hc-sources">${sourceRows}</div>
+                                ${r.notes ? `<div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:6px;">📝 ${r.notes}</div>` : ''}
+                                <div class="btn-group" style="margin-top:4px;justify-content:flex-end;">
+                                    <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();editEntryByDate('${r.date}')">✏️ Edit</button>
+                                    <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntryByDate('${r.date}')">🗑️ Delete</button>
+                                </div>
                             </div>
-                            ${r.notes ? `<div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px;">📝 ${r.notes}</div>` : ''}
-                            <div class="btn-group" style="margin-top:8px;justify-content:flex-end;">
-                                <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();editEntryByDate('${r.date}')" style="min-height:${isMobile?'34px':'32px'};padding:${isMobile?'7px 12px':'6px 14px'};">✏️ Edit</button>
-                                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteEntryByDate('${r.date}')" style="min-height:${isMobile?'34px':'32px'};padding:${isMobile?'7px 12px':'6px 14px'};">🗑️ Delete</button>
-                            </div>
-                        </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 }
+
+                // Keep the desktop table exactly as before
                 if (tableWrap) {
                     let tbl = `<table class="data-table"><thead><tr>
                         <th>Date</th><th>Bowser</th><th>Dipstick</th><th>iLembe</th><th>Hydrant</th><th>Borehole</th><th>Counted By</th><th>Notes</th><th>Actions</th>
@@ -2573,59 +2378,30 @@
                 const isMobile = window.matchMedia('(max-width: 430px)').matches;
                 const labels = sorted.map(r => r.date);
                 const datasets = [
-                    { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0), borderColor: '#2563EB',
-                        backgroundColor: 'rgba(37,99,235,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
-                        2 },
-                    { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0), borderColor: '#F59E0B',
-                        backgroundColor: 'rgba(245,158,11,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
-                        2 },
-                    { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0), borderColor: '#10B981',
-                        backgroundColor: 'rgba(16,185,129,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
-                        2 },
-                    { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0), borderColor: '#EF4444',
-                        backgroundColor: 'rgba(239,68,68,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
-                        2 },
-                    { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0), borderColor: '#7C3AED',
-                        backgroundColor: 'rgba(124,58,237,0.12)', fill: insightsChartType === 'stacked', tension: 0.3,
-                        pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 :
-                        2 },
+                    { label: 'Bowser', data: sorted.map(r => r.bowserDiff || 0), borderColor: '#2563EB', backgroundColor: 'rgba(37,99,235,0.12)', fill: insightsChartType === 'stacked', tension: 0.3, pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 : 2 },
+                    { label: 'Dipstick', data: sorted.map(r => r.dipDiff || 0), borderColor: '#F59E0B', backgroundColor: 'rgba(245,158,11,0.12)', fill: insightsChartType === 'stacked', tension: 0.3, pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 : 2 },
+                    { label: 'iLembe', data: sorted.map(r => r.ilembeDiff || 0), borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.12)', fill: insightsChartType === 'stacked', tension: 0.3, pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 : 2 },
+                    { label: 'Hydrant', data: sorted.map(r => r.hydrantDiff || 0), borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.12)', fill: insightsChartType === 'stacked', tension: 0.3, pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 : 2 },
+                    { label: 'Borehole', data: sorted.map(r => r.boreholeDiff || 0), borderColor: '#7C3AED', backgroundColor: 'rgba(124,58,237,0.12)', fill: insightsChartType === 'stacked', tension: 0.3, pointRadius: isMobile ? 2 : 3, pointHoverRadius: isMobile ? 5 : 6, borderWidth: isMobile ? 1.5 : 2 },
                 ];
                 const type = insightsChartType === 'stacked' ? 'line' : insightsChartType;
                 const options = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    plugins: { legend: { position: 'bottom', labels: { boxWidth: isMobile ? 8 : 12,
-                                font: { size: isMobile ? 8 : 10 }, usePointStyle: true, padding: isMobile ? 10 : 18 } } },
-                    scales: { y: { beginAtZero: true, stacked: insightsChartType === 'stacked',
-                            grid: { color: darkMode ? '#334155' : '#E2E8F0' }, ticks: { font: { size: isMobile ? 8 :
-                                    10 } } }, x: { stacked: insightsChartType === 'stacked',
-                            ticks: { maxRotation: isMobile ? 75 : 60, font: { size: isMobile ? 7 : 9 } },
-                            grid: { display: false } } }
+                    responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'bottom', labels: { boxWidth: isMobile ? 8 : 12, font: { size: isMobile ? 8 : 10 }, usePointStyle: true, padding: isMobile ? 10 : 18 } } },
+                    scales: { y: { beginAtZero: true, stacked: insightsChartType === 'stacked', grid: { color: darkMode ? '#334155' : '#E2E8F0' }, ticks: { font: { size: isMobile ? 8 : 10 } } }, x: { stacked: insightsChartType === 'stacked', ticks: { maxRotation: isMobile ? 75 : 60, font: { size: isMobile ? 7 : 9 } }, grid: { display: false } } }
                 };
                 insightsChartInstance = new Chart(ctx, { type, data: { labels, datasets }, options });
             }
 
             function setInsightsChartType(type) {
                 insightsChartType = type;
-                document.querySelectorAll('#viewInsights .chart-type-btn').forEach(b => {
-                    b.classList.remove('btn-primary');
-                    b.classList.add('btn-secondary');
-                });
-                if (event && event.target) {
-                    event.target.classList.remove('btn-secondary');
-                    event.target.classList.add('btn-primary');
-                }
+                document.querySelectorAll('#viewInsights .chart-type-btn').forEach(b => { b.classList.remove('btn-primary'); b.classList.add('btn-secondary'); });
+                if (event && event.target) { event.target.classList.remove('btn-secondary'); event.target.classList.add('btn-primary'); }
                 renderInsightsChart();
             }
 
             window.editEntryByDate = function(date) {
-                if (!adminMode) { toast('Admin access required!', false);
-                    showAdminModal(); return; }
+                if (!adminMode) { toast('Admin access required!', false); showAdminModal(); return; }
                 const idx = readingsHistory.findIndex(e => e.date === date);
                 if (idx === -1) return;
                 const entry = readingsHistory[idx];
@@ -2646,8 +2422,7 @@
             };
 
             window.deleteEntryByDate = async function(date) {
-                if (!adminMode) { toast('Admin access required!', false);
-                    showAdminModal(); return; }
+                if (!adminMode) { toast('Admin access required!', false); showAdminModal(); return; }
                 const idx = readingsHistory.findIndex(e => e.date === date);
                 if (idx === -1) return;
                 if (!confirm('Delete reading for ' + date + '? This cannot be undone.')) return;
@@ -2657,232 +2432,88 @@
                 toast('Deleted successfully!', true);
             };
 
-            function closeSheet() {
-                document.getElementById('sheetOverlay').classList.remove('active');
-                document.getElementById('sheetBody').innerHTML = '';
-            }
-
-            function showAdminModal() {
-                document.getElementById('adminModalOverlay').classList.add('active');
-                document.getElementById('adminPassInput').focus();
-            }
-
-            function closeAdminModal() {
-                document.getElementById('adminModalOverlay').classList.remove('active');
-                document.getElementById('adminMsg').textContent = '';
-                document.getElementById('adminPassInput').value = '';
-            }
-
+            function closeSheet() { document.getElementById('sheetOverlay').classList.remove('active'); document.getElementById('sheetBody').innerHTML = ''; }
+            function showAdminModal() { document.getElementById('adminModalOverlay').classList.add('active'); document.getElementById('adminPassInput').focus(); }
+            function closeAdminModal() { document.getElementById('adminModalOverlay').classList.remove('active'); document.getElementById('adminMsg').textContent = ''; document.getElementById('adminPassInput').value = ''; }
             function submitAdminPassword() {
                 const val = document.getElementById('adminPassInput').value.trim();
-                if (val === ADMIN_PASS) {
-                    adminMode = true;
-                    toast('Admin unlocked! 🔓', true);
-                    closeAdminModal();
-                    updateAdminUI();
-                } else {
-                    document.getElementById('adminMsg').textContent = 'Incorrect password!';
-                }
+                if (val === ADMIN_PASS) { adminMode = true; toast('Admin unlocked! 🔓', true); closeAdminModal(); updateAdminUI(); }
+                else { document.getElementById('adminMsg').textContent = 'Incorrect password!'; }
             }
-
-            function toggleAdminMode() {
-                if (adminMode) {
-                    adminMode = false;
-                    toast('Admin locked 🔒', true);
-                } else {
-                    showAdminModal();
-                    return;
-                }
-                updateAdminUI();
-            }
-
+            function toggleAdminMode() { if (adminMode) { adminMode = false; toast('Admin locked 🔒', true); } else { showAdminModal(); return; } updateAdminUI(); }
             function updateAdminUI() {
-                const btn = document.getElementById('btnAdminIndicator');
-                btn.textContent = adminMode ? '🔓' : '🔒';
-                btn.classList.toggle('admin-active', adminMode);
-                btn.setAttribute('data-tooltip', adminMode ? 'Admin: Unlocked' : 'Admin: Locked');
+                const btn = document.getElementById('btnAdminIndicator'); btn.textContent = adminMode ? '🔓' : '🔒'; btn.classList.toggle('admin-active', adminMode);
                 document.getElementById('adminStatusLabel').textContent = adminMode ? 'Unlocked 🔓' : 'Locked 🔒';
-                const avatar = document.getElementById('topbarAvatar');
-                if (avatar) avatar.textContent = adminMode ? 'AD' : 'SH';
+                const avatar = document.getElementById('topbarAvatar'); if (avatar) avatar.textContent = adminMode ? 'AD' : 'SH';
                 refreshHistoryView();
             }
-
-            function openRestore() {
-                if (!adminMode) { toast('Admin access required!', false);
-                    showAdminModal(); return; }
-                document.getElementById('restoreModalOverlay').classList.add('active');
-            }
-
-            function closeRestoreModal() {
-                document.getElementById('restoreModalOverlay').classList.remove('active');
-                document.getElementById('restoreFile').value = '';
-            }
-
+            function openRestore() { if (!adminMode) { toast('Admin access required!', false); showAdminModal(); return; } document.getElementById('restoreModalOverlay').classList.add('active'); }
+            function closeRestoreModal() { document.getElementById('restoreModalOverlay').classList.remove('active'); document.getElementById('restoreFile').value = ''; }
             async function doRestore() {
-                const file = document.getElementById('restoreFile').files[0];
-                if (!file) return;
+                const file = document.getElementById('restoreFile').files[0]; if (!file) return;
                 const reader = new FileReader();
                 reader.onload = async function(e) {
                     try {
-                        const obj = JSON.parse(e.target.result);
-                        if (!obj.dailyReadings) throw 'Invalid format';
-                        if (!confirm('Replace ALL data with this backup? This cannot be undone.')) return;
-                        readingsHistory = obj.dailyReadings;
-                        await saveHistory();
-                        closeRestoreModal();
-                        refreshAllViews();
-                        toast('Restore complete! ✅', true);
-                    } catch (err) {
-                        toast('Invalid file: ' + err, false);
-                    }
+                        const obj = JSON.parse(e.target.result); if (!obj.dailyReadings) throw 'Invalid format';
+                        if (!confirm('Replace ALL data with this backup?')) return;
+                        readingsHistory = obj.dailyReadings; await saveHistory(); closeRestoreModal(); refreshAllViews(); toast('Restore complete! ✅', true);
+                    } catch (err) { toast('Invalid file: ' + err, false); }
                 };
                 reader.readAsText(file);
             }
 
             window.exportCSV = function() {
                 if (!readingsHistory.length) return toast('No data to export.', false);
-                let csv = [
-                    ['Date', 'Bowser Open', 'Bowser Close', 'Bowser Diff', 'Dip Open', 'Dip Close', 'Dip Diff',
-                        'iLembe Open', 'iLembe Close', 'iLembe Diff', 'Hydrant Open', 'Hydrant Close',
-                        'Hydrant Diff', 'Borehole Open', 'Borehole Close', 'Borehole Diff', 'Counted By', 'Notes'
-                    ].join(',')
-                ];
-                readingsHistory.forEach(r => {
-                    csv.push([r.date, r.bowserOpen, r.bowserClose, r.bowserDiff, r.dipOpen, r.dipClose, r.dipDiff,
-                        r.ilembeOpen, r.ilembeClose, r.ilembeDiff, r.hydrantOpen, r.hydrantClose, r.hydrantDiff,
-                        r.boreholeOpen, r.boreholeClose, r.boreholeDiff,
-                        '"' + (r.countedBy || '').replace(/"/g, '""') + '"',
-                        '"' + (r.notes || '').replace(/"/g, '""') + '"'
-                    ].join(','));
-                });
-                const blob = new Blob([csv.join('\r\n')], { type: 'text/csv' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'water_readings.csv';
-                a.click();
-                toast('CSV exported! 📄', true);
+                let csv = [['Date','Bowser Open','Bowser Close','Bowser Diff','Dip Open','Dip Close','Dip Diff','iLembe Open','iLembe Close','iLembe Diff','Hydrant Open','Hydrant Close','Hydrant Diff','Borehole Open','Borehole Close','Borehole Diff','Counted By','Notes'].join(',')];
+                readingsHistory.forEach(r => { csv.push([r.date, r.bowserOpen, r.bowserClose, r.bowserDiff, r.dipOpen, r.dipClose, r.dipDiff, r.ilembeOpen, r.ilembeClose, r.ilembeDiff, r.hydrantOpen, r.hydrantClose, r.hydrantDiff, r.boreholeOpen, r.boreholeClose, r.boreholeDiff, '"'+(r.countedBy||'').replace(/"/g,'""')+'"', '"'+(r.notes||'').replace(/"/g,'""')+'"'].join(',')); });
+                const blob = new Blob([csv.join('\r\n')], { type: 'text/csv' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'water_readings.csv'; a.click(); toast('CSV exported! 📄', true);
             };
 
             window.exportPDF = function() {
                 if (!readingsHistory.length) return toast('No data to export.', false);
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.setFontSize(16);
-                doc.text('Superb Hyper - Water Readings', 14, 18);
-                const rows = [
-                    ['Date', 'Bowser', 'Dip', 'iLembe', 'Hydrant', 'Borehole', 'Counted By', 'Notes']
-                ];
-                readingsHistory.slice(-40).reverse().forEach(r => {
-                    rows.push([r.date, r.bowserDiff, r.dipDiff, r.ilembeDiff, r.hydrantDiff, r.boreholeDiff, r
-                        .countedBy || '', r.notes || ''
-                    ]);
-                });
-                if (typeof doc.autoTable === 'function') {
-                    doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 24, styles: { fontSize: 8,
-                            cellPadding: 2 } });
-                }
-                doc.save('water_readings.pdf');
-                toast('PDF exported! 📕', true);
+                const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.setFontSize(16); doc.text('Superb Hyper - Water Readings', 14, 18);
+                const rows = [['Date','Bowser','Dip','iLembe','Hydrant','Borehole','Counted By','Notes']];
+                readingsHistory.slice(-40).reverse().forEach(r => { rows.push([r.date, r.bowserDiff, r.dipDiff, r.ilembeDiff, r.hydrantDiff, r.boreholeDiff, r.countedBy||'', r.notes||'']); });
+                if (typeof doc.autoTable === 'function') { doc.autoTable({ head: [rows[0]], body: rows.slice(1), startY: 24, styles: { fontSize: 8, cellPadding: 2 } }); }
+                doc.save('water_readings.pdf'); toast('PDF exported! 📕', true);
             };
 
             window.backupJSON = function() {
                 if (!readingsHistory.length) return toast('No data to backup.', false);
-                const blob = new Blob([JSON.stringify({ dailyReadings: readingsHistory }, null, 2)], { type: 'application/json' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'superb_water_backup.json';
-                a.click();
-                toast('Backup downloaded! 💾', true);
+                const blob = new Blob([JSON.stringify({ dailyReadings: readingsHistory }, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'superb_water_backup.json'; a.click(); toast('Backup downloaded! 💾', true);
             };
 
-            // Pull-to-refresh for mobile
+            // Pull-to-refresh
             function initPullToRefresh() {
                 const contentArea = document.getElementById('contentArea');
                 const pullIndicator = document.getElementById('pullIndicator');
                 if (!contentArea || !pullIndicator) return;
-
-                contentArea.addEventListener('touchstart', function(e) {
-                    if (contentArea.scrollTop <= 0 && isMobileDevice) {
-                        pullStartY = e.touches[0].clientY;
-                        isPulling = true;
-                    }
-                }, { passive: true });
-
-                contentArea.addEventListener('touchmove', function(e) {
-                    if (!isPulling) return;
-                    pullDist = e.touches[0].clientY - pullStartY;
-                    if (pullDist > 30 && contentArea.scrollTop <= 0) {
-                        pullIndicator.classList.add('visible');
-                    }
-                }, { passive: true });
-
-                contentArea.addEventListener('touchend', function() {
-                    if (isPulling && pullDist > 60 && contentArea.scrollTop <= 0) {
-                        pullIndicator.textContent = '⟳ Refreshing...';
-                        loadHistory().then(() => {
-                            pullIndicator.textContent = '✓ Refreshed!';
-                            setTimeout(() => {
-                                pullIndicator.classList.remove('visible');
-                                pullIndicator.textContent = '↓ Pull to refresh';
-                            }, 1000);
-                        });
-                    }
-                    isPulling = false;
-                    pullDist = 0;
-                    if (pullIndicator.classList.contains('visible') && pullDist < 60) {
-                        pullIndicator.classList.remove('visible');
-                    }
-                });
+                contentArea.addEventListener('touchstart', function(e) { if (contentArea.scrollTop <= 0 && isMobileDevice) { pullStartY = e.touches[0].clientY; isPulling = true; } }, { passive: true });
+                contentArea.addEventListener('touchmove', function(e) { if (!isPulling) return; pullDist = e.touches[0].clientY - pullStartY; if (pullDist > 30 && contentArea.scrollTop <= 0) pullIndicator.classList.add('visible'); }, { passive: true });
+                contentArea.addEventListener('touchend', function() { if (isPulling && pullDist > 60 && contentArea.scrollTop <= 0) { pullIndicator.textContent = '⟳ Refreshing...'; loadHistory().then(() => { pullIndicator.textContent = '✓ Refreshed!'; setTimeout(() => { pullIndicator.classList.remove('visible'); pullIndicator.textContent = '↓ Pull to refresh'; }, 1000); }); } isPulling = false; pullDist = 0; if (pullIndicator.classList.contains('visible') && pullDist < 60) pullIndicator.classList.remove('visible'); });
             }
 
-            // Event listeners
             document.getElementById('btnDarkMode').addEventListener('click', toggleDarkModeUI);
-            document.getElementById('sheetOverlay').addEventListener('click', function(e) {
-                if (e.target === this) closeSheet();
-            });
-            document.getElementById('adminModalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) closeAdminModal();
-            });
-            document.getElementById('restoreModalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) closeRestoreModal();
-            });
-            document.getElementById('adminPassInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') submitAdminPassword();
-            });
-            document.getElementById('topbarSearchInput').addEventListener('input', function() {
-                if (currentView === 'history') filterHistory();
-            });
+            document.getElementById('sheetOverlay').addEventListener('click', function(e) { if (e.target === this) closeSheet(); });
+            document.getElementById('adminModalOverlay').addEventListener('click', function(e) { if (e.target === this) closeAdminModal(); });
+            document.getElementById('restoreModalOverlay').addEventListener('click', function(e) { if (e.target === this) closeRestoreModal(); });
+            document.getElementById('adminPassInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') submitAdminPassword(); });
+            document.getElementById('topbarSearchInput').addEventListener('input', function() { if (currentView === 'history') filterHistory(); });
 
-            // Media query listener for responsive changes
-            const mobileMediaQuery = window.matchMedia('(max-width: 768px)');
-            mobileMediaQuery.addEventListener('change', function() {
-                detectMobile();
-                refreshAllViews();
-            });
+            window.matchMedia('(max-width: 768px)').addEventListener('change', function() { detectMobile(); refreshAllViews(); });
+            window.matchMedia('(max-width: 430px)').addEventListener('change', function() { refreshAllViews(); });
 
-            const s24MediaQuery = window.matchMedia('(max-width: 430px)');
-            s24MediaQuery.addEventListener('change', function() {
-                refreshAllViews();
-            });
-
-            // Initialize
             document.addEventListener('DOMContentLoaded', () => {
                 detectMobile();
                 setDarkMode(localStorage.getItem('darkMode') === '1');
-                if (localStorage.getItem('sidebarCollapsed') === '1' && !isMobileDevice) {
-                    sidebarCollapsed = true;
-                    document.getElementById('appLayout').classList.add('sidebar-collapsed');
-                }
+                if (localStorage.getItem('sidebarCollapsed') === '1' && !isMobileDevice) { sidebarCollapsed = true; document.getElementById('appLayout').classList.add('sidebar-collapsed'); }
                 document.getElementById('readingDate').value = getTodayString();
-                loadHistory().then(() => {
-                    refreshAllViews();
-                });
+                loadHistory().then(() => refreshAllViews());
                 updateAdminUI();
                 updateFabVisibility();
                 initPullToRefresh();
             });
 
-            // Expose to global scope
             window.switchView = switchView;
             window.editEntryByDate = window.editEntryByDate;
             window.deleteEntryByDate = window.deleteEntryByDate;
